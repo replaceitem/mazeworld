@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "mazeworld.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "MoreOptionsDialogAccessor",
+    "WorldPresetsRegistrarMixin"
+  ],
+  "client": [
+    "LevelScreenProviderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
