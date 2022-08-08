@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screen.world.LevelScreenProvider;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.structure.StructureSet;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
-import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.biome.Biome;
