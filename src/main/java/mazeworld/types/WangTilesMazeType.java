@@ -136,11 +136,6 @@ public class WangTilesMazeType extends MazeType {
                 this.ya = Math.min(ya, yb);
                 this.xb = Math.max(xa, xb);
                 this.yb = Math.max(ya, yb);
-                /*// prevent edge cases
-                if(xa == 0) xa = -1;
-                if(ya == 0) xa = -1;
-                if(xb == 1) xb = 2;
-                if(yb == 1) yb = 2;*/
             }
 
             boolean isInside(double x, double y) {

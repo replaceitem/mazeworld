@@ -3,11 +3,9 @@ package mazeworld.mixin;
 import mazeworld.MazeChunkGenerator;
 import mazeworld.MazeChunkGeneratorConfig;
 import mazeworld.MazeWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionTypes;
@@ -23,9 +21,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(WorldPresets.Registrar.class)
 public abstract class WorldPresetsRegistrarMixin {
-
-    @Shadow protected abstract RegistryEntry<WorldPreset> register(RegistryKey<WorldPreset> key, DimensionOptions dimensionOptions);
-
     @Shadow @Final private Registry<WorldPreset> worldPresetRegistry;
 
     @Shadow protected abstract WorldPreset createPreset(DimensionOptions dimensionOptions);
