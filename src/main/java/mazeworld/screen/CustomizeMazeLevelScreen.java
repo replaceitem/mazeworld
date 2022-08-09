@@ -73,6 +73,8 @@ public class CustomizeMazeLevelScreen extends Screen {
             if(this.client == null) return; // shouldn't happen
             this.client.setScreen(this.parent);
         }));
+
+        mazePreviewWidget.preRender(modifiedConfig);
     }
 
     @Override
