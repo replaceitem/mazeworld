@@ -1,9 +1,38 @@
-# Fabric Example Mod
+# MazeWorld
 
-## Setup
+A mod to add an infinite maze to vanilla world generation
 
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+## World creation
 
-## License
+To create a mazeworld, select the world type "Maze World".
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+![World type](https://raw.githubusercontent.com/replaceitem/mazeworld/master/world-type.png)
+
+After clicking on customize, you can change various settings about the maze generation.
+You even get a preview of how the maze is going to look like.
+
+![Customization](https://raw.githubusercontent.com/replaceitem/mazeworld/master/customize.png)
+
+## Customization options
+
+### Maze Type
+
+There are different maze types with different algorithms for generating the maze
+
+* [Binary tree](https://weblog.jamisbuck.org/2011/2/1/maze-generation-binary-tree-algorithm)
+
+* [Wang tiles](http://www.cr31.co.uk/stagecast/wang/array.html)
+
+### Spacing
+
+This defines the maze size
+
+## World creation on a server
+
+On a server, you can set the `level-type` to
+
+```properties
+level-type=mazeworld\:maze_world
+```
+
+However, that will only create a maze world with default options. To customize the maze, you have to create the world on the client, and upload it to the server.
