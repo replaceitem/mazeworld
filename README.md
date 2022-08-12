@@ -1,6 +1,6 @@
 # MazeWorld
 
-A mod to add an infinite maze to vanilla world generation
+A mod to add an infinite maze out of bedrock to vanilla world generation that is capped off with barrier blocks at the top.
 
 ## World creation
 
