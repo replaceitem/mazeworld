@@ -60,6 +60,7 @@ public abstract class MazeType {
         int top = world.getTopY();
         while(pos.getY() < top) {
             chunk.setBlockState(pos, blockState, false);
+            chunk.removeBlockEntity(pos);
             pos.setY(pos.getY()+1);
         }
     }
@@ -67,7 +68,9 @@ public abstract class MazeType {
     protected static void fillPlane(Chunk chunk, int y, BlockState blockState) {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
-                chunk.setBlockState(new BlockPos(i, y, j), blockState, false);
+                BlockPos pos = new BlockPos(i, y, j);
+                chunk.setBlockState(pos, blockState, false);
+                chunk.removeBlockEntity(pos);
             }
         }
     }
