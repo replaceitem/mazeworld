@@ -6,10 +6,13 @@ import net.minecraft.structure.StructureSet;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.RegistryOps;
 import net.minecraft.util.math.noise.DoublePerlinNoiseSampler;
+import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.biome.source.BiomeSource;
+import net.minecraft.world.biome.source.MultiNoiseBiomeSource;
+import net.minecraft.world.biome.source.TheEndBiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
@@ -39,6 +42,16 @@ public class MazeChunkGenerator extends NoiseChunkGenerator {
         super(structureSetRegistry, noiseRegistry, populationSource, settings);
         this.mazeSettings = mazeSettings;
         this.noiseRegistry = noiseRegistry;
+    }
+    
+    public static MazeChunkGenerator forOverworld(MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
+        return new MazeChunkGenerator(BuiltinRegistries.STRUCTURE_SET, BuiltinRegistries.NOISE_PARAMETERS, MultiNoiseBiomeSource.Preset.OVERWORLD.getBiomeSource(BuiltinRegistries.BIOME), BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.getOrCreateEntry(ChunkGeneratorSettings.OVERWORLD), mazeChunkGeneratorConfig);
+    }
+    public static MazeChunkGenerator forNether(MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
+        return new MazeChunkGenerator(BuiltinRegistries.STRUCTURE_SET, BuiltinRegistries.NOISE_PARAMETERS, MultiNoiseBiomeSource.Preset.NETHER.getBiomeSource(BuiltinRegistries.BIOME), BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.getOrCreateEntry(ChunkGeneratorSettings.NETHER), mazeChunkGeneratorConfig);
+    }
+    public static MazeChunkGenerator forEnd(MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
+        return new MazeChunkGenerator(BuiltinRegistries.STRUCTURE_SET, BuiltinRegistries.NOISE_PARAMETERS, new TheEndBiomeSource(BuiltinRegistries.BIOME), BuiltinRegistries.CHUNK_GENERATOR_SETTINGS.getOrCreateEntry(ChunkGeneratorSettings.END), mazeChunkGeneratorConfig);
     }
 
     @Override
