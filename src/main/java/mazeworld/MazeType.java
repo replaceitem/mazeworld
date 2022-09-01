@@ -44,23 +44,25 @@ public abstract class MazeType {
 
         BlockChecker blockChecker = getBlockChecker(chunkPos, config, worldSeed);
         
-        if(!world.getDimension().hasCeiling()) fillPlane(chunk, world.getTopY()-1,Blocks.BARRIER.getDefaultState());
+        boolean hasCeiling = world.getDimension().hasCeiling();
+        
+        if(!hasCeiling) fillPlane(chunk, world.getTopY()-1,Blocks.BARRIER.getDefaultState());
+        
+        int wallHeight = world.getDimension().logicalHeight();
         
         for(int i = xs; i <= xe; i++) {
             for(int j = zs; j <= ze; j++) {
                 if(blockChecker.isBlockAt(i, j))
-                    placeColumn(world, chunk, i, j, Blocks.BEDROCK.getDefaultState());
+                    placeColumn(world, chunk, i, j, wallHeight, Blocks.BEDROCK.getDefaultState());
             }
         }
         
     }
     
-    protected static void placeColumn(StructureWorldAccess world, Chunk chunk, int cx, int cz, BlockState blockState) {
+    protected static void placeColumn(StructureWorldAccess world, Chunk chunk, int cx, int cz, int top, BlockState blockState) {
         BlockPos.Mutable pos = new BlockPos.Mutable(cx, world.getBottomY(), cz);
-        int top = world.getTopY();
         while(pos.getY() < top) {
-            chunk.setBlockState(pos, blockState, false);
-            chunk.removeBlockEntity(pos);
+            setBlock(chunk, pos, blockState);
             pos.setY(pos.getY()+1);
         }
     }
@@ -69,10 +71,14 @@ public abstract class MazeType {
         for (int i = 0; i < 16; i++) {
             for (int j = 0; j < 16; j++) {
                 BlockPos pos = new BlockPos(i, y, j);
-                chunk.setBlockState(pos, blockState, false);
-                chunk.removeBlockEntity(pos);
+                setBlock(chunk, pos, blockState);
             }
         }
+    }
+    
+    protected static void setBlock(Chunk chunk, BlockPos pos, BlockState blockState) {
+        chunk.setBlockState(pos, blockState, false);
+        chunk.removeBlockEntity(pos);
     }
     
     public abstract BlockChecker getBlockChecker(ChunkPos chunkPos, MazeChunkGeneratorConfig config, long seed);
