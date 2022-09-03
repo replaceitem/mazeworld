@@ -44,8 +44,6 @@ public abstract class MazeType {
 
         BlockChecker blockChecker = getBlockChecker(chunkPos, config, worldSeed);
         
-        if(!world.getDimension().hasCeiling()) fillPlane(chunk, world.getTopY()-1,Blocks.BARRIER.getDefaultState());
-        
         int wallTopY = world.getBottomY() + world.getDimension().logicalHeight();
         
         for(int i = xs; i <= xe; i++) {
@@ -62,15 +60,6 @@ public abstract class MazeType {
         while(pos.getY() < top) {
             setBlock(chunk, pos, blockState);
             pos.setY(pos.getY()+1);
-        }
-    }
-
-    protected static void fillPlane(Chunk chunk, int y, BlockState blockState) {
-        for (int i = 0; i < 16; i++) {
-            for (int j = 0; j < 16; j++) {
-                BlockPos pos = new BlockPos(i, y, j);
-                setBlock(chunk, pos, blockState);
-            }
         }
     }
     
