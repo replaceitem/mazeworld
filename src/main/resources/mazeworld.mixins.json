@@ -4,11 +4,13 @@
   "package": "mazeworld.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ServerPlayNetworkHandlerMixin",
+    "ServerWorldMixin",
     "WorldPresetsRegistrarMixin"
   ],
   "client": [
-    "MoreOptionsDialogAccessor",
-    "LevelScreenProviderMixin"
+    "LevelScreenProviderMixin",
+    "MoreOptionsDialogAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

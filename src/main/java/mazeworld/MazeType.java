@@ -44,16 +44,14 @@ public abstract class MazeType {
 
         BlockChecker blockChecker = getBlockChecker(chunkPos, config, worldSeed);
         
-        boolean hasCeiling = world.getDimension().hasCeiling();
+        if(!world.getDimension().hasCeiling()) fillPlane(chunk, world.getTopY()-1,Blocks.BARRIER.getDefaultState());
         
-        if(!hasCeiling) fillPlane(chunk, world.getTopY()-1,Blocks.BARRIER.getDefaultState());
-        
-        int wallHeight = world.getDimension().logicalHeight();
+        int wallTopY = world.getBottomY() + world.getDimension().logicalHeight();
         
         for(int i = xs; i <= xe; i++) {
             for(int j = zs; j <= ze; j++) {
                 if(blockChecker.isBlockAt(i, j))
-                    placeColumn(world, chunk, i, j, wallHeight, Blocks.BEDROCK.getDefaultState());
+                    placeColumn(world, chunk, i, j, wallTopY, Blocks.BEDROCK.getDefaultState());
             }
         }
         

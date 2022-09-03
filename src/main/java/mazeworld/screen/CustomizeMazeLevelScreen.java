@@ -6,6 +6,7 @@ import mazeworld.screen.widget.IntegerSliderWidget;
 import mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
 import mazeworld.MazeChunkGeneratorConfig;
 import mazeworld.screen.widget.MazePreviewWidget;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
@@ -38,38 +39,56 @@ public class CustomizeMazeLevelScreen extends Screen {
     
     private LogarithmicIntegerSliderWidget spacingWidget;
     private CyclingButtonWidget<MazeType> mazeTypeWidget;
+    private CyclingButtonWidget<Boolean> infiniteWallWidget;
     private MazePreviewWidget mazePreviewWidget;
 
     @Override
     protected void init() {
-        IntegerSliderWidget.UpdateCallback spacingUpdateCallback = (integerSliderWidget, value) -> {
-            modifiedConfig.spacing = value;
-            mazePreviewWidget.preRender(modifiedConfig);
-        };
-        spacingWidget = new LogarithmicIntegerSliderWidget(width/2-100, 80, 200, Text.translatable("createWorld.customize.maze_world.spacing"), config.spacing, 2, 1024, spacingUpdateCallback);
-        this.addDrawableChild(spacingWidget);
-        
-        CyclingButtonWidget.Builder<MazeType> builder = new CyclingButtonWidget.Builder<>(mazeType -> mazeType.name);
-        builder.values(MazeTypes.types);
-        builder.initially(config.mazeType);
-        builder.tooltip(MazeType::getTooltip);
+        int buttonWidth = 150;
+        int buttonHeight = 20;
+        int column1x = width/2-5-buttonWidth;
+        int column2x = width/2+5;
+
         CyclingButtonWidget.UpdateCallback<MazeType> mazeTypeUpdateCallback = (button, value) -> {
             this.modifiedConfig.mazeType = value;
             mazePreviewWidget.preRender(modifiedConfig);
         };
-        mazeTypeWidget = builder.build(width/2-100, 50, 200, 20, Text.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback);
+        mazeTypeWidget = CyclingButtonWidget.<MazeType>builder(mazeType -> mazeType.name)
+                .values(MazeTypes.types)
+                .initially(config.mazeType)
+                .tooltip(MazeType::getTooltip)
+                .build(column1x, 20, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback);
         this.addDrawableChild(mazeTypeWidget);
-        
-        mazePreviewWidget = new MazePreviewWidget(width/2 - 80, 120, 10, 5);
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 155, this.height - 28, 150, 20, ScreenTexts.DONE, button -> {
+        
+        
+        
+        IntegerSliderWidget.UpdateCallback spacingUpdateCallback = (integerSliderWidget, value) -> {
+            modifiedConfig.spacing = value;
+            mazePreviewWidget.preRender(modifiedConfig);
+        };
+        spacingWidget = new LogarithmicIntegerSliderWidget(column2x, 20, buttonWidth, Text.translatable("createWorld.customize.maze_world.spacing"), config.spacing, 2, 1024, spacingUpdateCallback);
+        this.addDrawableChild(spacingWidget);
+
+
+        CyclingButtonWidget.UpdateCallback<Boolean> infiniteWallUpdateCallback = (button, value) -> this.modifiedConfig.infiniteWall = value;
+        infiniteWallWidget = CyclingButtonWidget.onOffBuilder(config.infiniteWall)
+                .tooltip(aBoolean -> MinecraftClient.getInstance().textRenderer.wrapLines(Text.translatable("createWorld.customize.maze_world.infinite_walls.description"),100))
+                .build(column1x, 60, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.infinite_walls"), infiniteWallUpdateCallback);
+        this.addDrawableChild(infiniteWallWidget);
+        
+        
+        
+        mazePreviewWidget = new MazePreviewWidget(this.width / 2 - 10*16/2, height-30-5*16, 10, 5);
+
+        
+        
+        this.addDrawableChild(new ButtonWidget(column1x, this.height - 28, buttonWidth, buttonHeight, ScreenTexts.DONE, button -> {
             if(this.client == null) return; // shouldn't happen
-            config.spacing = spacingWidget.getIntegerValue();
-            config.mazeType = mazeTypeWidget.getValue();
-            this.configConsumer.accept(this.config);
+            this.configConsumer.accept(this.modifiedConfig);
             this.client.setScreen(this.parent);
         }));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 5, this.height - 28, 150, 20, ScreenTexts.CANCEL, button -> {
+        this.addDrawableChild(new ButtonWidget(column2x, this.height - 28, buttonWidth, buttonHeight, ScreenTexts.CANCEL, button -> {
             if(this.client == null) return; // shouldn't happen
             this.client.setScreen(this.parent);
         }));
