@@ -55,7 +55,7 @@ public class CustomizeMazeLevelScreen extends Screen {
         };
         mazeTypeWidget = CyclingButtonWidget.<MazeType>builder(mazeType -> mazeType.name)
                 .values(MazeTypes.types)
-                .initially(config.mazeType)
+                .initially(modifiedConfig.mazeType)
                 .tooltip(MazeType::getTooltip)
                 .build(column1x, 20, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback);
         this.addDrawableChild(mazeTypeWidget);
@@ -67,12 +67,12 @@ public class CustomizeMazeLevelScreen extends Screen {
             modifiedConfig.spacing = value;
             mazePreviewWidget.preRender(modifiedConfig);
         };
-        spacingWidget = new LogarithmicIntegerSliderWidget(column2x, 20, buttonWidth, Text.translatable("createWorld.customize.maze_world.spacing"), config.spacing, 2, 1024, spacingUpdateCallback);
+        spacingWidget = new LogarithmicIntegerSliderWidget(column2x, 20, buttonWidth, Text.translatable("createWorld.customize.maze_world.spacing"), modifiedConfig.spacing, 2, 1024, spacingUpdateCallback);
         this.addDrawableChild(spacingWidget);
 
 
         CyclingButtonWidget.UpdateCallback<Boolean> infiniteWallUpdateCallback = (button, value) -> this.modifiedConfig.infiniteWall = value;
-        infiniteWallWidget = CyclingButtonWidget.onOffBuilder(config.infiniteWall)
+        infiniteWallWidget = CyclingButtonWidget.onOffBuilder(modifiedConfig.infiniteWall)
                 .tooltip(aBoolean -> MinecraftClient.getInstance().textRenderer.wrapLines(Text.translatable("createWorld.customize.maze_world.infinite_walls.description"),100))
                 .build(column1x, 60, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.infinite_walls"), infiniteWallUpdateCallback);
         this.addDrawableChild(infiniteWallWidget);
