@@ -27,6 +27,10 @@ There are different maze types with different algorithms for generating the maze
 
 This defines the maze size
 
+### Infinite walls
+
+Prevents players from crossing the walls even above or below build height
+
 ## World creation on a server
 
 On a server, you can set the `level-type` to
