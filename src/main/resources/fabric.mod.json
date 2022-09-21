@@ -32,5 +32,13 @@
     "fabric": "*",
     "minecraft": "1.19.x",
     "java": ">=17"
+  },
+
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/etTDQAVSgt"
+      }
+    }
   }
 }
