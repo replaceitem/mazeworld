@@ -1,5 +1,7 @@
 # MazeWorld
 
+[![Discord](https://img.shields.io/badge/Discord-7289DA?logo=discord&logoColor=white)](https://discord.gg/etTDQAVSgt)
+
 A mod to add an infinite maze out of bedrock to vanilla world generation that is capped off with barrier blocks at the top.
 
 ## World creation
