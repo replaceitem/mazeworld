@@ -1,4 +1,4 @@
-package mazeworld.screen.widget;
+package net.replaceitem.mazeworld.screen.widget;
 
 import net.minecraft.text.Text;
 

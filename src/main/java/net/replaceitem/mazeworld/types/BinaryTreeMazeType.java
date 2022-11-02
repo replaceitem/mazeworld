@@ -1,7 +1,7 @@
-package mazeworld.types;
+package net.replaceitem.mazeworld.types;
 
-import mazeworld.MazeChunkGeneratorConfig;
-import mazeworld.MazeType;
+import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeType;
 import net.minecraft.util.math.ChunkPos;
 
 public class BinaryTreeMazeType extends MazeType {

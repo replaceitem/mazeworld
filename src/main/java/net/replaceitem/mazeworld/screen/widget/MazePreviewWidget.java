@@ -1,7 +1,7 @@
-package mazeworld.screen.widget;
+package net.replaceitem.mazeworld.screen.widget;
 
-import mazeworld.MazeChunkGeneratorConfig;
-import mazeworld.MazeType;
+import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeType;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;

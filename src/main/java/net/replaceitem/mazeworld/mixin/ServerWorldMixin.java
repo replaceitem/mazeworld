@@ -1,7 +1,7 @@
-package mazeworld.mixin;
+package net.replaceitem.mazeworld.mixin;
 
-import mazeworld.MazeChunkGenerator;
-import mazeworld.ServerWorldAccess;
+import net.replaceitem.mazeworld.MazeChunkGenerator;
+import net.replaceitem.mazeworld.ServerWorldAccess;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.WorldGenerationProgressListener;
 import net.minecraft.server.world.ServerWorld;

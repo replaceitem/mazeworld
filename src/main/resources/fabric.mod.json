@@ -19,7 +19,7 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "mazeworld.MazeWorld"
+      "net.replaceitem.mazeworld.MazeWorld"
     ]
   },
   "mixins": [

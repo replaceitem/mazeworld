@@ -1,8 +1,8 @@
-package mazeworld.mixin;
+package net.replaceitem.mazeworld.mixin;
 
-import mazeworld.MazeChunkGenerator;
-import mazeworld.MazeChunkGeneratorConfig;
-import mazeworld.MazeWorld;
+import net.replaceitem.mazeworld.MazeChunkGenerator;
+import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeWorld;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.dimension.DimensionOptions;

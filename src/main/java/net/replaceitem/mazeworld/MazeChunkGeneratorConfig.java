@@ -1,4 +1,4 @@
-package mazeworld;
+package net.replaceitem.mazeworld;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

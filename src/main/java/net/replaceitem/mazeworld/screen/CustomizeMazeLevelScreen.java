@@ -1,11 +1,11 @@
-package mazeworld.screen;
+package net.replaceitem.mazeworld.screen;
 
-import mazeworld.MazeType;
-import mazeworld.MazeTypes;
-import mazeworld.screen.widget.IntegerSliderWidget;
-import mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
-import mazeworld.MazeChunkGeneratorConfig;
-import mazeworld.screen.widget.MazePreviewWidget;
+import net.replaceitem.mazeworld.MazeType;
+import net.replaceitem.mazeworld.MazeTypes;
+import net.replaceitem.mazeworld.screen.widget.IntegerSliderWidget;
+import net.replaceitem.mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
+import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.screen.widget.MazePreviewWidget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;

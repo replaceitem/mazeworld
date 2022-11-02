@@ -1,4 +1,4 @@
-package mazeworld;
+package net.replaceitem.mazeworld;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;

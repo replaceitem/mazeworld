@@ -1,4 +1,4 @@
-package mazeworld;
+package net.replaceitem.mazeworld;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -67,6 +67,6 @@ public class MazeChunkGenerator extends NoiseChunkGenerator {
     }
 
     static {
-        Registry.register(Registry.CHUNK_GENERATOR, new Identifier("mazeworld", "maze_world"), CODEC);
+        Registry.register(Registry.CHUNK_GENERATOR, new Identifier("net/replaceitem/mazeworld", "maze_world"), CODEC);
     }
 }

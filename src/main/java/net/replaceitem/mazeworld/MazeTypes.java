@@ -1,7 +1,7 @@
-package mazeworld;
+package net.replaceitem.mazeworld;
 
-import mazeworld.types.BinaryTreeMazeType;
-import mazeworld.types.WangTilesMazeType;
+import net.replaceitem.mazeworld.types.BinaryTreeMazeType;
+import net.replaceitem.mazeworld.types.WangTilesMazeType;
 
 import java.util.ArrayList;
 import java.util.HashMap;

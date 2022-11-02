@@ -1,6 +1,6 @@
-package mazeworld.mixin;
+package net.replaceitem.mazeworld.mixin;
 
-import mazeworld.ServerWorldAccess;
+import net.replaceitem.mazeworld.ServerWorldAccess;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;

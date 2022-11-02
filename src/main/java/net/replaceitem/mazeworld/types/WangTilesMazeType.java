@@ -1,11 +1,11 @@
-package mazeworld.types;
+package net.replaceitem.mazeworld.types;
 
 import io.netty.util.collection.ByteObjectHashMap;
 import io.netty.util.collection.ByteObjectMap;
 import io.netty.util.collection.LongObjectHashMap;
 import io.netty.util.collection.LongObjectMap;
-import mazeworld.MazeChunkGeneratorConfig;
-import mazeworld.MazeType;
+import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeType;
 import net.minecraft.util.math.ChunkPos;
 
 import java.util.ArrayList;

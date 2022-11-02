@@ -1,4 +1,4 @@
-package mazeworld.mixin;
+package net.replaceitem.mazeworld.mixin;
 
 import net.minecraft.client.gui.screen.world.MoreOptionsDialog;
 import net.minecraft.client.world.GeneratorOptionsHolder;

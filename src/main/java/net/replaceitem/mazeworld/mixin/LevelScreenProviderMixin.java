@@ -1,10 +1,10 @@
-package mazeworld.mixin;
+package net.replaceitem.mazeworld.mixin;
 
 import com.mojang.serialization.Lifecycle;
-import mazeworld.MazeChunkGenerator;
-import mazeworld.MazeChunkGeneratorConfig;
-import mazeworld.MazeWorld;
-import mazeworld.screen.CustomizeMazeLevelScreen;
+import net.replaceitem.mazeworld.MazeChunkGenerator;
+import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeWorld;
+import net.replaceitem.mazeworld.screen.CustomizeMazeLevelScreen;
 import net.minecraft.client.gui.screen.world.LevelScreenProvider;
 import net.minecraft.client.world.GeneratorOptionsHolder;
 import net.minecraft.structure.StructureSet;
