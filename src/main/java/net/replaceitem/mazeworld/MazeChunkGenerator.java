@@ -67,6 +67,6 @@ public class MazeChunkGenerator extends NoiseChunkGenerator {
     }
 
     static {
-        Registry.register(Registry.CHUNK_GENERATOR, new Identifier("net/replaceitem/mazeworld", "maze_world"), CODEC);
+        Registry.register(Registry.CHUNK_GENERATOR, new Identifier("mazeworld", "maze_world"), CODEC);
     }
 }
