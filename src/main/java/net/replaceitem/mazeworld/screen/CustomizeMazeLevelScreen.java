@@ -1,28 +1,25 @@
 package net.replaceitem.mazeworld.screen;
 
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.world.CreateWorldScreen;
+import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CyclingButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.Text;
+import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeType;
 import net.replaceitem.mazeworld.MazeTypes;
 import net.replaceitem.mazeworld.screen.widget.IntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
-import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.screen.widget.MazePreviewWidget;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.world.CreateWorldScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.util.OrderableTooltip;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 public class CustomizeMazeLevelScreen extends Screen {
+
+    private static final Tooltip infiniteWallTooltip = Tooltip.of(Text.translatable("createWorld.customize.maze_world.infinite_walls.description"));
     
     protected final CreateWorldScreen parent;
     private final MazeChunkGeneratorConfig config;
@@ -73,7 +70,7 @@ public class CustomizeMazeLevelScreen extends Screen {
 
         CyclingButtonWidget.UpdateCallback<Boolean> infiniteWallUpdateCallback = (button, value) -> this.modifiedConfig.infiniteWall = value;
         infiniteWallWidget = CyclingButtonWidget.onOffBuilder(modifiedConfig.infiniteWall)
-                .tooltip(aBoolean -> MinecraftClient.getInstance().textRenderer.wrapLines(Text.translatable("createWorld.customize.maze_world.infinite_walls.description"),100))
+                .tooltip(aBoolean -> infiniteWallTooltip)
                 .build(column1x, 60, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.infinite_walls"), infiniteWallUpdateCallback);
         this.addDrawableChild(infiniteWallWidget);
         
@@ -83,15 +80,16 @@ public class CustomizeMazeLevelScreen extends Screen {
 
         
         
-        this.addDrawableChild(new ButtonWidget(column1x, this.height - 28, buttonWidth, buttonHeight, ScreenTexts.DONE, button -> {
+        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> {
             if(this.client == null) return; // shouldn't happen
             this.configConsumer.accept(this.modifiedConfig);
             this.client.setScreen(this.parent);
-        }));
-        this.addDrawableChild(new ButtonWidget(column2x, this.height - 28, buttonWidth, buttonHeight, ScreenTexts.CANCEL, button -> {
+        }).position(column1x, this.height - 28).size(buttonWidth, buttonHeight).build());
+
+        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.CANCEL, button -> {
             if(this.client == null) return; // shouldn't happen
             this.client.setScreen(this.parent);
-        }));
+        }).position(column2x, this.height - 28).size(buttonWidth, buttonHeight).build());
 
         mazePreviewWidget.preRender(modifiedConfig);
     }
@@ -103,12 +101,5 @@ public class CustomizeMazeLevelScreen extends Screen {
         super.render(matrices, mouseX, mouseY, delta);
 
         mazePreviewWidget.render(matrices, mouseX, mouseY, delta);
-        
-        for (Element child : this.children()) {
-            if(child instanceof OrderableTooltip orderableTooltip && child instanceof ClickableWidget clickableWidget && clickableWidget.isHovered()) {
-                List<OrderedText> tooltip = orderableTooltip.getOrderedTooltip();
-                this.renderOrderedTooltip(matrices, tooltip, mouseX, mouseY);
-            }
-        }
     }
 }

@@ -4,6 +4,7 @@
   "package": "net.replaceitem.mazeworld.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ChunkGeneratorsMixin",
     "ServerPlayNetworkHandlerMixin",
     "ServerWorldMixin",
     "WorldPresetsRegistrarMixin"

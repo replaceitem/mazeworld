@@ -3,6 +3,8 @@ package net.replaceitem.mazeworld;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.tooltip.Tooltip;
+import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.StringVisitable;
@@ -22,16 +24,16 @@ public abstract class MazeType {
         this.id = id;
         this.name = Text.translatable("maze_type." + id + ".name");
         this.description = Text.translatable("maze_type." + id + ".description");
-        this.tooltip = StringVisitable.concat(this.name.copy().formatted(Formatting.BOLD, Formatting.GOLD),Text.literal("\n"),this.description.copy());
+        this.tooltip = Tooltip.of(this.name.copy().formatted(Formatting.BOLD, Formatting.GOLD).append("\n").append(this.description.copy()));
     }
     
     public final String id;
     public final MutableText name;
     public final MutableText description;
-    public final StringVisitable tooltip;
+    public final Tooltip tooltip;
     
-    public List<OrderedText> getTooltip() {
-        return MinecraftClient.getInstance().textRenderer.wrapLines(this.tooltip,100);
+    public Tooltip getTooltip() {
+        return tooltip;
     }
 
     public void generateChunk(MazeChunkGeneratorConfig config, StructureWorldAccess world, Chunk chunk) {
