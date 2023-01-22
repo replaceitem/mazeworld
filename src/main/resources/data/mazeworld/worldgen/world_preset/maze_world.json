@@ -3,33 +3,48 @@
     "minecraft:overworld": {
       "type": "minecraft:overworld",
       "generator": {
-        "type": "minecraft:noise",
+        "type": "mazeworld:maze_world",
         "biome_source": {
           "type": "minecraft:multi_noise",
           "preset": "minecraft:overworld"
         },
-        "settings": "minecraft:overworld"
+        "settings": "minecraft:overworld",
+        "maze_settings": {
+          "spacing": 5,
+          "maze_type": "binary_tree",
+          "infinite_wall": true
+        }
       }
     },
     "minecraft:the_end": {
       "type": "minecraft:the_end",
       "generator": {
-        "type": "minecraft:noise",
+        "type": "mazeworld:maze_world",
         "biome_source": {
           "type": "minecraft:the_end"
         },
-        "settings": "minecraft:end"
+        "settings": "minecraft:end",
+        "maze_settings": {
+          "spacing": 5,
+          "maze_type": "binary_tree",
+          "infinite_wall": true
+        }
       }
     },
     "minecraft:the_nether": {
       "type": "minecraft:the_nether",
       "generator": {
-        "type": "minecraft:noise",
+        "type": "mazeworld:maze_world",
         "biome_source": {
           "type": "minecraft:multi_noise",
           "preset": "minecraft:nether"
         },
-        "settings": "minecraft:nether"
+        "settings": "minecraft:nether",
+        "maze_settings": {
+          "spacing": 5,
+          "maze_type": "binary_tree",
+          "infinite_wall": true
+        }
       }
     }
   }

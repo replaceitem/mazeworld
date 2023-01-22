@@ -8,7 +8,7 @@ public class MazeChunkGeneratorConfig {
     public static final Codec<MazeChunkGeneratorConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("spacing").orElse(5).forGetter(mazeChunkGeneratorConfig -> mazeChunkGeneratorConfig.spacing),
             Codec.STRING.fieldOf("maze_type").orElse(MazeTypes.BINARY_TREE.id).forGetter(mazeChunkGeneratorConfig -> mazeChunkGeneratorConfig.mazeType.id),
-            Codec.BOOL.fieldOf("infinite_wall").orElse(false).forGetter(mazeChunkGeneratorConfig -> mazeChunkGeneratorConfig.infiniteWall)
+            Codec.BOOL.fieldOf("infinite_wall").orElse(true).forGetter(mazeChunkGeneratorConfig -> mazeChunkGeneratorConfig.infiniteWall)
     ).apply(instance, MazeChunkGeneratorConfig::new));
 
     public MazeChunkGeneratorConfig(int spacing, MazeType mazeTypeId, boolean infiniteWall) {
@@ -22,7 +22,7 @@ public class MazeChunkGeneratorConfig {
     }
     
     public static MazeChunkGeneratorConfig getDefaultConfig() {
-        return new MazeChunkGeneratorConfig(5, MazeTypes.BINARY_TREE.id, false);
+        return new MazeChunkGeneratorConfig(5, MazeTypes.BINARY_TREE.id, true);
     }
     
     public int spacing;
