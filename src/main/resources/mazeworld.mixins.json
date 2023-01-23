@@ -6,8 +6,7 @@
   "mixins": [
     "ChunkGeneratorsMixin",
     "ServerPlayNetworkHandlerMixin",
-    "ServerWorldMixin",
-    "WorldPresetsRegistrarMixin"
+    "ServerWorldMixin"
   ],
   "client": [
     "LevelScreenProviderMixin",
