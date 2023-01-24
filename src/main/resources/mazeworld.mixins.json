@@ -5,9 +5,9 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ChunkGeneratorsMixin",
+    "DimensionOptionsRegistryHolderMixin",
     "ServerPlayNetworkHandlerMixin",
-    "ServerWorldMixin",
-    "WorldPresetsRegistrarMixin"
+    "ServerWorldMixin"
   ],
   "client": [
     "LevelScreenProviderMixin",

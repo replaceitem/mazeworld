@@ -26,10 +26,6 @@ public class MazeChunkGenerator extends NoiseChunkGenerator {
         return mazeSettings;
     }
 
-    public MazeChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> chunkGeneratorSettings) {
-        this(biomeSource, chunkGeneratorSettings, MazeChunkGeneratorConfig.getDefaultConfig());
-    }
-
     public MazeChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> chunkGeneratorSettings, MazeChunkGeneratorConfig mazeConfig) {
         super(biomeSource, chunkGeneratorSettings);
         this.mazeSettings = mazeConfig;
