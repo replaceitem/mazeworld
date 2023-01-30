@@ -22,7 +22,6 @@ public class CustomizeMazeLevelScreen extends Screen {
     private static final Tooltip infiniteWallTooltip = Tooltip.of(Text.translatable("createWorld.customize.maze_world.infinite_walls.description"));
     
     protected final CreateWorldScreen parent;
-    private final MazeChunkGeneratorConfig config;
     private final MazeChunkGeneratorConfig modifiedConfig;
     private final Consumer<MazeChunkGeneratorConfig> configConsumer;
     
@@ -30,13 +29,13 @@ public class CustomizeMazeLevelScreen extends Screen {
         super(Text.translatable("createWorld.customize.maze_world.title"));
         this.parent = parent;
         this.configConsumer = configConsumer;
-        this.config = config;
         this.modifiedConfig = config.copy();
     }
     
-    private LogarithmicIntegerSliderWidget spacingWidget;
     private CyclingButtonWidget<MazeType> mazeTypeWidget;
+    private LogarithmicIntegerSliderWidget spacingWidget;
     private CyclingButtonWidget<Boolean> infiniteWallWidget;
+    private IntegerSliderWidget thresholdWidget;
     private MazePreviewWidget mazePreviewWidget;
 
     @Override
@@ -73,6 +72,13 @@ public class CustomizeMazeLevelScreen extends Screen {
                 .tooltip(aBoolean -> infiniteWallTooltip)
                 .build(column1x, 60, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.infinite_walls"), infiniteWallUpdateCallback);
         this.addDrawableChild(infiniteWallWidget);
+
+        IntegerSliderWidget.UpdateCallback thresholdUpdateCallback = (integerSliderWidget, value) -> {
+            modifiedConfig.threshold = integerSliderWidget.getPercentageValue();
+            mazePreviewWidget.preRender(modifiedConfig);
+        };
+        thresholdWidget = new IntegerSliderWidget(column2x, 60, buttonWidth, Text.translatable("createWorld.customize.maze_world.threshold"), (int) (modifiedConfig.threshold*100), 0, 100, thresholdUpdateCallback);
+        this.addDrawableChild(thresholdWidget);
         
         
         

@@ -4,15 +4,19 @@
   
   "createWorld.customize.maze_world.maze_type": "Maze Type",
   "maze_type.binary_tree.name": "Binary Tree",
-  "maze_type.binary_tree.description": "A very simple algorithm with a bias to make diagonal corridors",
+  "maze_type.binary_tree.description": "A very simple algorithm with a bias to make diagonal corridors\nThe threshold control the ratio of horizontal and vertical corridors.",
   
   "maze_type.wang_tiles.name": "Wang Tiles",
-  "maze_type.wang_tiles.description": "Makes a maze by filling in matching random tiles. This can generate corridors not connected to anything.",
+  "maze_type.wang_tiles.description": "Makes a maze by filling in matching random tiles. This can generate corridors not connected to anything.\nThe threshold controls the ratio of the wall and corridor width.",
 
   "maze_type.round_wang_tiles.name": "Round Wang Tiles",
-  "maze_type.round_wang_tiles.description": "Makes a rounded off maze by filling in matching random tiles. This can generate corridors not connected to anything.",
+  "maze_type.round_wang_tiles.description": "Makes a rounded off maze by filling in matching random tiles. This can generate corridors not connected to anything.\nThe threshold controls the ratio of the wall and corridor width.",
+
+  "maze_type.simplex_noise.name": "Simplex noise",
+  "maze_type.simplex_noise.description": "Makes a maze by comparing a 2D noise map by the set threshold value.",
   
   "createWorld.customize.maze_world.spacing": "Spacing",
+  "createWorld.customize.maze_world.threshold": "Threshold",
   
   "createWorld.customize.maze_world.infinite_walls": "Infinite walls",
   "createWorld.customize.maze_world.infinite_walls.description": "Prevents the player from going above or below the walls in worlds without a ceiling by rejecting movement packets that cross the maze walls"

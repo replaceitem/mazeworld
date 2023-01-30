@@ -15,6 +15,7 @@ public class IntegerSliderWidget extends SliderWidget {
         super(x, y, width, 20, name, value);
         this.min = min;
         this.max = max;
+        this.setIntegerValue(value);
         this.name = name;
         this.updateMessage();
         this.callback = callback;
@@ -29,6 +30,10 @@ public class IntegerSliderWidget extends SliderWidget {
     protected void applyValue() {
         if(callback == null) return;
         callback.onValueChange(this, this.getIntegerValue());
+    }
+
+    public double getPercentageValue() {
+        return this.value;
     }
 
     protected int sliderToValue(double slider, double min, double max) {

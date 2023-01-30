@@ -27,10 +27,18 @@ There are different maze types with different algorithms for generating the maze
 * [Binary tree](https://weblog.jamisbuck.org/2011/2/1/maze-generation-binary-tree-algorithm)
 
 * [Wang tiles](http://www.cr31.co.uk/stagecast/wang/array.html)
+    * Rectangular wang tiles
+    * Round wang tiles
+
+* [Simplex noise](https://en.wikipedia.org/wiki/Simplex_noise)
 
 ### Spacing
 
 This defines the maze size
+
+### Threshold
+
+The effect of this value depends on the selected maze type. For more information, hover the maze type button in the create world screen.
 
 ### Infinite walls
 

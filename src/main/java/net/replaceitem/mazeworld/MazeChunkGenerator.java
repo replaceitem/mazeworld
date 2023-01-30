@@ -20,22 +20,21 @@ public class MazeChunkGenerator extends NoiseChunkGenerator {
                     MazeChunkGeneratorConfig.CODEC.fieldOf("maze_settings").forGetter(MazeChunkGenerator::getConfig)
             ).apply(instance, instance.stable(MazeChunkGenerator::new)));
 
-    private final MazeChunkGeneratorConfig mazeSettings;
+    private final MazeGenerator mazeGenerator;
 
     public MazeChunkGeneratorConfig getConfig() {
-        return mazeSettings;
+        return mazeGenerator.config;
     }
 
     public MazeChunkGenerator(BiomeSource biomeSource, RegistryEntry<ChunkGeneratorSettings> chunkGeneratorSettings, MazeChunkGeneratorConfig mazeConfig) {
         super(biomeSource, chunkGeneratorSettings);
-        this.mazeSettings = mazeConfig;
+        this.mazeGenerator = mazeConfig.mazeType.getGenerator(mazeConfig);
     }
 
     @Override
     public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
         super.generateFeatures(world, chunk, structureAccessor);
-        
-        mazeSettings.mazeType.generateChunk(mazeSettings, world, chunk);
+        mazeGenerator.generateChunk(world, chunk);
     }
 
     @Override

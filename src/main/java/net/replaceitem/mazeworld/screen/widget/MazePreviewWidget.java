@@ -1,12 +1,12 @@
 package net.replaceitem.mazeworld.screen.widget;
 
-import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
-import net.replaceitem.mazeworld.MazeType;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.ChunkPos;
+import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class MazePreviewWidget extends DrawableHelper implements Drawable, Eleme
         wallSpots.clear();
         for(int cx = 0; cx < chunksW; cx++) {
             for(int cy = 0; cy < chunksH; cy++) {
-                MazeType.BlockChecker blockChecker = config.mazeType.getBlockChecker(new ChunkPos(cx, cy), config, 0);
+                MazeGenerator.BlockChecker blockChecker = config.mazeType.getGenerator(config).getBlockChecker(new ChunkPos(cx, cy), 0);
                 int chunkOriginX = cx<<4;
                 int chunkOriginY = cy<<4;
                 for(int bx = 0; bx < 16; bx++) {

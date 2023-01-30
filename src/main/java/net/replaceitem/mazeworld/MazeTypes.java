@@ -1,9 +1,6 @@
 package net.replaceitem.mazeworld;
 
-import net.replaceitem.mazeworld.types.BinaryTreeMazeType;
-import net.replaceitem.mazeworld.types.RectangularWangTilesMazeType;
-import net.replaceitem.mazeworld.types.RoundWangTilesMazeType;
-import net.replaceitem.mazeworld.types.WangTilesMazeType;
+import net.replaceitem.mazeworld.types.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +18,8 @@ public class MazeTypes {
         return type;
     }
 
-    public static final MazeType BINARY_TREE = register(new BinaryTreeMazeType());
-    public static final MazeType WANG_TILES_MAZE_TYPES = register(new RectangularWangTilesMazeType());
-    public static final MazeType ROUND_WANG_TILES_MAZE_TYPES = register(new RoundWangTilesMazeType());
+    public static final MazeType BINARY_TREE = register(new MazeType("binary_tree", BinaryTreeMazeGenerator::new));
+    public static final MazeType WANG_TILES = register(new MazeType("wang_tiles", RectangularWangTilesMazeGenerator::new));
+    public static final MazeType ROUND_WANG_TILES = register(new MazeType("round_wang_tiles", RoundWangTilesMazeGenerator::new));
+    public static final MazeType SIMPLEX_NOISE = register(new MazeType("simplex_noise", SimplexNoiseMazeGenerator::new));
 }
