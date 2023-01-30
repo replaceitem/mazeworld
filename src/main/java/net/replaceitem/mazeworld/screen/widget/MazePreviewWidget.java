@@ -3,45 +3,43 @@ package net.replaceitem.mazeworld.screen.widget;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.ChunkPos;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MazePreviewWidget extends DrawableHelper implements Drawable, Element {
+public class MazePreviewWidget extends DrawableHelper implements Drawable, Element, Selectable {
 
     private final List<Integer> wallSpots = new ArrayList<>();
     private final int x, y;
+    private final MazeChunkGeneratorConfig config;
+    private double vx, vy;
     private final int w, h;
-    private final int chunksW, chunksH;
 
-    public MazePreviewWidget(int x, int y, int chunksW, int chunksH) {
+    public MazePreviewWidget(int x, int y, int w, int h, MazeChunkGeneratorConfig config) {
         this.x = x;
         this.y = y;
-        this.chunksW = chunksW;
-        this.chunksH = chunksH;
-        this.w = chunksW<<4;
-        this.h = chunksH<<4;
+        this.w = w;
+        this.h = h;
+        this.config = config;
     }
     
-    public void preRender(MazeChunkGeneratorConfig config) {
+    public void preRender() {
         wallSpots.clear();
-        for(int cx = 0; cx < chunksW; cx++) {
-            for(int cy = 0; cy < chunksH; cy++) {
-                MazeGenerator.BlockChecker blockChecker = config.mazeType.getGenerator(config).getBlockChecker(new ChunkPos(cx, cy), 0);
-                int chunkOriginX = cx<<4;
-                int chunkOriginY = cy<<4;
-                for(int bx = 0; bx < 16; bx++) {
-                    for(int by = 0; by < 16; by++) {
-                        int blockX = chunkOriginX+bx;
-                        int blockY = chunkOriginY+by;
-                        if(blockChecker.isBlockAt(blockX, blockY)) {
-                            wallSpots.add((blockX & 0xFFFF) << 16 | (blockY & 0xFFFF));
-                        }
-                    }
+        MazeGenerator.BlockChecker blockChecker = config.mazeType.getGenerator(config).getBlockChecker(0);
+        int offsetX = (int) vx;
+        int offsetY = (int) vy;
+        for(int pixelX = 0; pixelX < w; pixelX++) {
+            for(int pixelY = 0; pixelY < h; pixelY++) {
+                int blockX = pixelX+offsetX;
+                int blockY = pixelY+offsetY;
+                if(blockChecker.isBlockAt(blockX, blockY)) {
+                    wallSpots.add((pixelX & 0xFFFF) << 16 | (pixelY & 0xFFFF));
                 }
             }
         }
@@ -61,5 +59,33 @@ public class MazePreviewWidget extends DrawableHelper implements Drawable, Eleme
         int sx = x + px;
         int sy = y + py;
         fill(matrices, sx, sy, sx+1, sy+1, 0xFF000000);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return isMouseOver(mouseX, mouseY);
+    }
+
+    @Override
+    public boolean isMouseOver(double mouseX, double mouseY) {
+        return mouseX >= (double)this.x && mouseY >= (double)this.y && mouseX < (double)(this.x + this.w) && mouseY < (double)(this.y + this.h);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        this.vx -= deltaX;
+        this.vy -= deltaY;
+        preRender();
+        return true;
+    }
+
+    @Override
+    public SelectionType getType() {
+        return SelectionType.NONE;
+    }
+
+    @Override
+    public void appendNarrations(NarrationMessageBuilder builder) {
+        builder.put(NarrationPart.TITLE, "Maze preview panel");
     }
 }

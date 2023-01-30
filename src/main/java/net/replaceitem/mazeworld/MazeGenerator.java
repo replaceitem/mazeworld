@@ -25,7 +25,7 @@ public abstract class MazeGenerator {
         int xe = chunkPos.getEndX();
         int ze = chunkPos.getEndZ();
 
-        BlockChecker blockChecker = getBlockChecker(chunkPos, worldSeed);
+        BlockChecker blockChecker = getBlockChecker(worldSeed);
 
         int wallTopY = world.getBottomY() + world.getDimension().logicalHeight();
 
@@ -51,7 +51,7 @@ public abstract class MazeGenerator {
         chunk.removeBlockEntity(pos);
     }
 
-    public abstract BlockChecker getBlockChecker(ChunkPos chunkPos, long seed);
+    public abstract BlockChecker getBlockChecker(long seed);
 
     @FunctionalInterface
     public interface BlockChecker {

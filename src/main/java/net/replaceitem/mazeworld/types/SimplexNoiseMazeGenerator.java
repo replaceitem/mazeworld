@@ -1,6 +1,5 @@
 package net.replaceitem.mazeworld.types;
 
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.noise.SimplexNoiseSampler;
 import net.minecraft.util.math.random.Random;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
@@ -12,7 +11,7 @@ public class SimplexNoiseMazeGenerator extends MazeGenerator {
     }
 
     @Override
-    public BlockChecker getBlockChecker(ChunkPos chunkPos, long seed) {
+    public BlockChecker getBlockChecker(long seed) {
         SimplexNoiseSampler simplexNoiseSampler = new SimplexNoiseSampler(Random.create(seed));
         double spacing = config.spacing;
         double threshold = config.threshold*2-1;

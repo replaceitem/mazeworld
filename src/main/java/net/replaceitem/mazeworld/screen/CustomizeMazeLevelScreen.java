@@ -47,7 +47,7 @@ public class CustomizeMazeLevelScreen extends Screen {
 
         CyclingButtonWidget.UpdateCallback<MazeType> mazeTypeUpdateCallback = (button, value) -> {
             this.modifiedConfig.mazeType = value;
-            mazePreviewWidget.preRender(modifiedConfig);
+            mazePreviewWidget.preRender();
         };
         mazeTypeWidget = CyclingButtonWidget.<MazeType>builder(mazeType -> mazeType.name)
                 .values(MazeTypes.types)
@@ -61,7 +61,7 @@ public class CustomizeMazeLevelScreen extends Screen {
         
         IntegerSliderWidget.UpdateCallback spacingUpdateCallback = (integerSliderWidget, value) -> {
             modifiedConfig.spacing = value;
-            mazePreviewWidget.preRender(modifiedConfig);
+            mazePreviewWidget.preRender();
         };
         spacingWidget = new LogarithmicIntegerSliderWidget(column2x, 20, buttonWidth, Text.translatable("createWorld.customize.maze_world.spacing"), modifiedConfig.spacing, 2, 1024, spacingUpdateCallback);
         this.addDrawableChild(spacingWidget);
@@ -75,15 +75,15 @@ public class CustomizeMazeLevelScreen extends Screen {
 
         IntegerSliderWidget.UpdateCallback thresholdUpdateCallback = (integerSliderWidget, value) -> {
             modifiedConfig.threshold = integerSliderWidget.getPercentageValue();
-            mazePreviewWidget.preRender(modifiedConfig);
+            mazePreviewWidget.preRender();
         };
         thresholdWidget = new IntegerSliderWidget(column2x, 60, buttonWidth, Text.translatable("createWorld.customize.maze_world.threshold"), (int) (modifiedConfig.threshold*100), 0, 100, thresholdUpdateCallback);
         this.addDrawableChild(thresholdWidget);
         
         
         
-        mazePreviewWidget = new MazePreviewWidget(this.width / 2 - 10*16/2, height-30-5*16, 10, 5);
-
+        mazePreviewWidget = new MazePreviewWidget(this.width / 2 - 10*16/2, height-30-5*16, 160, 80, modifiedConfig);
+        this.addDrawableChild(mazePreviewWidget);
         
         
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> {
@@ -97,7 +97,7 @@ public class CustomizeMazeLevelScreen extends Screen {
             this.client.setScreen(this.parent);
         }).position(column2x, this.height - 28).size(buttonWidth, buttonHeight).build());
 
-        mazePreviewWidget.preRender(modifiedConfig);
+        mazePreviewWidget.preRender();
     }
 
     @Override

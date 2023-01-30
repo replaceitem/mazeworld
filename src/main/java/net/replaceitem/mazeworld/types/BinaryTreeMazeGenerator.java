@@ -2,7 +2,6 @@ package net.replaceitem.mazeworld.types;
 
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator;
-import net.minecraft.util.math.ChunkPos;
 
 public class BinaryTreeMazeGenerator extends MazeGenerator {
     public BinaryTreeMazeGenerator(MazeChunkGeneratorConfig config) {
@@ -10,7 +9,7 @@ public class BinaryTreeMazeGenerator extends MazeGenerator {
     }
 
     @Override
-    public BlockChecker getBlockChecker(ChunkPos chunkPos, long seed) {
+    public BlockChecker getBlockChecker(long seed) {
         int spacing = config.spacing;
         double threshold = config.threshold;
         return (x, y) -> {

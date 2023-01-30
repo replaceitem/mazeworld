@@ -6,7 +6,6 @@ import io.netty.util.collection.LongObjectHashMap;
 import io.netty.util.collection.LongObjectMap;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator;
-import net.minecraft.util.math.ChunkPos;
 import net.replaceitem.mazeworld.Tile;
 
 import java.util.ArrayList;
@@ -41,7 +40,7 @@ public abstract class WangTilesMazeGenerator extends MazeGenerator {
     protected abstract void registerTiles();
 
     @Override
-    public BlockChecker getBlockChecker(ChunkPos chunkPos, long worldSeed) {
+    public BlockChecker getBlockChecker(long worldSeed) {
         int spacing = config.spacing;
         LongObjectMap<Tile> tileCache = new LongObjectHashMap<>();
         return (x, y) -> {
