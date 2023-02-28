@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.util.math.MatrixStack;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
-import net.replaceitem.mazeworld.MazeGenerator;
+import net.replaceitem.mazeworld.MazeGenerator2D;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class MazePreviewWidget extends DrawableHelper implements Drawable, Eleme
     
     public void preRender() {
         wallSpots.clear();
-        MazeGenerator.BlockChecker blockChecker = config.mazeType.getGenerator(config).getBlockChecker(0);
+        MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType.getGenerator(config).getBlockChecker(0);
         int offsetX = (int) vx;
         int offsetY = (int) vy;
         for(int pixelX = 0; pixelX < w; pixelX++) {

@@ -9,9 +9,9 @@ import java.util.function.Function;
 
 public class MazeType {
 
-    private final Function<MazeChunkGeneratorConfig, MazeGenerator> constructor;
+    private final Function<MazeChunkGeneratorConfig, MazeGenerator<?>> constructor;
 
-    public MazeType(String id, Function<MazeChunkGeneratorConfig, MazeGenerator> constructor) {
+    public MazeType(String id, Function<MazeChunkGeneratorConfig, MazeGenerator<?>> constructor) {
         this.id = id;
         this.name = Text.translatable("maze_type." + id + ".name");
         this.description = Text.translatable("maze_type." + id + ".description");
@@ -27,7 +27,7 @@ public class MazeType {
         return tooltip;
     }
 
-    public MazeGenerator getGenerator(MazeChunkGeneratorConfig config) {
+    public MazeGenerator<?> getGenerator(MazeChunkGeneratorConfig config) {
         return constructor.apply(config);
     }
 }

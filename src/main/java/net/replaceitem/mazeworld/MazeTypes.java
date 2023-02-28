@@ -22,4 +22,5 @@ public class MazeTypes {
     public static final MazeType WANG_TILES = register(new MazeType("wang_tiles", RectangularWangTilesMazeGenerator::new));
     public static final MazeType ROUND_WANG_TILES = register(new MazeType("round_wang_tiles", RoundWangTilesMazeGenerator::new));
     public static final MazeType SIMPLEX_NOISE = register(new MazeType("simplex_noise", SimplexNoiseMazeGenerator::new));
+    public static final MazeType SIMPLEX_NOISE_3D = register(new MazeType("simplex_noise_3d", SimplexNoise3DMazeGenerator::new));
 }

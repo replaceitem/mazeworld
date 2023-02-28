@@ -5,13 +5,13 @@ import io.netty.util.collection.ByteObjectMap;
 import io.netty.util.collection.LongObjectHashMap;
 import io.netty.util.collection.LongObjectMap;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
-import net.replaceitem.mazeworld.MazeGenerator;
+import net.replaceitem.mazeworld.MazeGenerator2D;
 import net.replaceitem.mazeworld.Tile;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class WangTilesMazeGenerator extends MazeGenerator {
+public abstract class WangTilesMazeGenerator extends MazeGenerator2D {
     public WangTilesMazeGenerator(MazeChunkGeneratorConfig config) {
         super(config);
         this.registerTiles();
@@ -40,15 +40,15 @@ public abstract class WangTilesMazeGenerator extends MazeGenerator {
     protected abstract void registerTiles();
 
     @Override
-    public BlockChecker getBlockChecker(long worldSeed) {
+    public BlockChecker2D getBlockChecker(long worldSeed) {
         int spacing = config.spacing;
         LongObjectMap<Tile> tileCache = new LongObjectHashMap<>();
-        return (x, y) -> {
+        return (x, z) -> {
             int tx = Math.floorDiv(x, spacing);
-            int tz = Math.floorDiv(y, spacing);
+            int tz = Math.floorDiv(z, spacing);
             Tile tile = computeTileAt(tx, tz, worldSeed, tileCache);
             double tilePosX = ((double) Math.floorMod(x, spacing)) / spacing;
-            double tilePosY = ((double) Math.floorMod(y, spacing)) / spacing;
+            double tilePosY = ((double) Math.floorMod(z, spacing)) / spacing;
             return tile.isBlock(tilePosX, tilePosY);
         };
     }

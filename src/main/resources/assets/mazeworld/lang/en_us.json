@@ -15,6 +15,9 @@
   "maze_type.simplex_noise.name": "Simplex noise",
   "maze_type.simplex_noise.description": "Makes a maze by comparing a 2D noise map by the set threshold value.",
   
+  "maze_type.simplex_noise_3d.name": "Simplex noise 3D",
+  "maze_type.simplex_noise_3d.description": "Makes a maze by comparing a 3D noise map by the set threshold value. This generates bedrock caves through the whole world.",
+  
   "createWorld.customize.maze_world.spacing": "Spacing",
   "createWorld.customize.maze_world.threshold": "Threshold",
   
