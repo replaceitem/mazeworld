@@ -35,6 +35,7 @@ public abstract class MazeGenerator3D extends MazeGenerator<MazeGenerator3D.Bloc
                 }
             }
         }
+        clearBlockEntities(chunk);
     }
     
     public interface BlockChecker3D extends MazeGenerator2D.BlockChecker2D {

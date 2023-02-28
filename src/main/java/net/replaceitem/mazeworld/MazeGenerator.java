@@ -1,11 +1,12 @@
 package net.replaceitem.mazeworld;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.chunk.Chunk;
 
 import java.util.Random;
+import java.util.Set;
 
 public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
 
@@ -16,11 +17,15 @@ public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
     }
     
     public abstract void generateChunk(StructureWorldAccess world, Chunk chunk);
-
-    protected static void setBlock(Chunk chunk, BlockPos pos, BlockState blockState) {
-        chunk.setBlockState(pos, blockState, false);
-        chunk.removeBlockEntity(pos);
-    }
+    
+    public static void clearBlockEntities(Chunk chunk) {
+        Set<BlockPos> blockEntityPositions = chunk.getBlockEntityPositions();
+        for (BlockPos pos : blockEntityPositions) {
+            if(chunk.getBlockState(pos).isOf(Blocks.BEDROCK)) {
+                chunk.removeBlockEntity(pos);
+            }
+        }
+    } 
 
     public abstract T getBlockChecker(long seed);
 
