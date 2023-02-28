@@ -30,7 +30,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     
     private boolean inWallPreviously = false;
 
-    @Inject(method = "onPlayerMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;getBoundingBox()Lnet/minecraft/util/math/Box;"))
+    @Inject(method = "onPlayerMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayerEntity;getBoundingBox()Lnet/minecraft/util/math/Box;"), cancellable = true)
     private void verifyMovement(PlayerMoveC2SPacket packet, CallbackInfo ci) {
         if(!packet.changesPosition()) return;
         if(!this.player.interactionManager.getGameMode().isSurvivalLike()) return;
@@ -42,14 +42,17 @@ public abstract class ServerPlayNetworkHandlerMixin {
         double y = packet.getY(this.player.getY());
         double z = packet.getZ(this.player.getZ());
         Box box = this.player.getDimensions(this.player.getPose()).getBoxAt(x, y, z);
-        boolean inWall = isInsideWall(box);
-        if(inWall && !inWallPreviously) {
-            this.requestTeleport(this.player.getX(), y, this.player.getZ(), packet.getYaw(this.player.getYaw()), packet.getPitch(this.player.getPitch()));
-        }
+        
+        boolean inWall = shouldRejectMovement(box);
+        boolean setback = inWall && !inWallPreviously;
         inWallPreviously = inWall;
+        if(setback) {
+            this.requestTeleport(this.player.getX(), y, this.player.getZ(), packet.getYaw(this.player.getYaw()), packet.getPitch(this.player.getPitch()));
+            ci.cancel();
+        }
     }
     
-    @Inject(method = "onVehicleMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isSpaceEmpty(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Z"))
+    @Inject(method = "onVehicleMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isSpaceEmpty(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Z"), cancellable = true)
     private void verifyVehicleMovement(VehicleMoveC2SPacket packet, CallbackInfo ci) {
         if(!this.player.interactionManager.getGameMode().isSurvivalLike()) return;
         World world = this.player.world;
@@ -62,22 +65,27 @@ public abstract class ServerPlayNetworkHandlerMixin {
         Entity rootVehicle = this.player.getRootVehicle();
         Box box = rootVehicle.getDimensions(rootVehicle.getPose()).getBoxAt(x, y, z);
         
-        boolean inWall = isInsideWall(box);
-        if(inWall && !inWallPreviously) {
-            this.connection.send(new VehicleMoveS2CPacket(rootVehicle));
-        }
+        boolean inWall = shouldRejectMovement(box);
+        boolean setback = inWall && !inWallPreviously;
         inWallPreviously = inWall;
+        if(setback) {
+            this.connection.send(new VehicleMoveS2CPacket(rootVehicle));
+            ci.cancel();
+        }
     }
 
-    private boolean isInsideWall(Box box) {
-        double maxY = this.player.world.getTopY()-1;
-        BlockPos blockPos = new BlockPos(box.minX + 0.001, maxY, box.minZ + 0.001);
-        BlockPos blockPos2 = new BlockPos(box.maxX - 0.001, maxY, box.maxZ - 0.001);
+    private boolean shouldRejectMovement(Box box) {
+        boolean isAboveTop = box.minY >= this.player.world.getTopY();
+        boolean isBelowBottom = box.maxY <= this.player.world.getBottomY();
+        if(!isAboveTop && ! isBelowBottom) return false;
+        int intersectionCheckY = isAboveTop ? this.player.world.getTopY()-1 : this.player.world.getBottomY();
+        BlockPos blockPos = new BlockPos(box.minX + 0.001, intersectionCheckY, box.minZ + 0.001);
+        BlockPos blockPos2 = new BlockPos(box.maxX - 0.001, intersectionCheckY, box.maxZ - 0.001);
         if (this.player.world.isRegionLoaded(blockPos, blockPos2)) {
             BlockPos.Mutable mutable = new BlockPos.Mutable();
             for (int blockPosX = blockPos.getX(); blockPosX <= blockPos2.getX(); ++blockPosX) {
                 for (int blockPosZ = blockPos.getZ(); blockPosZ <= blockPos2.getZ(); ++blockPosZ) {
-                    mutable.set(blockPosX, maxY, blockPosZ);
+                    mutable.set(blockPosX, intersectionCheckY, blockPosZ);
                     BlockState blockState = this.player.world.getBlockState(mutable);
                     if(blockState.getBlock() == Blocks.BEDROCK) {
                         return true;

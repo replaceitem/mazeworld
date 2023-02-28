@@ -21,7 +21,7 @@ public abstract class MazeGenerator3D extends MazeGenerator<MazeGenerator3D.Bloc
         int zs = chunkPos.getStartZ();
 
         int xe = chunkPos.getEndX();
-        int ye = world.getTopY();
+        int ye = world.getTopY()-1;
         int ze = chunkPos.getEndZ();
 
         SimplexNoise3DMazeGenerator.BlockChecker3D blockChecker = getBlockChecker(worldSeed);
