@@ -26,7 +26,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
 
     @Shadow public ServerPlayerEntity player;
 
-    @Shadow @Final public ClientConnection connection;
+    @Shadow @Final private ClientConnection connection;
     
     private boolean inWallPreviously = false;
 
@@ -79,8 +79,8 @@ public abstract class ServerPlayNetworkHandlerMixin {
         boolean isBelowBottom = box.maxY <= this.player.world.getBottomY();
         if(!isAboveTop && ! isBelowBottom) return false;
         int intersectionCheckY = isAboveTop ? this.player.world.getTopY()-1 : this.player.world.getBottomY();
-        BlockPos blockPos = new BlockPos(box.minX + 0.001, intersectionCheckY, box.minZ + 0.001);
-        BlockPos blockPos2 = new BlockPos(box.maxX - 0.001, intersectionCheckY, box.maxZ - 0.001);
+        BlockPos blockPos = BlockPos.ofFloored(box.minX + 0.001, intersectionCheckY, box.minZ + 0.001);
+        BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 0.001, intersectionCheckY, box.maxZ - 0.001);
         if (this.player.world.isRegionLoaded(blockPos, blockPos2)) {
             BlockPos.Mutable mutable = new BlockPos.Mutable();
             for (int blockPosX = blockPos.getX(); blockPosX <= blockPos2.getX(); ++blockPosX) {

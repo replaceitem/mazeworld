@@ -103,7 +103,7 @@ public class CustomizeMazeLevelScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 8, 0xFFFFFF);
+        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 8, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
 
         mazePreviewWidget.render(matrices, mouseX, mouseY, delta);

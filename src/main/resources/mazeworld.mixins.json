@@ -10,8 +10,7 @@
     "ServerWorldMixin"
   ],
   "client": [
-    "LevelScreenProviderMixin",
-    "MoreOptionsDialogAccessor"
+    "LevelScreenProviderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

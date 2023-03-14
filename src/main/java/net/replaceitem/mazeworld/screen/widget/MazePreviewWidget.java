@@ -72,6 +72,16 @@ public class MazePreviewWidget extends DrawableHelper implements Drawable, Eleme
     }
 
     @Override
+    public void setFocused(boolean focused) {
+
+    }
+
+    @Override
+    public boolean isFocused() {
+        return false;
+    }
+
+    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         this.vx -= deltaX;
         this.vy -= deltaY;

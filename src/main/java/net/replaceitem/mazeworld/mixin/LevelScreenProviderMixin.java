@@ -23,7 +23,7 @@ public interface LevelScreenProviderMixin {
         LevelScreenProvider factory = (parent, generatorOptionsHolder) -> {
             ChunkGenerator chunkGenerator = generatorOptionsHolder.selectedDimensions().getChunkGenerator();
             return new CustomizeMazeLevelScreen(parent,
-                    mazeChunkGeneratorConfig -> ((MoreOptionsDialogAccessor) parent.moreOptionsDialog).callApply(createGlobalModifier(mazeChunkGeneratorConfig)),
+                    mazeChunkGeneratorConfig -> parent.getWorldCreator().applyModifier(createGlobalModifier(mazeChunkGeneratorConfig)),
                     chunkGenerator instanceof MazeChunkGenerator mazeChunkGenerator ? mazeChunkGenerator.getConfig() : MazeChunkGeneratorConfig.getDefaultConfig()
             );
         };
