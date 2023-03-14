@@ -32,12 +32,13 @@ public class MazePreviewWidget extends DrawableHelper implements Drawable, Eleme
     public void preRender() {
         wallSpots.clear();
         MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType.getGenerator(config).getBlockChecker(0);
-        int offsetX = (int) vx;
-        int offsetY = (int) vy;
+        int spacing = config.spacing;
+        int offsetX = (int) (vx * spacing);
+        int offsetY = (int) (vy * spacing);
         for(int pixelX = 0; pixelX < w; pixelX++) {
             for(int pixelY = 0; pixelY < h; pixelY++) {
-                int blockX = pixelX+offsetX;
-                int blockY = pixelY+offsetY;
+                int blockX = pixelX+offsetX-w/2;
+                int blockY = pixelY+offsetY-h/2;
                 if(blockChecker.isBlockAt(blockX, blockY)) {
                     wallSpots.add((pixelX & 0xFFFF) << 16 | (pixelY & 0xFFFF));
                 }
@@ -83,8 +84,8 @@ public class MazePreviewWidget extends DrawableHelper implements Drawable, Eleme
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        this.vx -= deltaX;
-        this.vy -= deltaY;
+        this.vx -= deltaX / config.spacing;
+        this.vy -= deltaY / config.spacing;
         preRender();
         return true;
     }
