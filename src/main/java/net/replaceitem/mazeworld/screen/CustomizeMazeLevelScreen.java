@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CyclingButtonWidget;
+import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
@@ -45,6 +46,9 @@ public class CustomizeMazeLevelScreen extends Screen {
         int column1x = width/2-5-buttonWidth;
         int column2x = width/2+5;
 
+        GridWidget gridWidget = new GridWidget(0, 20);
+        gridWidget.setSpacing(10);
+
         CyclingButtonWidget.UpdateCallback<MazeType> mazeTypeUpdateCallback = (button, value) -> {
             this.modifiedConfig.mazeType = value;
             mazePreviewWidget.preRender();
@@ -54,7 +58,7 @@ public class CustomizeMazeLevelScreen extends Screen {
                 .initially(modifiedConfig.mazeType)
                 .tooltip(MazeType::getTooltip)
                 .build(column1x, 20, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback);
-        this.addDrawableChild(mazeTypeWidget);
+        gridWidget.add(mazeTypeWidget, 0, 0);
 
         
         
@@ -64,23 +68,25 @@ public class CustomizeMazeLevelScreen extends Screen {
             mazePreviewWidget.preRender();
         };
         spacingWidget = new LogarithmicIntegerSliderWidget(column2x, 20, buttonWidth, Text.translatable("createWorld.customize.maze_world.spacing"), modifiedConfig.spacing, 2, 1024, spacingUpdateCallback);
-        this.addDrawableChild(spacingWidget);
+        gridWidget.add(spacingWidget, 0, 1);
 
 
         CyclingButtonWidget.UpdateCallback<Boolean> infiniteWallUpdateCallback = (button, value) -> this.modifiedConfig.infiniteWall = value;
         infiniteWallWidget = CyclingButtonWidget.onOffBuilder(modifiedConfig.infiniteWall)
                 .tooltip(aBoolean -> infiniteWallTooltip)
                 .build(column1x, 60, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.infinite_walls"), infiniteWallUpdateCallback);
-        this.addDrawableChild(infiniteWallWidget);
+        gridWidget.add(infiniteWallWidget, 1, 0);
 
         IntegerSliderWidget.UpdateCallback thresholdUpdateCallback = (integerSliderWidget, value) -> {
             modifiedConfig.threshold = integerSliderWidget.getPercentageValue();
             mazePreviewWidget.preRender();
         };
         thresholdWidget = new IntegerSliderWidget(column2x, 60, buttonWidth, Text.translatable("createWorld.customize.maze_world.threshold"), (int) (modifiedConfig.threshold*100), 0, 100, thresholdUpdateCallback);
-        this.addDrawableChild(thresholdWidget);
-        
-        
+        gridWidget.add(thresholdWidget, 1, 1);
+
+        gridWidget.refreshPositions();
+        gridWidget.setX(width/2 - gridWidget.getWidth()/2);
+        gridWidget.forEachChild(this::addDrawableChild);
         
         mazePreviewWidget = new MazePreviewWidget(this.width / 2 - 10*16/2, height-30-5*16, 160, 80, modifiedConfig);
         this.addDrawableChild(mazePreviewWidget);
