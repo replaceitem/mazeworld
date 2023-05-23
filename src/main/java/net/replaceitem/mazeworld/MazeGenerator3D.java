@@ -1,6 +1,6 @@
 package net.replaceitem.mazeworld;
 
-import net.minecraft.block.Blocks;
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.StructureWorldAccess;
@@ -26,16 +26,18 @@ public abstract class MazeGenerator3D extends MazeGenerator<MazeGenerator3D.Bloc
 
         SimplexNoise3DMazeGenerator.BlockChecker3D blockChecker = getBlockChecker(worldSeed);
 
+        BlockState defaultState = this.getWallBlockState(world);
+
         for(int x = xs; x <= xe; x++) {
             for(int y = ys; y <= ye; y++) {
                 for (int z = zs; z <= ze; z++) {
                     if (blockChecker.isBlockAt(x, y, z)) {
-                        chunk.setBlockState(new BlockPos(x, y, z), Blocks.BEDROCK.getDefaultState(), false);
+                        chunk.setBlockState(new BlockPos(x, y, z), defaultState, false);
                     }
                 }
             }
         }
-        clearBlockEntities(chunk);
+        clearBlockEntities(chunk, defaultState.getBlock());
     }
     
     public interface BlockChecker3D extends MazeGenerator2D.BlockChecker2D {
@@ -43,6 +45,5 @@ public abstract class MazeGenerator3D extends MazeGenerator<MazeGenerator3D.Bloc
             return isBlockAt(x, 0, z);
         }
         boolean isBlockAt(int x, int y, int z);
-
     }
 }

@@ -1,7 +1,6 @@
 package net.replaceitem.mazeworld;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.StructureWorldAccess;
@@ -21,17 +20,19 @@ public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.Bloc
         int xe = chunkPos.getEndX();
         int ze = chunkPos.getEndZ();
 
-        BlockChecker2D blockChecker = getBlockChecker(worldSeed);
+        BlockChecker2D blockChecker = this.getBlockChecker(worldSeed);
 
         int wallTopY = world.getTopY();
+
+        BlockState defaultState = this.getWallBlockState(world);
 
         for(int i = xs; i <= xe; i++) {
             for(int j = zs; j <= ze; j++) {
                 if(blockChecker.isBlockAt(i, j))
-                    placeColumn(world, chunk, i, j, wallTopY, Blocks.BEDROCK.getDefaultState());
+                    placeColumn(world, chunk, i, j, wallTopY, defaultState);
             }
         }
-        clearBlockEntities(chunk);
+        clearBlockEntities(chunk, defaultState.getBlock());
     }
 
     protected static void placeColumn(StructureWorldAccess world, Chunk chunk, int cx, int cz, int top, BlockState blockState) {

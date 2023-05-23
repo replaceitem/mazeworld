@@ -1,7 +1,7 @@
 package net.replaceitem.mazeworld.mixin;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
@@ -81,13 +81,14 @@ public abstract class ServerPlayNetworkHandlerMixin {
         int intersectionCheckY = isAboveTop ? this.player.world.getTopY()-1 : this.player.world.getBottomY();
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 0.001, intersectionCheckY, box.minZ + 0.001);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 0.001, intersectionCheckY, box.maxZ - 0.001);
+        Block mazeWallBlock = ((ServerWorldAccess) this.player.world).getMazeWallBlock();
         if (this.player.world.isRegionLoaded(blockPos, blockPos2)) {
             BlockPos.Mutable mutable = new BlockPos.Mutable();
             for (int blockPosX = blockPos.getX(); blockPosX <= blockPos2.getX(); ++blockPosX) {
                 for (int blockPosZ = blockPos.getZ(); blockPosZ <= blockPos2.getZ(); ++blockPosZ) {
                     mutable.set(blockPosX, intersectionCheckY, blockPosZ);
                     BlockState blockState = this.player.world.getBlockState(mutable);
-                    if(blockState.getBlock() == Blocks.BEDROCK) {
+                    if(blockState.isOf(mazeWallBlock)) {
                         return true;
                     }
                 }
