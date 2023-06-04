@@ -1,19 +1,18 @@
 package net.replaceitem.mazeworld.screen.widget;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.util.math.MatrixStack;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MazePreviewWidget extends DrawableHelper implements Drawable, Element, Selectable {
+public class MazePreviewWidget implements Drawable, Element, Selectable {
 
     private final List<Integer> wallSpots = new ArrayList<>();
     private final int x, y;
@@ -47,19 +46,19 @@ public class MazePreviewWidget extends DrawableHelper implements Drawable, Eleme
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        fill(matrices, x, y, x+w, y+h, 0xFF20D020);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        drawContext.fill(x, y, x+w, y+h, 0xFF20D020);
         for (Integer wallSpot : wallSpots) {
             int px = wallSpot >> 16;
             int py = wallSpot & 0xFFFF;
-            setWall(matrices, px, py);
+            setWall(drawContext, px, py);
         }
     }
 
-    private void setWall(MatrixStack matrices, int px, int py) {
+    private void setWall(DrawContext drawContext, int px, int py) {
         int sx = x + px;
         int sy = y + py;
-        fill(matrices, sx, sy, sx+1, sy+1, 0xFF000000);
+        drawContext.fill(sx, sy, sx+1, sy+1, 0xFF000000);
     }
 
     @Override

@@ -34,7 +34,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     private void verifyMovement(PlayerMoveC2SPacket packet, CallbackInfo ci) {
         if(!packet.changesPosition()) return;
         if(!this.player.interactionManager.getGameMode().isSurvivalLike()) return;
-        World world = this.player.world;
+        World world = this.player.getWorld();
         if(!((ServerWorldAccess) world).isInfiniteMaze()) return;
         if(world.getDimension().hasCeiling()) return;
 
@@ -43,7 +43,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         double z = packet.getZ(this.player.getZ());
         Box box = this.player.getDimensions(this.player.getPose()).getBoxAt(x, y, z);
         
-        boolean inWall = shouldRejectMovement(box);
+        boolean inWall = shouldRejectMovement(box, world);
         boolean setback = inWall && !inWallPreviously;
         inWallPreviously = inWall;
         if(setback) {
@@ -55,7 +55,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
     @Inject(method = "onVehicleMove", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;isSpaceEmpty(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Z"), cancellable = true)
     private void verifyVehicleMovement(VehicleMoveC2SPacket packet, CallbackInfo ci) {
         if(!this.player.interactionManager.getGameMode().isSurvivalLike()) return;
-        World world = this.player.world;
+        World world = this.player.getWorld();
         if(!((ServerWorldAccess) world).isInfiniteMaze()) return;
         if(world.getDimension().hasCeiling()) return;
 
@@ -65,7 +65,7 @@ public abstract class ServerPlayNetworkHandlerMixin {
         Entity rootVehicle = this.player.getRootVehicle();
         Box box = rootVehicle.getDimensions(rootVehicle.getPose()).getBoxAt(x, y, z);
         
-        boolean inWall = shouldRejectMovement(box);
+        boolean inWall = shouldRejectMovement(box, world);
         boolean setback = inWall && !inWallPreviously;
         inWallPreviously = inWall;
         if(setback) {
@@ -74,20 +74,20 @@ public abstract class ServerPlayNetworkHandlerMixin {
         }
     }
 
-    private boolean shouldRejectMovement(Box box) {
-        boolean isAboveTop = box.minY >= this.player.world.getTopY();
-        boolean isBelowBottom = box.maxY <= this.player.world.getBottomY();
+    private static boolean shouldRejectMovement(Box box, World world) {
+        boolean isAboveTop = box.minY >= world.getTopY();
+        boolean isBelowBottom = box.maxY <= world.getBottomY();
         if(!isAboveTop && ! isBelowBottom) return false;
-        int intersectionCheckY = isAboveTop ? this.player.world.getTopY()-1 : this.player.world.getBottomY();
+        int intersectionCheckY = isAboveTop ? world.getTopY()-1 : world.getBottomY();
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 0.001, intersectionCheckY, box.minZ + 0.001);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 0.001, intersectionCheckY, box.maxZ - 0.001);
-        Block mazeWallBlock = ((ServerWorldAccess) this.player.world).getMazeWallBlock();
-        if (this.player.world.isRegionLoaded(blockPos, blockPos2)) {
+        Block mazeWallBlock = ((ServerWorldAccess) world).getMazeWallBlock();
+        if (world.isRegionLoaded(blockPos, blockPos2)) {
             BlockPos.Mutable mutable = new BlockPos.Mutable();
             for (int blockPosX = blockPos.getX(); blockPosX <= blockPos2.getX(); ++blockPosX) {
                 for (int blockPosZ = blockPos.getZ(); blockPosZ <= blockPos2.getZ(); ++blockPosZ) {
                     mutable.set(blockPosX, intersectionCheckY, blockPosZ);
-                    BlockState blockState = this.player.world.getBlockState(mutable);
+                    BlockState blockState = world.getBlockState(mutable);
                     if(blockState.isOf(mazeWallBlock)) {
                         return true;
                     }
