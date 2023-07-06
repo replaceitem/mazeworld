@@ -59,7 +59,7 @@ public class CustomizeMazeLevelScreen extends Screen {
         mazeTypeWidget = CyclingButtonWidget.<MazeType>builder(mazeType -> mazeType.name)
                 .values(MazeTypes.types)
                 .initially(modifiedConfig.mazeType)
-                .tooltip(MazeType::getTooltip)
+                .tooltip(mazeType1 -> Tooltip.of(mazeType1.getTooltipText()))
                 .build(0, 0, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback);
         gridWidget.add(mazeTypeWidget, 0, 0);
 
