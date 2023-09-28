@@ -13,6 +13,7 @@ import net.replaceitem.mazeworld.fakes.DimensionOptionsRegistryHolderAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Map;
 import java.util.Objects;
@@ -32,11 +33,13 @@ public abstract class DimensionOptionsRegistryHolderMixin implements DimensionOp
         return new DimensionOptionsRegistryHolder(registry2);
     }
 
+    @Unique
     private static RegistryEntry<DimensionType> getEntry(Registry<DimensionType> dynamicRegistry, Registry<DimensionOptions> currentRegistry, RegistryKey<DimensionOptions> dimensionOptionsRegistryKey, RegistryKey<DimensionType> dimensionTypeRegistryKey) {
         DimensionOptions dimensionOptions = currentRegistry.get(dimensionOptionsRegistryKey);
         return dimensionOptions == null ? dynamicRegistry.entryOf(dimensionTypeRegistryKey) : dimensionOptions.dimensionTypeEntry();
     }
 
+    @Unique
     private static Registry<DimensionOptions> createGlobalRegistry(Registry<DimensionType> dynamicRegistry, Registry<DimensionOptions> currentRegistry, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
         SimpleRegistry<DimensionOptions> mutableRegistry = new SimpleRegistry<>(RegistryKeys.DIMENSION, Lifecycle.experimental());
 

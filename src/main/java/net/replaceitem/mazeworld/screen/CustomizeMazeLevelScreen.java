@@ -128,7 +128,7 @@ public class CustomizeMazeLevelScreen extends Screen {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        this.renderBackground(drawContext);
+        this.renderBackground(drawContext, mouseX, mouseY, delta);
         drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 8, 0xFFFFFF);
         super.render(drawContext, mouseX, mouseY, delta);
         mazePreviewWidget.render(drawContext, mouseX, mouseY, delta);

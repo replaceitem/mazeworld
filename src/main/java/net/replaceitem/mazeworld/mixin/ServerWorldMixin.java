@@ -22,6 +22,7 @@ import net.replaceitem.mazeworld.MazeChunkGenerator;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.fakes.ServerWorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -36,7 +37,9 @@ public abstract class ServerWorldMixin extends World implements ServerWorldAcces
         super(properties, registryRef, registryManager, dimensionEntry, profiler, isClient, debugWorld, biomeAccess, maxChainedNeighborUpdates);
     }
 
+    @Unique
     private boolean infiniteMazeWall = false;
+    @Unique
     private Block mazeWallBlock = null;
 
 

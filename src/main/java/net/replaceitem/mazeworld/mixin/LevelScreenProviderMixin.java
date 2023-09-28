@@ -9,6 +9,7 @@ import net.replaceitem.mazeworld.MazeWorld;
 import net.replaceitem.mazeworld.fakes.DimensionOptionsRegistryHolderAccess;
 import net.replaceitem.mazeworld.screen.CustomizeMazeLevelScreen;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -30,6 +31,7 @@ public interface LevelScreenProviderMixin {
         return Map.of(k1, v1, k2, v2, (K) Optional.of(MazeWorld.MAZE_WORLD), (V) factory);
     }
 
+    @Unique
     private static GeneratorOptionsHolder.RegistryAwareModifier createGlobalModifier(MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
         return (dynamicRegistryManager, dimensionsRegistryHolder) -> ((DimensionOptionsRegistryHolderAccess) (Object) dimensionsRegistryHolder).globalWith(dynamicRegistryManager, mazeChunkGeneratorConfig);
     }
