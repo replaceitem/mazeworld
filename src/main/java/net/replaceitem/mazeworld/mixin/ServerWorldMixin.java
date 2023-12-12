@@ -17,7 +17,7 @@ import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.level.ServerWorldProperties;
 import net.minecraft.world.level.storage.LevelStorage;
-import net.minecraft.world.spawner.Spawner;
+import net.minecraft.world.spawner.SpecialSpawner;
 import net.replaceitem.mazeworld.MazeChunkGenerator;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.fakes.ServerWorldAccess;
@@ -44,7 +44,7 @@ public abstract class ServerWorldMixin extends World implements ServerWorldAcces
 
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void storeInfiniteMaze(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<Spawner> spawners, boolean shouldTickTime, RandomSequencesState randomSequencesState, CallbackInfo ci) {
+    private void storeInfiniteMaze(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, WorldGenerationProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, RandomSequencesState randomSequencesState, CallbackInfo ci) {
         if(dimensionOptions.chunkGenerator() instanceof MazeChunkGenerator mazeChunkGenerator) {
             MazeChunkGeneratorConfig config = mazeChunkGenerator.getConfig();
             infiniteMazeWall = config.infiniteWall;
