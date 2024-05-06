@@ -1,6 +1,6 @@
 package net.replaceitem.mazeworld.mixin;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
@@ -10,12 +10,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ChunkGenerators.class)
 public class ChunkGeneratorsMixin {
-    @Inject(method = "registerAndGetDefault", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void registerMazeGenerator(Registry<Codec<? extends ChunkGenerator>> registry, CallbackInfoReturnable<Codec<? extends ChunkGenerator>> cir) {
+    @Inject(method = "registerAndGetDefault", at = @At("RETURN"))
+    private static void registerMazeGenerator(Registry<MapCodec<? extends ChunkGenerator>> registry, CallbackInfoReturnable<MapCodec<? extends ChunkGenerator>> cir) {
         Registry.register(registry, new Identifier("mazeworld", "maze_world"), MazeChunkGenerator.CODEC);
     }
 }

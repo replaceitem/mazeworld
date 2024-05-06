@@ -1,6 +1,6 @@
 package net.replaceitem.mazeworld.mixin;
 
-import com.mojang.serialization.Lifecycle;
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.registry.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.dimension.DimensionOptions;
@@ -21,7 +21,7 @@ import java.util.Objects;
 // Note to future me - NEVER touch this again
 @Mixin(DimensionOptionsRegistryHolder.class)
 public abstract class DimensionOptionsRegistryHolderMixin implements DimensionOptionsRegistryHolderAccess {
-    @Shadow @Final private Registry<DimensionOptions> dimensions;
+    @Shadow @Final private Map<RegistryKey<DimensionOptions>, DimensionOptions> dimensions;
 
     /**
      * Replica of with(), except applied to all dimensions
@@ -29,29 +29,30 @@ public abstract class DimensionOptionsRegistryHolderMixin implements DimensionOp
     @Override
     public DimensionOptionsRegistryHolder globalWith(DynamicRegistryManager dynamicRegistryManager, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
         Registry<DimensionType> registry = dynamicRegistryManager.get(RegistryKeys.DIMENSION_TYPE);
-        Registry<DimensionOptions> registry2 = createGlobalRegistry(registry, this.dimensions, mazeChunkGeneratorConfig);
+        Map<RegistryKey<DimensionOptions>, DimensionOptions> registry2 = createGlobalRegistry(registry, this.dimensions, mazeChunkGeneratorConfig);
         return new DimensionOptionsRegistryHolder(registry2);
     }
 
     @Unique
-    private static RegistryEntry<DimensionType> getEntry(Registry<DimensionType> dynamicRegistry, Registry<DimensionOptions> currentRegistry, RegistryKey<DimensionOptions> dimensionOptionsRegistryKey, RegistryKey<DimensionType> dimensionTypeRegistryKey) {
+    private static RegistryEntry<DimensionType> getEntry(Registry<DimensionType> dynamicRegistry, Map<RegistryKey<DimensionOptions>, DimensionOptions> currentRegistry, RegistryKey<DimensionOptions> dimensionOptionsRegistryKey, RegistryKey<DimensionType> dimensionTypeRegistryKey) {
         DimensionOptions dimensionOptions = currentRegistry.get(dimensionOptionsRegistryKey);
         return dimensionOptions == null ? dynamicRegistry.entryOf(dimensionTypeRegistryKey) : dimensionOptions.dimensionTypeEntry();
     }
 
     @Unique
-    private static Registry<DimensionOptions> createGlobalRegistry(Registry<DimensionType> dynamicRegistry, Registry<DimensionOptions> currentRegistry, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
-        SimpleRegistry<DimensionOptions> mutableRegistry = new SimpleRegistry<>(RegistryKeys.DIMENSION, Lifecycle.experimental());
+    private static Map<RegistryKey<DimensionOptions>, DimensionOptions> createGlobalRegistry(Registry<DimensionType> dynamicRegistry, Map<RegistryKey<DimensionOptions>, DimensionOptions> currentRegistry, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
+        ImmutableMap.Builder<RegistryKey<DimensionOptions>, DimensionOptions> builder = ImmutableMap.builder();
 
-        for (Map.Entry<RegistryKey<DimensionOptions>, DimensionOptions> entry : currentRegistry.getEntrySet()) {
+        for (Map.Entry<RegistryKey<DimensionOptions>, DimensionOptions> entry : currentRegistry.entrySet()) {
             RegistryKey<DimensionOptions> registryKey = entry.getKey();
             DimensionOptions dimensionOptions = entry.getValue();
 
             NoiseChunkGenerator currentChunkGenerator = (NoiseChunkGenerator) Objects.requireNonNull(dimensionOptions).chunkGenerator();
             MazeChunkGenerator generator = new MazeChunkGenerator(currentChunkGenerator.getBiomeSource(), currentChunkGenerator.getSettings(), mazeChunkGeneratorConfig);
 
-            mutableRegistry.add(registryKey, new DimensionOptions(getEntry(dynamicRegistry, currentRegistry, registryKey, dimensionOptions.dimensionTypeEntry().getKey().orElseThrow()), generator), currentRegistry.getEntryLifecycle(entry.getValue()));
+            RegistryEntry<DimensionType> dimensionTypeEntry = getEntry(dynamicRegistry, currentRegistry, registryKey, dimensionOptions.dimensionTypeEntry().getKey().orElseThrow());
+            builder.put(registryKey, new DimensionOptions(dimensionTypeEntry, generator));
         }
-        return mutableRegistry.freeze();
+        return builder.buildKeepingLast();
     }
 }

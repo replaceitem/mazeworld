@@ -1,6 +1,6 @@
 package net.replaceitem.mazeworld;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.world.StructureWorldAccess;
@@ -13,7 +13,7 @@ import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
 
 public class MazeChunkGenerator extends NoiseChunkGenerator {
 
-    public static final Codec<MazeChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
+    public static final MapCodec<MazeChunkGenerator> CODEC = RecordCodecBuilder.mapCodec((instance) ->
             instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(ChunkGenerator::getBiomeSource),
                     ChunkGeneratorSettings.REGISTRY_CODEC.fieldOf("settings").forGetter(NoiseChunkGenerator::getSettings),
@@ -38,7 +38,7 @@ public class MazeChunkGenerator extends NoiseChunkGenerator {
     }
 
     @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
+    protected MapCodec<? extends ChunkGenerator> getCodec() {
         return CODEC;
     }
 
