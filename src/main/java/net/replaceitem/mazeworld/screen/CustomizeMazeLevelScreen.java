@@ -1,6 +1,5 @@
 package net.replaceitem.mazeworld.screen;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
@@ -94,6 +93,7 @@ public class CustomizeMazeLevelScreen extends Screen {
         wallBlockWidget.setChangedListener(s -> {
             Identifier identifier = Identifier.tryParse(s);
             if(identifier != null) modifiedConfig.wallBlock = identifier;
+            mazePreviewWidget.preRender();
         });
         gridWidget.add(wallBlockWidget, 2, 0);
 

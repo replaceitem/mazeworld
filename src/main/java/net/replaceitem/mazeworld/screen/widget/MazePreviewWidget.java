@@ -1,30 +1,26 @@
 package net.replaceitem.mazeworld.screen.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.MapColor;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
-import net.replaceitem.mazeworld.MazeWorld;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MazePreviewWidget implements Drawable, Element, Selectable {
-    
-    public static final int BACKGROUND_COLOR = 0xFF20D020;
-    public static final int WALL_COLOR = 0xFF000000;
-    
     public static final Identifier ID = new Identifier("mazeworld", "preview_texture");
+    public static final int DEFAULT_WALL_COLOR = 0xFF000000;
 
     private final NativeImage image;
     private final NativeImageBackedTexture texture;
@@ -47,6 +43,12 @@ public class MazePreviewWidget implements Drawable, Element, Selectable {
     
     public void preRender() {
         MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType.getGenerator(config).getBlockChecker(0);
+        // TODO shading?
+        int wallColor = Registries.BLOCK.getEntry(config.wallBlock)
+                .map(RegistryEntry.Reference::value)
+                .map(block -> block.getDefaultMapColor().getRenderColor(MapColor.Brightness.HIGH))
+                .orElse(DEFAULT_WALL_COLOR);
+        int backgroundColor = Blocks.GRASS_BLOCK.getDefaultMapColor().getRenderColor(MapColor.Brightness.HIGH);
         int spacing = config.spacing;
         int offsetX = (int) (vx * spacing) - w/2;
         int offsetY = (int) (vy * spacing) - h/2;
@@ -54,7 +56,7 @@ public class MazePreviewWidget implements Drawable, Element, Selectable {
             for(int pixelY = 0; pixelY < h; pixelY++) {
                 int blockX = pixelX+offsetX;
                 int blockY = pixelY+offsetY;
-                image.setColor(pixelX, pixelY, blockChecker.isBlockAt(blockX, blockY) ? WALL_COLOR : BACKGROUND_COLOR);
+                image.setColor(pixelX, pixelY, blockChecker.isBlockAt(blockX, blockY) ? wallColor : backgroundColor);
             }
         }
         this.texture.upload();
