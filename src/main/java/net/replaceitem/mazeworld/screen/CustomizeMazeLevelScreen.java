@@ -1,5 +1,6 @@
 package net.replaceitem.mazeworld.screen;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
@@ -99,8 +100,9 @@ public class CustomizeMazeLevelScreen extends Screen {
         gridWidget.refreshPositions();
         gridWidget.setX(width/2 - gridWidget.getWidth()/2);
         gridWidget.forEachChild(this::addDrawableChild);
-        
-        mazePreviewWidget = new MazePreviewWidget(this.width / 2 - 10*16/2, height-30-5*16, 160, 80, modifiedConfig);
+
+        assert this.client != null;
+        mazePreviewWidget = new MazePreviewWidget(this.width / 2 - 10*16/2, height-30-5*16, 160, 80, modifiedConfig, this.client.getTextureManager());
         this.addDrawableChild(mazePreviewWidget);
         
         

@@ -1,64 +1,71 @@
 package net.replaceitem.mazeworld.screen.widget;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.texture.AbstractTexture;
+import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.client.texture.TextureManager;
+import net.minecraft.util.Identifier;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
+import net.replaceitem.mazeworld.MazeWorld;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MazePreviewWidget implements Drawable, Element, Selectable {
+    
+    public static final int BACKGROUND_COLOR = 0xFF20D020;
+    public static final int WALL_COLOR = 0xFF000000;
+    
+    public static final Identifier ID = new Identifier("mazeworld", "preview_texture");
 
-    private final List<Integer> wallSpots = new ArrayList<>();
+    private final NativeImage image;
+    private final NativeImageBackedTexture texture;
+    private final TextureManager textureManager;
     private final int x, y;
     private final MazeChunkGeneratorConfig config;
     private double vx, vy;
     private final int w, h;
 
-    public MazePreviewWidget(int x, int y, int w, int h, MazeChunkGeneratorConfig config) {
+    public MazePreviewWidget(int x, int y, int w, int h, MazeChunkGeneratorConfig config, TextureManager textureManager) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
+        this.textureManager = textureManager;
+        this.texture = new NativeImageBackedTexture(w, h, false);
+        this.image = texture.getImage();
         this.config = config;
     }
     
     public void preRender() {
-        wallSpots.clear();
         MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType.getGenerator(config).getBlockChecker(0);
         int spacing = config.spacing;
-        int offsetX = (int) (vx * spacing);
-        int offsetY = (int) (vy * spacing);
+        int offsetX = (int) (vx * spacing) - w/2;
+        int offsetY = (int) (vy * spacing) - h/2;
         for(int pixelX = 0; pixelX < w; pixelX++) {
             for(int pixelY = 0; pixelY < h; pixelY++) {
-                int blockX = pixelX+offsetX-w/2;
-                int blockY = pixelY+offsetY-h/2;
-                if(blockChecker.isBlockAt(blockX, blockY)) {
-                    wallSpots.add((pixelX & 0xFFFF) << 16 | (pixelY & 0xFFFF));
-                }
+                int blockX = pixelX+offsetX;
+                int blockY = pixelY+offsetY;
+                image.setColor(pixelX, pixelY, blockChecker.isBlockAt(blockX, blockY) ? WALL_COLOR : BACKGROUND_COLOR);
             }
         }
+        this.texture.upload();
+        this.textureManager.registerTexture(ID, this.texture);
     }
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        drawContext.fill(x, y, x+w, y+h, 0xFF20D020);
-        for (Integer wallSpot : wallSpots) {
-            int px = wallSpot >> 16;
-            int py = wallSpot & 0xFFFF;
-            setWall(drawContext, px, py);
-        }
-    }
-
-    private void setWall(DrawContext drawContext, int px, int py) {
-        int sx = x + px;
-        int sy = y + py;
-        drawContext.fill(sx, sy, sx+1, sy+1, 0xFF000000);
+        RenderSystem.enableBlend();
+        drawContext.drawTexture(ID, x, y, 0.0F, 0.0F, w, h, w, h);
+        RenderSystem.disableBlend();
     }
 
     @Override
