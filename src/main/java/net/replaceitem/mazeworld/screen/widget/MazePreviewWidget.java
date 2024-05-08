@@ -43,10 +43,9 @@ public class MazePreviewWidget implements Drawable, Element, Selectable {
     
     public void preRender() {
         MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType.getGenerator(config).getBlockChecker(0);
-        // TODO shading?
         int wallColor = Registries.BLOCK.getEntry(config.wallBlock)
                 .map(RegistryEntry.Reference::value)
-                .map(block -> block.getDefaultMapColor().getRenderColor(MapColor.Brightness.HIGH))
+                .map(block -> block.getDefaultMapColor().getRenderColor(MapColor.Brightness.NORMAL))
                 .orElse(DEFAULT_WALL_COLOR);
         int backgroundColor = Blocks.GRASS_BLOCK.getDefaultMapColor().getRenderColor(MapColor.Brightness.HIGH);
         int spacing = config.spacing;
