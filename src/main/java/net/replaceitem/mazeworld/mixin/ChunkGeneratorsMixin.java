@@ -15,6 +15,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ChunkGeneratorsMixin {
     @Inject(method = "registerAndGetDefault", at = @At("RETURN"))
     private static void registerMazeGenerator(Registry<MapCodec<? extends ChunkGenerator>> registry, CallbackInfoReturnable<MapCodec<? extends ChunkGenerator>> cir) {
-        Registry.register(registry, new Identifier("mazeworld", "maze_world"), MazeChunkGenerator.CODEC);
+        Registry.register(registry, Identifier.of("mazeworld", "maze_world"), MazeChunkGenerator.CODEC);
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.world.gen.WorldPreset;
 
 public class MazeWorld implements ModInitializer {
 
-	public static final RegistryKey<WorldPreset> MAZE_WORLD = RegistryKey.of(RegistryKeys.WORLD_PRESET, new Identifier("mazeworld","maze_world"));
+	public static final RegistryKey<WorldPreset> MAZE_WORLD = RegistryKey.of(RegistryKeys.WORLD_PRESET, Identifier.of("mazeworld","maze_world"));
 	
 	@Override
 	public void onInitialize() {

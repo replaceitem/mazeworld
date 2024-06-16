@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 
 public class MazeChunkGeneratorConfig {
 
-    public static final Identifier BEDROCK_IDENTIFIER = new Identifier("minecraft","bedrock");
+    public static final Identifier BEDROCK_IDENTIFIER = Identifier.of("minecraft","bedrock");
 
     public static final Codec<MazeChunkGeneratorConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("spacing").orElse(5).forGetter(mazeChunkGeneratorConfig -> mazeChunkGeneratorConfig.spacing),

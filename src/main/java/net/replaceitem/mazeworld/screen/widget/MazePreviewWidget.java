@@ -19,7 +19,7 @@ import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
 
 public class MazePreviewWidget implements Drawable, Element, Selectable {
-    public static final Identifier ID = new Identifier("mazeworld", "preview_texture");
+    public static final Identifier ID = Identifier.of("mazeworld", "preview_texture");
     public static final int DEFAULT_WALL_COLOR = 0xFF000000;
 
     private final NativeImage image;
