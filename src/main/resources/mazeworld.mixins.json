@@ -1,18 +1,18 @@
 {
-  "required": true,
-  "minVersion": "0.8",
-  "package": "net.replaceitem.mazeworld.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "ChunkGeneratorsMixin",
-    "DimensionOptionsRegistryHolderMixin",
-    "ServerPlayNetworkHandlerMixin",
-    "ServerWorldMixin"
-  ],
-  "client": [
-    "LevelScreenProviderMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
+    "required": true,
+    "minVersion": "0.8",
+    "package": "net.replaceitem.mazeworld.mixin",
+    "compatibilityLevel": "JAVA_21",
+    "mixins": [
+        "ChunkGeneratorsMixin",
+        "CollisionViewMixin",
+        "DimensionOptionsRegistryHolderMixin",
+        "ServerWorldMixin"
+    ],
+    "client": [
+        "LevelScreenProviderMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
   }
 }
