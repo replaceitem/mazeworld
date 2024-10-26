@@ -45,6 +45,6 @@ public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
     }
 
     protected BlockState getWallBlockState(WorldAccess world) {
-        return world.getRegistryManager().get(RegistryKeys.BLOCK).getOrEmpty(this.config.wallBlock).orElse(Blocks.BEDROCK).getDefaultState();
+        return world.getRegistryManager().getOrThrow(RegistryKeys.BLOCK).getOptionalValue(this.config.wallBlock).orElse(Blocks.BEDROCK).getDefaultState();
     }
 }

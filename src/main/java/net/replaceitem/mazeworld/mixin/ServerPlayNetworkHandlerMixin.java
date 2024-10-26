@@ -81,10 +81,10 @@ public abstract class ServerPlayNetworkHandlerMixin extends ServerCommonNetworkH
 
     @Unique
     private static boolean shouldRejectMovement(Box box, World world) {
-        boolean isAboveTop = box.minY >= world.getTopY();
+        boolean isAboveTop = box.minY > world.getTopYInclusive();
         boolean isBelowBottom = box.maxY <= world.getBottomY();
         if(!isAboveTop && ! isBelowBottom) return false;
-        int intersectionCheckY = isAboveTop ? world.getTopY()-1 : world.getBottomY();
+        int intersectionCheckY = isAboveTop ? world.getTopYInclusive() : world.getBottomY();
         BlockPos blockPos = BlockPos.ofFloored(box.minX + 0.001, intersectionCheckY, box.minZ + 0.001);
         BlockPos blockPos2 = BlockPos.ofFloored(box.maxX - 0.001, intersectionCheckY, box.maxZ - 0.001);
         Block mazeWallBlock = ((ServerWorldAccess) world).getMazeWallBlock();

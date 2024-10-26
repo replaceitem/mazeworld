@@ -28,7 +28,7 @@ public abstract class DimensionOptionsRegistryHolderMixin implements DimensionOp
      */
     @Override
     public DimensionOptionsRegistryHolder globalWith(DynamicRegistryManager dynamicRegistryManager, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
-        Registry<DimensionType> registry = dynamicRegistryManager.get(RegistryKeys.DIMENSION_TYPE);
+        Registry<DimensionType> registry = dynamicRegistryManager.getOrThrow(RegistryKeys.DIMENSION_TYPE);
         Map<RegistryKey<DimensionOptions>, DimensionOptions> registry2 = createGlobalRegistry(registry, this.dimensions, mazeChunkGeneratorConfig);
         return new DimensionOptionsRegistryHolder(registry2);
     }
@@ -36,7 +36,7 @@ public abstract class DimensionOptionsRegistryHolderMixin implements DimensionOp
     @Unique
     private static RegistryEntry<DimensionType> getEntry(Registry<DimensionType> dynamicRegistry, Map<RegistryKey<DimensionOptions>, DimensionOptions> currentRegistry, RegistryKey<DimensionOptions> dimensionOptionsRegistryKey, RegistryKey<DimensionType> dimensionTypeRegistryKey) {
         DimensionOptions dimensionOptions = currentRegistry.get(dimensionOptionsRegistryKey);
-        return dimensionOptions == null ? dynamicRegistry.entryOf(dimensionTypeRegistryKey) : dimensionOptions.dimensionTypeEntry();
+        return dimensionOptions == null ? dynamicRegistry.getOrThrow(dimensionTypeRegistryKey) : dimensionOptions.dimensionTypeEntry();
     }
 
     @Unique

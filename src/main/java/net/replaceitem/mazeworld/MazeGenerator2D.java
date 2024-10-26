@@ -22,7 +22,7 @@ public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.Bloc
 
         BlockChecker2D blockChecker = this.getBlockChecker(worldSeed);
 
-        int wallTopY = world.getTopY();
+        int wallTopY = world.getTopYInclusive();
 
         BlockState defaultState = this.getWallBlockState(world);
 
@@ -37,7 +37,7 @@ public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.Bloc
 
     protected static void placeColumn(StructureWorldAccess world, Chunk chunk, int cx, int cz, int top, BlockState blockState) {
         BlockPos.Mutable pos = new BlockPos.Mutable(cx, world.getBottomY(), cz);
-        while(pos.getY() < top) {
+        while(pos.getY() <= top) {
             chunk.setBlockState(pos, blockState, false);
             pos.setY(pos.getY()+1);
         }

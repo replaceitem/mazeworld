@@ -9,6 +9,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
@@ -17,9 +18,10 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
+import net.replaceitem.mazeworld.MazeWorld;
 
 public class MazePreviewWidget implements Drawable, Element, Selectable {
-    public static final Identifier ID = new Identifier("mazeworld", "preview_texture");
+    public static final Identifier ID = MazeWorld.id("preview_texture");
     public static final int DEFAULT_WALL_COLOR = 0xFF000000;
 
     private final NativeImage image;
@@ -55,7 +57,7 @@ public class MazePreviewWidget implements Drawable, Element, Selectable {
             for(int pixelY = 0; pixelY < h; pixelY++) {
                 int blockX = pixelX+offsetX;
                 int blockY = pixelY+offsetY;
-                image.setColor(pixelX, pixelY, blockChecker.isBlockAt(blockX, blockY) ? wallColor : backgroundColor);
+                image.setColorArgb(pixelX, pixelY, blockChecker.isBlockAt(blockX, blockY) ? wallColor : backgroundColor);
             }
         }
         this.texture.upload();
@@ -65,7 +67,7 @@ public class MazePreviewWidget implements Drawable, Element, Selectable {
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         RenderSystem.enableBlend();
-        drawContext.drawTexture(ID, x, y, 0.0F, 0.0F, w, h, w, h);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, ID, x, y, 0.0F, 0.0F, w, h, w, h);
         RenderSystem.disableBlend();
     }
 
