@@ -32,7 +32,7 @@ public abstract class MazeGenerator3D extends MazeGenerator<MazeGenerator3D.Bloc
             for(int y = ys; y <= ye; y++) {
                 for (int z = zs; z <= ze; z++) {
                     if (blockChecker.isBlockAt(x, y, z)) {
-                        chunk.setBlockState(new BlockPos(x, y, z), defaultState, false);
+                        chunk.setBlockState(new BlockPos(x, y, z), defaultState);
                     }
                 }
             }

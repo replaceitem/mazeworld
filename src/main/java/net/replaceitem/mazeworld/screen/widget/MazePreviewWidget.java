@@ -1,6 +1,5 @@
 package net.replaceitem.mazeworld.screen.widget;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.client.gui.DrawContext;
@@ -38,7 +37,7 @@ public class MazePreviewWidget implements Drawable, Element, Selectable {
         this.w = w;
         this.h = h;
         this.textureManager = textureManager;
-        this.texture = new NativeImageBackedTexture(w, h, false);
+        this.texture = new NativeImageBackedTexture("Mazeworld Preview" ,w, h, false);
         this.image = texture.getImage();
         this.config = config;
     }
@@ -66,9 +65,7 @@ public class MazePreviewWidget implements Drawable, Element, Selectable {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        RenderSystem.enableBlend();
         drawContext.drawTexture(RenderLayer::getGuiTextured, ID, x, y, 0.0F, 0.0F, w, h, w, h);
-        RenderSystem.disableBlend();
     }
 
     @Override

@@ -38,7 +38,7 @@ public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.Bloc
     protected static void placeColumn(StructureWorldAccess world, Chunk chunk, int cx, int cz, int top, BlockState blockState) {
         BlockPos.Mutable pos = new BlockPos.Mutable(cx, world.getBottomY(), cz);
         while(pos.getY() <= top) {
-            chunk.setBlockState(pos, blockState, false);
+            chunk.setBlockState(pos, blockState);
             pos.setY(pos.getY()+1);
         }
     }
