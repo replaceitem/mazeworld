@@ -1,2 +1,1 @@
-* Updated to MC 1.21.5
-* Fixed problems with world type configuration screen
+* Updated to MC 1.21.7
