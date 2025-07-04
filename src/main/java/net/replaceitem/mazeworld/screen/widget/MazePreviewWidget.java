@@ -2,11 +2,11 @@ package net.replaceitem.mazeworld.screen.widget;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
@@ -64,7 +64,7 @@ public class MazePreviewWidget extends ClickableWidget {
             preRender();
             this.needsRender = false;
         }
-        context.drawTexture(RenderLayer::getGuiTextured, ID, getX(), getY(), 0.0F, 0.0F, getWidth(), getHeight(), getWidth(), getHeight());
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, ID, getX(), getY(), 0.0F, 0.0F, getWidth(), getHeight(), getWidth(), getHeight());
     }
 
 
