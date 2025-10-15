@@ -3,6 +3,7 @@ package net.replaceitem.mazeworld.screen.widget;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.MapColor;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
@@ -66,12 +67,11 @@ public class MazePreviewWidget extends ClickableWidget {
         }
         context.drawTexture(RenderPipelines.GUI_TEXTURED, ID, getX(), getY(), 0.0F, 0.0F, getWidth(), getHeight(), getWidth(), getHeight());
     }
-
-
+    
     @Override
-    protected void onDrag(double mouseX, double mouseY, double deltaX, double deltaY) {
-        this.vx -= deltaX / config.spacing;
-        this.vy -= deltaY / config.spacing;
+    protected void onDrag(Click click, double offsetX, double offsetY) {
+        this.vx -= offsetX / config.spacing;
+        this.vy -= offsetY / config.spacing;
         this.needsRender = true;
     }
 

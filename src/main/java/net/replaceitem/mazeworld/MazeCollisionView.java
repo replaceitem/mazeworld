@@ -23,7 +23,9 @@ public class MazeCollisionView extends MazeBlockView<CollisionView> implements C
 
     @Override
     public @Nullable BlockView getChunkAsView(int chunkX, int chunkZ) {
-        return new MazeBlockView<>(delegate.getChunkAsView(chunkX, chunkZ), wallBlock);
+        @Nullable BlockView delegateChunkView = delegate.getChunkAsView(chunkX, chunkZ);
+        if(delegateChunkView == null) return null;
+        return new MazeBlockView<>(delegateChunkView, wallBlock);
     }
 
     @Override
