@@ -2,7 +2,7 @@ package net.replaceitem.mazeworld.mixin;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -69,8 +69,8 @@ public abstract class ServerWorldMixin extends World implements ServerWorldAcces
     }
 
     @Override
-    public Iterable<VoxelShape> getBlockCollisions(@Nullable Entity entity, Box box) {
-        if(isInfiniteMaze() && mazeCollisionView != null) return mazeCollisionView.getBlockCollisions(entity, box);
-        return super.getBlockCollisions(entity, box);
+    public Iterable<VoxelShape> getBlockOrFluidCollisions(ShapeContext shapeContext, Box box) {
+        if(isInfiniteMaze() && mazeCollisionView != null) return mazeCollisionView.getBlockOrFluidCollisions(shapeContext, box);
+        return super.getBlockOrFluidCollisions(shapeContext, box);
     }
 }

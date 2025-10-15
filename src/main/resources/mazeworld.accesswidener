@@ -1,3 +1,4 @@
 accessWidener   v1      named
 extendable      class   net/minecraft/world/gen/chunk/NoiseChunkGenerator
 accessible      class   net/minecraft/world/gen/WorldPresets$Registrar
+accessible      method  net/minecraft/world/CollisionView getBlockOrFluidCollisions (Lnet/minecraft/block/ShapeContext;Lnet/minecraft/util/math/Box;)Ljava/lang/Iterable;
