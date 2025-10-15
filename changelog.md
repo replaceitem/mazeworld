@@ -1,1 +1,2 @@
-* Updated to MC 1.21.7
+* Updated to MC 1.21.10
+* Fixed inifnite maze not working
