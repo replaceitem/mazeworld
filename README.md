@@ -27,7 +27,7 @@ There are different maze types with different algorithms for generating the maze
 
 * [Binary tree](https://weblog.jamisbuck.org/2011/2/1/maze-generation-binary-tree-algorithm)
 
-* [Wang tiles](http://www.cr31.co.uk/stagecast/wang/array.html)
+* [Wang tiles](https://www.boristhebrave.com/permanent/24/06/cr31/stagecast/wang/array.html)
     * Rectangular wang tiles
     * Round wang tiles
 
