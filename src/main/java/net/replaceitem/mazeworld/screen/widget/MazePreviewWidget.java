@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.MapColor;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
@@ -20,7 +20,7 @@ import net.replaceitem.mazeworld.MazeGenerator2D;
 import net.replaceitem.mazeworld.MazeWorld;
 
 public class MazePreviewWidget extends AbstractWidget {
-    public static final ResourceLocation ID = MazeWorld.id("preview_texture");
+    public static final Identifier ID = MazeWorld.id("preview_texture");
     public static final int DEFAULT_WALL_COLOR = 0xFF000000;
 
     private final NativeImage image;

@@ -2,11 +2,11 @@ package net.replaceitem.mazeworld;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class MazeChunkGeneratorConfig {
 
-    public static final ResourceLocation BEDROCK_IDENTIFIER = ResourceLocation.fromNamespaceAndPath("minecraft","bedrock");
+    public static final Identifier BEDROCK_IDENTIFIER = Identifier.fromNamespaceAndPath("minecraft","bedrock");
 
     public static final Codec<MazeChunkGeneratorConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("spacing").orElse(5).forGetter(mazeChunkGeneratorConfig -> mazeChunkGeneratorConfig.spacing),
@@ -16,7 +16,7 @@ public class MazeChunkGeneratorConfig {
             Codec.STRING.fieldOf("maze_block").orElse(BEDROCK_IDENTIFIER.toString()).forGetter(mazeChunkGeneratorConfig -> mazeChunkGeneratorConfig.wallBlock.toString())
     ).apply(instance, MazeChunkGeneratorConfig::new));
 
-    public MazeChunkGeneratorConfig(int spacing, MazeType mazeType, boolean infiniteWall, double threshold, ResourceLocation wallBlock) {
+    public MazeChunkGeneratorConfig(int spacing, MazeType mazeType, boolean infiniteWall, double threshold, Identifier wallBlock) {
         if(mazeType == null) mazeType = MazeTypes.BINARY_TREE;
         if(wallBlock == null) wallBlock = BEDROCK_IDENTIFIER;
         this.spacing = spacing;
@@ -27,7 +27,7 @@ public class MazeChunkGeneratorConfig {
     }
 
     public MazeChunkGeneratorConfig(int spacing, String mazeTypeId, boolean infiniteWall, double threshold, String wallBlockIdentifier) {
-        this(spacing, MazeTypes.byId.get(mazeTypeId), infiniteWall, threshold, ResourceLocation.tryParse(wallBlockIdentifier));
+        this(spacing, MazeTypes.byId.get(mazeTypeId), infiniteWall, threshold, Identifier.tryParse(wallBlockIdentifier));
     }
     
     public static MazeChunkGeneratorConfig getDefaultConfig() {
@@ -38,7 +38,7 @@ public class MazeChunkGeneratorConfig {
     public MazeType mazeType;
     public boolean infiniteWall;
     public double threshold;
-    public ResourceLocation wallBlock;
+    public Identifier wallBlock;
     
     public MazeChunkGeneratorConfig copy() {
         return new MazeChunkGeneratorConfig(this.spacing, this.mazeType, this.infiniteWall, this.threshold, this.wallBlock);

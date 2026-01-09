@@ -12,7 +12,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeType;
 import net.replaceitem.mazeworld.MazeTypes;
@@ -58,9 +58,8 @@ public class CustomizeMazeLevelScreen extends Screen {
         };
         
         gridWidget.addChild(
-                CycleButton.<MazeType>builder(mazeType -> mazeType.name)
+                CycleButton.builder(mazeType -> mazeType.name, modifiedConfig.mazeType)
                         .withValues(MazeTypes.types)
-                        .withInitialValue(modifiedConfig.mazeType)
                         .withTooltip(mazeType1 -> Tooltip.create(mazeType1.getTooltipText()))
                         .create(0, 0, buttonWidth, buttonHeight, Component.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback),
                 0, 0
@@ -108,7 +107,7 @@ public class CustomizeMazeLevelScreen extends Screen {
         wallBlockWidget.setValue(modifiedConfig.wallBlock.toString());
         wallBlockWidget.setHint(Component.nullToEmpty("Maze wall block"));
         wallBlockWidget.setResponder(s -> {
-            ResourceLocation identifier = ResourceLocation.tryParse(s);
+            Identifier identifier = Identifier.tryParse(s);
             if (identifier != null) modifiedConfig.wallBlock = identifier;
             mazePreviewWidget.preRender();
         });
