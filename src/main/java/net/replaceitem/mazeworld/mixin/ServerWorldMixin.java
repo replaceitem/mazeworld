@@ -1,24 +1,24 @@
 package net.replaceitem.mazeworld.mixin;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.random.RandomSequencesState;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.MutableWorldProperties;
-import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.level.ServerWorldProperties;
-import net.minecraft.world.level.storage.LevelStorage;
-import net.minecraft.world.spawner.SpecialSpawner;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.RandomSequences;
+import net.minecraft.world.level.CustomSpawner;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.storage.LevelStorageSource;
+import net.minecraft.world.level.storage.ServerLevelData;
+import net.minecraft.world.level.storage.WritableLevelData;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.replaceitem.mazeworld.MazeChunkGenerator;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeCollisionView;
@@ -33,10 +33,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 import java.util.concurrent.Executor;
 
-@Mixin(ServerWorld.class)
-public abstract class ServerWorldMixin extends World implements ServerWorldAccess {
+@Mixin(ServerLevel.class)
+public abstract class ServerWorldMixin extends Level implements ServerWorldAccess {
 
-    protected ServerWorldMixin(MutableWorldProperties properties, RegistryKey<World> registryRef, DynamicRegistryManager registryManager, RegistryEntry<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
+    protected ServerWorldMixin(WritableLevelData properties, ResourceKey<Level> registryRef, RegistryAccess registryManager, Holder<DimensionType> dimensionEntry, boolean isClient, boolean debugWorld, long seed, int maxChainedNeighborUpdates) {
         super(properties, registryRef, registryManager, dimensionEntry, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
@@ -49,11 +49,11 @@ public abstract class ServerWorldMixin extends World implements ServerWorldAcces
 
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void storeInfiniteMaze(MinecraftServer server, Executor workerExecutor, LevelStorage.Session session, ServerWorldProperties properties, RegistryKey<World> worldKey, DimensionOptions dimensionOptions, boolean debugWorld, long seed, List<SpecialSpawner> spawners, boolean shouldTickTime, RandomSequencesState randomSequenceState, CallbackInfo ci) {
-        if(dimensionOptions.chunkGenerator() instanceof MazeChunkGenerator mazeChunkGenerator) {
+    private void storeInfiniteMaze(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, boolean debugWorld, long seed, List<CustomSpawner> spawners, boolean shouldTickTime, RandomSequences randomSequenceState, CallbackInfo ci) {
+        if(dimensionOptions.generator() instanceof MazeChunkGenerator mazeChunkGenerator) {
             MazeChunkGeneratorConfig config = mazeChunkGenerator.getConfig();
             infiniteMazeWall = config.infiniteWall;
-            mazeWallBlock = this.getRegistryManager().getOrThrow(RegistryKeys.BLOCK).getOptionalValue(config.wallBlock).orElse(Blocks.BEDROCK);
+            mazeWallBlock = this.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(config.wallBlock).orElse(Blocks.BEDROCK);
             this.mazeCollisionView = new MazeCollisionView(this, getMazeWallBlock());
         }
     }
@@ -69,8 +69,8 @@ public abstract class ServerWorldMixin extends World implements ServerWorldAcces
     }
 
     @Override
-    public Iterable<VoxelShape> getBlockOrFluidCollisions(ShapeContext shapeContext, Box box) {
-        if(isInfiniteMaze() && mazeCollisionView != null) return mazeCollisionView.getBlockOrFluidCollisions(shapeContext, box);
-        return super.getBlockOrFluidCollisions(shapeContext, box);
+    public Iterable<VoxelShape> getBlockCollisionsFromContext(CollisionContext shapeContext, AABB box) {
+        if(isInfiniteMaze() && mazeCollisionView != null) return mazeCollisionView.getBlockCollisionsFromContext(shapeContext, box);
+        return super.getBlockCollisionsFromContext(shapeContext, box);
     }
 }

@@ -1,12 +1,18 @@
 package net.replaceitem.mazeworld.screen;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.world.CreateWorldScreen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.*;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.layouts.LayoutSettings;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeType;
 import net.replaceitem.mazeworld.MazeTypes;
@@ -18,15 +24,15 @@ import java.util.function.Consumer;
 
 public class CustomizeMazeLevelScreen extends Screen {
 
-    private static final Tooltip infiniteWallTooltip = Tooltip.of(Text.translatable("createWorld.customize.maze_world.infinite_walls.description"));
+    private static final Tooltip infiniteWallTooltip = Tooltip.create(Component.translatable("createWorld.customize.maze_world.infinite_walls.description"));
     
-    private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     protected final CreateWorldScreen parent;
     private final MazeChunkGeneratorConfig modifiedConfig;
     private final Consumer<MazeChunkGeneratorConfig> configConsumer;
     
     public CustomizeMazeLevelScreen(CreateWorldScreen parent, Consumer<MazeChunkGeneratorConfig> configConsumer, MazeChunkGeneratorConfig config) {
-        super(Text.translatable("createWorld.customize.maze_world.title"));
+        super(Component.translatable("createWorld.customize.maze_world.title"));
         this.parent = parent;
         this.configConsumer = configConsumer;
         this.modifiedConfig = config.copy();
@@ -36,33 +42,33 @@ public class CustomizeMazeLevelScreen extends Screen {
 
     @Override
     protected void init() {
-        this.layout.addHeader(this.title, this.textRenderer);
+        this.layout.addTitleHeader(this.title, this.font);
         
         int buttonWidth = 150;
         int buttonHeight = 20;
         int column1x = width/2-5-buttonWidth;
         int column2x = width/2+5;
 
-        GridWidget gridWidget = this.layout.addBody(new GridWidget());
-        gridWidget.setSpacing(10);
+        GridLayout gridWidget = this.layout.addToContents(new GridLayout());
+        gridWidget.spacing(10);
 
-        CyclingButtonWidget.UpdateCallback<MazeType> mazeTypeUpdateCallback = (button, value) -> {
+        CycleButton.OnValueChange<MazeType> mazeTypeUpdateCallback = (button, value) -> {
             this.modifiedConfig.mazeType = value;
             mazePreviewWidget.preRender();
         };
         
-        gridWidget.add(
-                CyclingButtonWidget.<MazeType>builder(mazeType -> mazeType.name)
-                        .values(MazeTypes.types)
-                        .initially(modifiedConfig.mazeType)
-                        .tooltip(mazeType1 -> Tooltip.of(mazeType1.getTooltipText()))
-                        .build(0, 0, buttonWidth, buttonHeight, Text.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback),
+        gridWidget.addChild(
+                CycleButton.<MazeType>builder(mazeType -> mazeType.name)
+                        .withValues(MazeTypes.types)
+                        .withInitialValue(modifiedConfig.mazeType)
+                        .withTooltip(mazeType1 -> Tooltip.create(mazeType1.getTooltipText()))
+                        .create(0, 0, buttonWidth, buttonHeight, Component.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback),
                 0, 0
         );
 
-        gridWidget.add(
+        gridWidget.addChild(
                 new LogarithmicIntegerSliderWidget(0, 0, buttonWidth,
-                        Text.translatable("createWorld.customize.maze_world.spacing"),
+                        Component.translatable("createWorld.customize.maze_world.spacing"),
                         modifiedConfig.spacing, 2, 1024,
                         (integerSliderWidget, value) -> {
                             modifiedConfig.spacing = value;
@@ -72,20 +78,20 @@ public class CustomizeMazeLevelScreen extends Screen {
                 0, 1
         );
 
-        gridWidget.add(
-                CyclingButtonWidget.onOffBuilder(modifiedConfig.infiniteWall)
-                        .tooltip(aBoolean -> infiniteWallTooltip)
-                        .build(0, 0, buttonWidth, buttonHeight,
-                                Text.translatable("createWorld.customize.maze_world.infinite_walls"),
+        gridWidget.addChild(
+                CycleButton.onOffBuilder(modifiedConfig.infiniteWall)
+                        .withTooltip(aBoolean -> infiniteWallTooltip)
+                        .create(0, 0, buttonWidth, buttonHeight,
+                                Component.translatable("createWorld.customize.maze_world.infinite_walls"),
                                 (button, value) -> this.modifiedConfig.infiniteWall = value
                         ),
                 1, 0
         );
 
-        gridWidget.add(
+        gridWidget.addChild(
                 new IntegerSliderWidget(
                         0, 0, buttonWidth,
-                        Text.translatable("createWorld.customize.maze_world.threshold"),
+                        Component.translatable("createWorld.customize.maze_world.threshold"),
                         (int) (modifiedConfig.threshold * 100), 0, 100,
                         (integerSliderWidget, value) -> {
                             modifiedConfig.threshold = integerSliderWidget.getPercentageValue();
@@ -95,60 +101,60 @@ public class CustomizeMazeLevelScreen extends Screen {
                 1, 1
         );
 
-        TextFieldWidget wallBlockWidget = gridWidget.add(
-                new TextFieldWidget(this.textRenderer, 0, 0, buttonWidth, buttonHeight, Text.empty()),
+        EditBox wallBlockWidget = gridWidget.addChild(
+                new EditBox(this.font, 0, 0, buttonWidth, buttonHeight, Component.empty()),
                 2, 0
         );
-        wallBlockWidget.setText(modifiedConfig.wallBlock.toString());
-        wallBlockWidget.setPlaceholder(Text.of("Maze wall block"));
-        wallBlockWidget.setChangedListener(s -> {
-            Identifier identifier = Identifier.tryParse(s);
+        wallBlockWidget.setValue(modifiedConfig.wallBlock.toString());
+        wallBlockWidget.setHint(Component.nullToEmpty("Maze wall block"));
+        wallBlockWidget.setResponder(s -> {
+            ResourceLocation identifier = ResourceLocation.tryParse(s);
             if (identifier != null) modifiedConfig.wallBlock = identifier;
             mazePreviewWidget.preRender();
         });
 
-        assert this.client != null;
-        mazePreviewWidget = gridWidget.add(
+        assert this.minecraft != null;
+        mazePreviewWidget = gridWidget.addChild(
                 new MazePreviewWidget(
                         this.width / 2 - 10 * 16 / 2, height - 30 - 5 * 16, 160, 80,
-                        modifiedConfig, this.client.getTextureManager()
+                        modifiedConfig, this.minecraft.getTextureManager()
                 ),
                 3, 0, 1, 2,
-                Positioner::alignHorizontalCenter
+                LayoutSettings::alignHorizontallyCenter
         );
 
-        DirectionalLayoutWidget footerLayout = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
-        footerLayout.getMainPositioner().alignVerticalCenter();
-        footerLayout.add(
-                ButtonWidget.builder(ScreenTexts.DONE, this::onDone)
-                        .position(column1x, this.height - 28)
+        LinearLayout footerLayout = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
+        footerLayout.defaultCellSetting().alignVerticallyMiddle();
+        footerLayout.addChild(
+                Button.builder(CommonComponents.GUI_DONE, this::onDone)
+                        .pos(column1x, this.height - 28)
                         .size(buttonWidth, buttonHeight).build()
         );
-        footerLayout.add(
-                ButtonWidget.builder(ScreenTexts.CANCEL, this::onCancel)
-                        .position(column2x, this.height - 28)
+        footerLayout.addChild(
+                Button.builder(CommonComponents.GUI_CANCEL, this::onCancel)
+                        .pos(column2x, this.height - 28)
                         .size(buttonWidth, buttonHeight).build()
         );
 
         mazePreviewWidget.preRender();
         
-        this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        this.repositionElements();
     }
 
     @Override
-    protected void refreshWidgetPositions() {
-        this.layout.refreshPositions();
+    protected void repositionElements() {
+        this.layout.arrangeElements();
     }
 
-    private void onDone(ButtonWidget buttonWidget) {
-        if(this.client == null) return; // shouldn't happen
+    private void onDone(Button buttonWidget) {
+        if(this.minecraft == null) return; // shouldn't happen
         this.configConsumer.accept(this.modifiedConfig);
-        this.client.setScreen(this.parent);
+        this.minecraft.setScreen(this.parent);
     }
 
-    private void onCancel(ButtonWidget buttonWidget) {
-        if(this.client == null) return; // shouldn't happen
-        this.client.setScreen(this.parent);
+    private void onCancel(Button buttonWidget) {
+        if(this.minecraft == null) return; // shouldn't happen
+        this.minecraft.setScreen(this.parent);
     }
 }

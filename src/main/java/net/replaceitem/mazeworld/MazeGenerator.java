@@ -1,16 +1,15 @@
 package net.replaceitem.mazeworld;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.chunk.Chunk;
-
 import java.util.Random;
 import java.util.Set;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
 
@@ -20,12 +19,12 @@ public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
         this.config = config;
     }
     
-    public abstract void generateChunk(StructureWorldAccess world, Chunk chunk);
+    public abstract void generateChunk(WorldGenLevel world, ChunkAccess chunk);
     
-    public static void clearBlockEntities(Chunk chunk, Block replacingBlock) {
-        Set<BlockPos> blockEntityPositions = chunk.getBlockEntityPositions();
+    public static void clearBlockEntities(ChunkAccess chunk, Block replacingBlock) {
+        Set<BlockPos> blockEntityPositions = chunk.getBlockEntitiesPos();
         for (BlockPos pos : blockEntityPositions) {
-            if(chunk.getBlockState(pos).isOf(replacingBlock)) {
+            if(chunk.getBlockState(pos).is(replacingBlock)) {
                 chunk.removeBlockEntity(pos);
             }
         }
@@ -44,7 +43,7 @@ public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
         return Math.abs(getMultiSeededRandom(seed, x, y).nextInt(max));
     }
 
-    protected BlockState getWallBlockState(WorldAccess world) {
-        return world.getRegistryManager().getOrThrow(RegistryKeys.BLOCK).getOptionalValue(this.config.wallBlock).orElse(Blocks.BEDROCK).getDefaultState();
+    protected BlockState getWallBlockState(LevelAccessor world) {
+        return world.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(this.config.wallBlock).orElse(Blocks.BEDROCK).defaultBlockState();
     }
 }

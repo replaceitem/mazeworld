@@ -1,6 +1,6 @@
 package net.replaceitem.mazeworld.fakes;
 
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 
 public interface ServerWorldAccess {
     boolean isInfiniteMaze();

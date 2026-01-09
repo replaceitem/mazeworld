@@ -1,17 +1,17 @@
 package net.replaceitem.mazeworld.screen.widget;
 
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 
-public class IntegerSliderWidget extends SliderWidget {
+public class IntegerSliderWidget extends AbstractSliderButton {
     
     protected final int min;
     protected final int max;
-    protected final Text name;
+    protected final Component name;
     private final UpdateCallback callback;
 
-    public IntegerSliderWidget(int x, int y, int width, Text name, int value, int min, int max, UpdateCallback callback) {
+    public IntegerSliderWidget(int x, int y, int width, Component name, int value, int min, int max, UpdateCallback callback) {
         super(x, y, width, 20, name, value);
         this.min = min;
         this.max = max;
@@ -23,7 +23,7 @@ public class IntegerSliderWidget extends SliderWidget {
 
     @Override
     protected void updateMessage() {
-        this.setMessage(Text.empty().append(name).append(": " + getIntegerValue()));
+        this.setMessage(Component.empty().append(name).append(": " + getIntegerValue()));
     }
 
     @Override
@@ -41,7 +41,7 @@ public class IntegerSliderWidget extends SliderWidget {
     }
 
     protected double valueToSlider(int value, double min, double max) {
-        return MathHelper.clamp(((double)value-min)/(max-min), min, max);
+        return Mth.clamp(((double)value-min)/(max-min), min, max);
     }
 
     public int getIntegerValue() {

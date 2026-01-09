@@ -1,10 +1,9 @@
 package net.replaceitem.mazeworld;
 
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-
 import java.util.function.Function;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class MazeType {
 
@@ -12,17 +11,17 @@ public class MazeType {
 
     public MazeType(String id, Function<MazeChunkGeneratorConfig, MazeGenerator<?>> constructor) {
         this.id = id;
-        this.name = Text.translatable("maze_type." + id + ".name");
-        this.description = Text.translatable("maze_type." + id + ".description");
+        this.name = Component.translatable("maze_type." + id + ".name");
+        this.description = Component.translatable("maze_type." + id + ".description");
         this.constructor = constructor;
-        this.tooltipText = this.name.copy().formatted(Formatting.BOLD, Formatting.GOLD).append("\n").append(this.description.copy());
+        this.tooltipText = this.name.copy().withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD).append("\n").append(this.description.copy());
     }
     public final String id;
-    public final MutableText name;
-    public final MutableText description;
-    public final Text tooltipText;
+    public final MutableComponent name;
+    public final MutableComponent description;
+    public final Component tooltipText;
     
-    public Text getTooltipText() {
+    public Component getTooltipText() {
         return tooltipText;
     }
 

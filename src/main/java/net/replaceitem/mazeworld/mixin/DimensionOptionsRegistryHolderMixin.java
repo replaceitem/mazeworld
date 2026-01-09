@@ -1,12 +1,15 @@
 package net.replaceitem.mazeworld.mixin;
 
 import com.google.common.collect.ImmutableMap;
-import net.minecraft.registry.*;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.world.dimension.DimensionOptions;
-import net.minecraft.world.dimension.DimensionOptionsRegistryHolder;
-import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.gen.chunk.NoiseChunkGenerator;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.levelgen.WorldDimensions;
 import net.replaceitem.mazeworld.MazeChunkGenerator;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.fakes.DimensionOptionsRegistryHolderAccess;
@@ -19,39 +22,39 @@ import java.util.Map;
 import java.util.Objects;
 
 // Note to future me - NEVER touch this again
-@Mixin(DimensionOptionsRegistryHolder.class)
+@Mixin(WorldDimensions.class)
 public abstract class DimensionOptionsRegistryHolderMixin implements DimensionOptionsRegistryHolderAccess {
-    @Shadow @Final private Map<RegistryKey<DimensionOptions>, DimensionOptions> dimensions;
+    @Shadow @Final private Map<ResourceKey<LevelStem>, LevelStem> dimensions;
 
     /**
      * Replica of with(), except applied to all dimensions
      */
     @Override
-    public DimensionOptionsRegistryHolder globalWith(DynamicRegistryManager dynamicRegistryManager, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
-        Registry<DimensionType> registry = dynamicRegistryManager.getOrThrow(RegistryKeys.DIMENSION_TYPE);
-        Map<RegistryKey<DimensionOptions>, DimensionOptions> registry2 = createGlobalRegistry(registry, this.dimensions, mazeChunkGeneratorConfig);
-        return new DimensionOptionsRegistryHolder(registry2);
+    public WorldDimensions globalWith(RegistryAccess dynamicRegistryManager, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
+        Registry<DimensionType> registry = dynamicRegistryManager.lookupOrThrow(Registries.DIMENSION_TYPE);
+        Map<ResourceKey<LevelStem>, LevelStem> registry2 = createGlobalRegistry(registry, this.dimensions, mazeChunkGeneratorConfig);
+        return new WorldDimensions(registry2);
     }
 
     @Unique
-    private static RegistryEntry<DimensionType> getEntry(Registry<DimensionType> dynamicRegistry, Map<RegistryKey<DimensionOptions>, DimensionOptions> currentRegistry, RegistryKey<DimensionOptions> dimensionOptionsRegistryKey, RegistryKey<DimensionType> dimensionTypeRegistryKey) {
-        DimensionOptions dimensionOptions = currentRegistry.get(dimensionOptionsRegistryKey);
-        return dimensionOptions == null ? dynamicRegistry.getOrThrow(dimensionTypeRegistryKey) : dimensionOptions.dimensionTypeEntry();
+    private static Holder<DimensionType> getEntry(Registry<DimensionType> dynamicRegistry, Map<ResourceKey<LevelStem>, LevelStem> currentRegistry, ResourceKey<LevelStem> dimensionOptionsRegistryKey, ResourceKey<DimensionType> dimensionTypeRegistryKey) {
+        LevelStem dimensionOptions = currentRegistry.get(dimensionOptionsRegistryKey);
+        return dimensionOptions == null ? dynamicRegistry.getOrThrow(dimensionTypeRegistryKey) : dimensionOptions.type();
     }
 
     @Unique
-    private static Map<RegistryKey<DimensionOptions>, DimensionOptions> createGlobalRegistry(Registry<DimensionType> dynamicRegistry, Map<RegistryKey<DimensionOptions>, DimensionOptions> currentRegistry, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
-        ImmutableMap.Builder<RegistryKey<DimensionOptions>, DimensionOptions> builder = ImmutableMap.builder();
+    private static Map<ResourceKey<LevelStem>, LevelStem> createGlobalRegistry(Registry<DimensionType> dynamicRegistry, Map<ResourceKey<LevelStem>, LevelStem> currentRegistry, MazeChunkGeneratorConfig mazeChunkGeneratorConfig) {
+        ImmutableMap.Builder<ResourceKey<LevelStem>, LevelStem> builder = ImmutableMap.builder();
 
-        for (Map.Entry<RegistryKey<DimensionOptions>, DimensionOptions> entry : currentRegistry.entrySet()) {
-            RegistryKey<DimensionOptions> registryKey = entry.getKey();
-            DimensionOptions dimensionOptions = entry.getValue();
+        for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : currentRegistry.entrySet()) {
+            ResourceKey<LevelStem> registryKey = entry.getKey();
+            LevelStem dimensionOptions = entry.getValue();
 
-            NoiseChunkGenerator currentChunkGenerator = (NoiseChunkGenerator) Objects.requireNonNull(dimensionOptions).chunkGenerator();
-            MazeChunkGenerator generator = new MazeChunkGenerator(currentChunkGenerator.getBiomeSource(), currentChunkGenerator.getSettings(), mazeChunkGeneratorConfig);
+            NoiseBasedChunkGenerator currentChunkGenerator = (NoiseBasedChunkGenerator) Objects.requireNonNull(dimensionOptions).generator();
+            MazeChunkGenerator generator = new MazeChunkGenerator(currentChunkGenerator.getBiomeSource(), currentChunkGenerator.generatorSettings(), mazeChunkGeneratorConfig);
 
-            RegistryEntry<DimensionType> dimensionTypeEntry = getEntry(dynamicRegistry, currentRegistry, registryKey, dimensionOptions.dimensionTypeEntry().getKey().orElseThrow());
-            builder.put(registryKey, new DimensionOptions(dimensionTypeEntry, generator));
+            Holder<DimensionType> dimensionTypeEntry = getEntry(dynamicRegistry, currentRegistry, registryKey, dimensionOptions.type().unwrapKey().orElseThrow());
+            builder.put(registryKey, new LevelStem(dimensionTypeEntry, generator));
         }
         return builder.buildKeepingLast();
     }

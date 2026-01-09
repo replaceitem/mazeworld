@@ -1,10 +1,10 @@
 package net.replaceitem.mazeworld;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
 public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.BlockChecker2D> {
 
@@ -12,17 +12,17 @@ public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.Bloc
         super(config);
     }
 
-    public void generateChunk(StructureWorldAccess world, Chunk chunk) {
+    public void generateChunk(WorldGenLevel world, ChunkAccess chunk) {
         ChunkPos chunkPos = chunk.getPos();
         long worldSeed = world.getSeed();
-        int xs = chunkPos.getStartX();
-        int zs = chunkPos.getStartZ();
-        int xe = chunkPos.getEndX();
-        int ze = chunkPos.getEndZ();
+        int xs = chunkPos.getMinBlockX();
+        int zs = chunkPos.getMinBlockZ();
+        int xe = chunkPos.getMaxBlockX();
+        int ze = chunkPos.getMaxBlockZ();
 
         BlockChecker2D blockChecker = this.getBlockChecker(worldSeed);
 
-        int wallTopY = world.getTopYInclusive();
+        int wallTopY = world.getMaxY();
 
         BlockState defaultState = this.getWallBlockState(world);
 
@@ -35,8 +35,8 @@ public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.Bloc
         clearBlockEntities(chunk, defaultState.getBlock());
     }
 
-    protected static void placeColumn(StructureWorldAccess world, Chunk chunk, int cx, int cz, int top, BlockState blockState) {
-        BlockPos.Mutable pos = new BlockPos.Mutable(cx, world.getBottomY(), cz);
+    protected static void placeColumn(WorldGenLevel world, ChunkAccess chunk, int cx, int cz, int top, BlockState blockState) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(cx, world.getMinY(), cz);
         while(pos.getY() <= top) {
             chunk.setBlockState(pos, blockState);
             pos.setY(pos.getY()+1);

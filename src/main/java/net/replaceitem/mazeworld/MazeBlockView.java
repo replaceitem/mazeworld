@@ -1,14 +1,14 @@
 package net.replaceitem.mazeworld;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
-public class MazeBlockView<T extends BlockView> implements BlockView {
+public class MazeBlockView<T extends BlockGetter> implements BlockGetter {
     
     protected final T delegate;
     protected final Block wallBlock;
@@ -26,12 +26,12 @@ public class MazeBlockView<T extends BlockView> implements BlockView {
     @Override
     public BlockState getBlockState(BlockPos pos) {
         int y = pos.getY();
-        if(y < this.getBottomY()) {
-            BlockState bottomBlock = delegate.getBlockState(pos.withY(this.getBottomY()));
-            if(bottomBlock.isOf(wallBlock)) return bottomBlock;
-        } else if(y > this.getTopYInclusive()) {
-            BlockState topBlock = delegate.getBlockState(pos.withY(this.getTopYInclusive()));
-            if(topBlock.isOf(wallBlock)) return topBlock;
+        if(y < this.getMinY()) {
+            BlockState bottomBlock = delegate.getBlockState(pos.atY(this.getMinY()));
+            if(bottomBlock.is(wallBlock)) return bottomBlock;
+        } else if(y > this.getMaxY()) {
+            BlockState topBlock = delegate.getBlockState(pos.atY(this.getMaxY()));
+            if(topBlock.is(wallBlock)) return topBlock;
         }
         return delegate.getBlockState(pos);
     }
@@ -47,7 +47,7 @@ public class MazeBlockView<T extends BlockView> implements BlockView {
     }
 
     @Override
-    public int getBottomY() {
-        return delegate.getBottomY();
+    public int getMinY() {
+        return delegate.getMinY();
     }
 }
