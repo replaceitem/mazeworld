@@ -1,13 +1,14 @@
 package net.replaceitem.mazeworld.screen.widget;
 
 import net.minecraft.network.chat.Component;
+import org.jspecify.annotations.Nullable;
 
 public class LogarithmicIntegerSliderWidget extends IntegerSliderWidget {
 
     private final double base;
     private final double base_1;
     
-    public LogarithmicIntegerSliderWidget(int x, int y, int width, Component text, int value, int min, int max, UpdateCallback callback) {
+    public LogarithmicIntegerSliderWidget(int x, int y, int width, Component text, int value, int min, int max, @Nullable UpdateCallback callback) {
         super(x, y, width, text, 0, min, max, callback);
         this.base = ((double)max)/10;
         this.base_1 = this.base-1;

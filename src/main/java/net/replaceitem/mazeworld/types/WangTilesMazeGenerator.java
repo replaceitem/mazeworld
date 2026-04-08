@@ -1,9 +1,9 @@
 package net.replaceitem.mazeworld.types;
 
-import io.netty.util.collection.ByteObjectHashMap;
-import io.netty.util.collection.ByteObjectMap;
-import io.netty.util.collection.LongObjectHashMap;
-import io.netty.util.collection.LongObjectMap;
+import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
+import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
 import net.replaceitem.mazeworld.Tile;
@@ -18,7 +18,7 @@ public abstract class WangTilesMazeGenerator extends MazeGenerator2D {
     }
 
 
-    private final ByteObjectMap<Tile> tilesByWalls = new ByteObjectHashMap<>();
+    private final Byte2ObjectMap<Tile> tilesByWalls = new Byte2ObjectOpenHashMap<>();
     private final List<Tile> determinableTiles = new ArrayList<>();
 
     public void register(Tile tile) {
@@ -42,7 +42,7 @@ public abstract class WangTilesMazeGenerator extends MazeGenerator2D {
     @Override
     public BlockChecker2D getBlockChecker(long worldSeed) {
         int spacing = config.spacing;
-        LongObjectMap<Tile> tileCache = new LongObjectHashMap<>();
+        Long2ObjectMap<Tile> tileCache = new Long2ObjectOpenHashMap<>();
         return (x, z) -> {
             int tx = Math.floorDiv(x, spacing);
             int tz = Math.floorDiv(z, spacing);
@@ -53,25 +53,21 @@ public abstract class WangTilesMazeGenerator extends MazeGenerator2D {
         };
     }
 
-    private Tile computeTileAt(int tx, int tz, long worldSeed, LongObjectMap<Tile> tileCache) {
+    private Tile computeTileAt(int tx, int tz, long worldSeed, Long2ObjectMap<Tile> tileCache) {
         long pos = Tile.tilePosToLong(tx, tz);
-        Tile tile = tileCache.get(pos);
-        if(tile == null) {
-            tile = this.computeTileAt(tx, tz, worldSeed);
-            tileCache.put(pos, tile);
-        }
-        return tile;
+        return tileCache.computeIfAbsent(pos, _ -> this.computeTileAt(tx, tz, worldSeed));
     }
 
     private Tile computeTileAt(int tx, int tz, long worldSeed) {
         if(isDeterminedTile(tx, tz)) {
             return getDeterminedTile(tx, tz, worldSeed);
         }
-        byte centerWallState = 0;
-        centerWallState |= (getDeterminedTile(tx, tz-1, worldSeed).wallState & 0b0010) << 2; // north wall needs to be south wall of above
-        centerWallState |= (getDeterminedTile(tx+1, tz, worldSeed).wallState & 0b0001) << 2; // north wall needs to be south wall of above
-        centerWallState |= (getDeterminedTile(tx, tz+1, worldSeed).wallState & 0b1000) >> 2; // north wall needs to be south wall of above
-        centerWallState |= (getDeterminedTile(tx-1, tz, worldSeed).wallState & 0b0100) >> 2; // north wall needs to be south wall of above
+        byte centerWallState = (byte)(
+                  ((getDeterminedTile(tx, tz-1, worldSeed).wallState & 0b0010) << 2) // north wall here is south wall of north tile
+                | ((getDeterminedTile(tx+1, tz, worldSeed).wallState & 0b0001) << 2) // east wall here is west wall of east tile
+                | ((getDeterminedTile(tx, tz+1, worldSeed).wallState & 0b1000) >> 2) // south wall here is north wall of south tile
+                | ((getDeterminedTile(tx-1, tz, worldSeed).wallState & 0b0100) >> 2) // west wall here is east wall of west tile
+        );
         return tilesByWalls.get(centerWallState);
     }
 

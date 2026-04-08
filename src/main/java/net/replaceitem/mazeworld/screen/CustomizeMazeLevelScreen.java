@@ -19,6 +19,7 @@ import net.replaceitem.mazeworld.MazeTypes;
 import net.replaceitem.mazeworld.screen.widget.IntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.MazePreviewWidget;
+import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
 
@@ -38,7 +39,14 @@ public class CustomizeMazeLevelScreen extends Screen {
         this.modifiedConfig = config.copy();
     }
 
+    @Nullable
     private MazePreviewWidget mazePreviewWidget;
+
+    private void reloadPreview() {
+        if(mazePreviewWidget != null) {
+            mazePreviewWidget.preRender();
+        }
+    }
 
     @Override
     protected void init() {
@@ -52,9 +60,9 @@ public class CustomizeMazeLevelScreen extends Screen {
         GridLayout gridWidget = this.layout.addToContents(new GridLayout());
         gridWidget.spacing(10);
 
-        CycleButton.OnValueChange<MazeType> mazeTypeUpdateCallback = (button, value) -> {
+        CycleButton.OnValueChange<MazeType> mazeTypeUpdateCallback = (_, value) -> {
             this.modifiedConfig.mazeType = value;
-            mazePreviewWidget.preRender();
+            reloadPreview();
         };
         
         gridWidget.addChild(
@@ -69,9 +77,9 @@ public class CustomizeMazeLevelScreen extends Screen {
                 new LogarithmicIntegerSliderWidget(0, 0, buttonWidth,
                         Component.translatable("createWorld.customize.maze_world.spacing"),
                         modifiedConfig.spacing, 2, 1024,
-                        (integerSliderWidget, value) -> {
+                        (_, value) -> {
                             modifiedConfig.spacing = value;
-                            mazePreviewWidget.preRender();
+                            reloadPreview();
                         }
                 ),
                 0, 1
@@ -94,7 +102,7 @@ public class CustomizeMazeLevelScreen extends Screen {
                         (int) (modifiedConfig.threshold * 100), 0, 100,
                         (integerSliderWidget, value) -> {
                             modifiedConfig.threshold = integerSliderWidget.getPercentageValue();
-                            mazePreviewWidget.preRender();
+                            reloadPreview();
                         }
                 ),
                 1, 1
@@ -109,10 +117,9 @@ public class CustomizeMazeLevelScreen extends Screen {
         wallBlockWidget.setResponder(s -> {
             Identifier identifier = Identifier.tryParse(s);
             if (identifier != null) modifiedConfig.wallBlock = identifier;
-            mazePreviewWidget.preRender();
+            reloadPreview();
         });
 
-        assert this.minecraft != null;
         mazePreviewWidget = gridWidget.addChild(
                 new MazePreviewWidget(
                         this.width / 2 - 10 * 16 / 2, height - 30 - 5 * 16, 160, 80,
@@ -147,13 +154,11 @@ public class CustomizeMazeLevelScreen extends Screen {
     }
 
     private void onDone(Button buttonWidget) {
-        if(this.minecraft == null) return; // shouldn't happen
         this.configConsumer.accept(this.modifiedConfig);
         this.minecraft.setScreen(this.parent);
     }
 
     private void onCancel(Button buttonWidget) {
-        if(this.minecraft == null) return; // shouldn't happen
         this.minecraft.setScreen(this.parent);
     }
 }

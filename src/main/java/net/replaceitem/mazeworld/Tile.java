@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tile {
-    protected final TileOperation[] operations;
+    private final TileOperation[] operations;
     // binary flags for whether there is a wall is on top|right|bottom|left
     public final byte wallState;
 
-    public Tile(int wallState, TileOperation[] operations) {
+    private Tile(int wallState, TileOperation[] operations) {
         this.wallState = (byte)(wallState & 0b1111);
         this.operations = operations;
     }
@@ -127,6 +127,7 @@ public class Tile {
 
         @Override
         public Circle rotated() {
+            //noinspection SuspiciousNameCombination
             return new Circle(1 - y, x, r);
         }
     }

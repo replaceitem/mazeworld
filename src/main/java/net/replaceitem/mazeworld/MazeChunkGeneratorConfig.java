@@ -3,6 +3,7 @@ package net.replaceitem.mazeworld;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 public class MazeChunkGeneratorConfig {
 
@@ -16,7 +17,7 @@ public class MazeChunkGeneratorConfig {
             Codec.STRING.fieldOf("maze_block").orElse(BEDROCK_IDENTIFIER.toString()).forGetter(mazeChunkGeneratorConfig -> mazeChunkGeneratorConfig.wallBlock.toString())
     ).apply(instance, MazeChunkGeneratorConfig::new));
 
-    public MazeChunkGeneratorConfig(int spacing, MazeType mazeType, boolean infiniteWall, double threshold, Identifier wallBlock) {
+    public MazeChunkGeneratorConfig(int spacing, @Nullable MazeType mazeType, boolean infiniteWall, double threshold, @Nullable Identifier wallBlock) {
         if(mazeType == null) mazeType = MazeTypes.BINARY_TREE;
         if(wallBlock == null) wallBlock = BEDROCK_IDENTIFIER;
         this.spacing = spacing;

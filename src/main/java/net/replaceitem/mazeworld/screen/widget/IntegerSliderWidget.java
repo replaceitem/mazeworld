@@ -3,15 +3,17 @@ package net.replaceitem.mazeworld.screen.widget;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import org.jspecify.annotations.Nullable;
 
 public class IntegerSliderWidget extends AbstractSliderButton {
     
     protected final int min;
     protected final int max;
     protected final Component name;
+    @Nullable
     private final UpdateCallback callback;
 
-    public IntegerSliderWidget(int x, int y, int width, Component name, int value, int min, int max, UpdateCallback callback) {
+    public IntegerSliderWidget(int x, int y, int width, Component name, int value, int min, int max, @Nullable UpdateCallback callback) {
         super(x, y, width, 20, name, value);
         this.min = min;
         this.max = max;
