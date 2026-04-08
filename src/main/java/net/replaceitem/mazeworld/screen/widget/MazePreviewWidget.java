@@ -1,7 +1,7 @@
 package net.replaceitem.mazeworld.screen.widget;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -58,14 +58,14 @@ public class MazePreviewWidget extends AbstractWidget {
         this.texture.upload();
         this.textureManager.register(ID, this.texture);
     }
-    
+
     @Override
-    protected void renderWidget(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
         if(this.needsRender) {
             preRender();
             this.needsRender = false;
         }
-        context.blit(RenderPipelines.GUI_TEXTURED, ID, getX(), getY(), 0.0F, 0.0F, getWidth(), getHeight(), getWidth(), getHeight());
+        graphics.blit(RenderPipelines.GUI_TEXTURED, ID, getX(), getY(), 0.0F, 0.0F, getWidth(), getHeight(), getWidth(), getHeight());
     }
     
     @Override

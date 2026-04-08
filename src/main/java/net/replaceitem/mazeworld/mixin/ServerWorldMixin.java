@@ -6,7 +6,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.CustomSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -49,7 +48,7 @@ public abstract class ServerWorldMixin extends Level implements ServerWorldAcces
 
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void storeInfiniteMaze(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, boolean debugWorld, long seed, List<CustomSpawner> spawners, boolean shouldTickTime, RandomSequences randomSequenceState, CallbackInfo ci) {
+    private void storeInfiniteMaze(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, boolean debugWorld, long seed, List<CustomSpawner> spawners, boolean shouldTickTime, CallbackInfo ci) {
         if(dimensionOptions.generator() instanceof MazeChunkGenerator mazeChunkGenerator) {
             MazeChunkGeneratorConfig config = mazeChunkGenerator.getConfig();
             infiniteMazeWall = config.infiniteWall;
