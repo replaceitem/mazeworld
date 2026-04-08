@@ -1,1 +1,1 @@
-* Updated to MC 1.21.11
+* Updated to MC 26.1
