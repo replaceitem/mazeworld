@@ -155,10 +155,10 @@ public class CustomizeMazeLevelScreen extends Screen {
 
     private void onDone(Button buttonWidget) {
         this.configConsumer.accept(this.modifiedConfig);
-        this.minecraft.setScreen(this.parent);
+        this.minecraft.setScreenAndShow(this.parent);
     }
 
     private void onCancel(Button buttonWidget) {
-        this.minecraft.setScreen(this.parent);
+        this.minecraft.setScreenAndShow(this.parent);
     }
 }
