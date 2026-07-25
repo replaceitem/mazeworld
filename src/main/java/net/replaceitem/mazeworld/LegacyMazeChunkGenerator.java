@@ -11,24 +11,39 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 
-public class MazeChunkGenerator extends NoiseBasedChunkGenerator {
+@Deprecated()
+public class LegacyMazeChunkGenerator extends NoiseBasedChunkGenerator {
 
-    public static final MapCodec<MazeChunkGenerator> CODEC = RecordCodecBuilder.mapCodec((instance) ->
+    public static final MapCodec<LegacyMazeChunkGenerator> CODEC = RecordCodecBuilder.mapCodec((instance) ->
             instance.group(
                     BiomeSource.CODEC.fieldOf("biome_source").forGetter(ChunkGenerator::getBiomeSource),
                     NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter(NoiseBasedChunkGenerator::generatorSettings),
-                    MazeChunkGeneratorConfig.CODEC.fieldOf("maze_settings").forGetter(MazeChunkGenerator::getConfig)
-            ).apply(instance, instance.stable(MazeChunkGenerator::new)));
+                    LegacyMazeChunkGeneratorConfig.CODEC.fieldOf("maze_settings").forGetter(LegacyMazeChunkGenerator::getConfig)
+            ).apply(instance, instance.stable(LegacyMazeChunkGenerator::new)));
 
     private final MazeGenerator<?> mazeGenerator;
 
-    public MazeChunkGenerator(BiomeSource biomeSource, Holder<NoiseGeneratorSettings> chunkGeneratorSettings, MazeChunkGeneratorConfig mazeConfig) {
+    public LegacyMazeChunkGenerator(BiomeSource biomeSource, Holder<NoiseGeneratorSettings> chunkGeneratorSettings, LegacyMazeChunkGeneratorConfig legacyConfig) {
         super(biomeSource, chunkGeneratorSettings);
-        this.mazeGenerator = mazeConfig.mazeType.getGenerator(mazeConfig);
+        var mazeGeneratorConfig = new MazeGeneratorConfig(
+                legacyConfig.spacing,
+                legacyConfig.mazeType,
+                legacyConfig.infiniteWall,
+                legacyConfig.threshold,
+                legacyConfig.wallBlock
+        );
+        this.mazeGenerator = legacyConfig.mazeType.getGenerator(mazeGeneratorConfig);
     }
 
-    public MazeChunkGeneratorConfig getConfig() {
-        return mazeGenerator.config;
+    public LegacyMazeChunkGeneratorConfig getConfig() {
+        var config = mazeGenerator.config;
+        return new LegacyMazeChunkGeneratorConfig(
+                config.spacing(),
+                config.mazeType(),
+                config.infiniteWall(),
+                config.threshold(),
+                config.wallBlock()
+        );
     }
 
     @Override

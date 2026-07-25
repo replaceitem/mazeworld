@@ -1,7 +1,5 @@
 package net.replaceitem.mazeworld;
 
-import java.util.Random;
-import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.LevelAccessor;
@@ -11,11 +9,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
+import java.util.Random;
+import java.util.Set;
+
 public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
 
-    protected final MazeChunkGeneratorConfig config;
+    protected final MazeGeneratorConfig config;
 
-    protected MazeGenerator(MazeChunkGeneratorConfig config) {
+    protected MazeGenerator(MazeGeneratorConfig config) {
         this.config = config;
     }
     
@@ -44,6 +45,6 @@ public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
     }
 
     protected BlockState getWallBlockState(LevelAccessor world) {
-        return world.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(this.config.wallBlock).orElse(Blocks.BEDROCK).defaultBlockState();
+        return world.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(this.config.wallBlock()).orElse(Blocks.BEDROCK).defaultBlockState();
     }
 }

@@ -17,6 +17,9 @@
     "entrypoints": {
         "main": [
             "net.replaceitem.mazeworld.MazeWorld"
+        ],
+        "recordrecoder:register": [
+            "net.replaceitem.mazeworld.RecordRecoderRegistration"
         ]
     },
     "mixins": [

@@ -4,13 +4,19 @@
     "package": "net.replaceitem.mazeworld.mixin",
     "compatibilityLevel": "JAVA_25",
     "mixins": [
-        "ChunkGeneratorsMixin",
-        "DimensionOptionsRegistryHolderMixin",
-        "ServerWorldMixin"
+        "ChunkMapMixin",
+        "ChunkStatusTasksMixin",
+        "LevelStemMixin",
+        "ServerLevelMixin",
+        "WorldDimensionsMixin",
+        "WorldGenContextMixin",
+        "ChunkGeneratorsMixin"
     ],
     "client": [
-        "LevelScreenProviderMixin"
+        "CreateWorldScreenWorldTabMixin",
+        "WorldCreationUiStateMixin"
     ],
+    "plugin": "recordrecoder.impl.RecordRecoder",
     "injectors": {
         "defaultRequire": 1
     }

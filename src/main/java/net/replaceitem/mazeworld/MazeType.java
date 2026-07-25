@@ -1,31 +1,18 @@
 package net.replaceitem.mazeworld;
 
-import java.util.function.Function;
-import net.minecraft.ChatFormatting;
+import com.mojang.serialization.Codec;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
-public class MazeType {
+import java.util.function.Function;
 
-    private final Function<MazeChunkGeneratorConfig, MazeGenerator<?>> constructor;
+public record MazeType(
+        Function<MazeGeneratorConfig, MazeGenerator<?>> constructor,
+        Component name,
+        Component description
+) {
+    public static Codec<MazeType> CODEC = MazeWorld.MAZE_TYPE_REGISTRY.byNameCodec();
 
-    public MazeType(String id, Function<MazeChunkGeneratorConfig, MazeGenerator<?>> constructor) {
-        this.id = id;
-        this.name = Component.translatable("maze_type." + id + ".name");
-        this.description = Component.translatable("maze_type." + id + ".description");
-        this.constructor = constructor;
-        this.tooltipText = this.name.copy().withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD).append("\n").append(this.description.copy());
-    }
-    public final String id;
-    public final MutableComponent name;
-    public final MutableComponent description;
-    public final Component tooltipText;
-    
-    public Component getTooltipText() {
-        return tooltipText;
-    }
-
-    public MazeGenerator<?> getGenerator(MazeChunkGeneratorConfig config) {
+    public MazeGenerator<?> getGenerator(MazeGeneratorConfig config) {
         return constructor.apply(config);
     }
 }

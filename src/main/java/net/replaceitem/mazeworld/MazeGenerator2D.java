@@ -8,7 +8,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 
 public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.BlockChecker2D> {
 
-    protected MazeGenerator2D(MazeChunkGeneratorConfig config) {
+    protected MazeGenerator2D(MazeGeneratorConfig config) {
         super(config);
     }
 
