@@ -1,17 +1,17 @@
 package net.replaceitem.mazeworld.types;
 
-import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
 
 public class BinaryTreeMazeGenerator extends MazeGenerator2D {
-    public BinaryTreeMazeGenerator(MazeChunkGeneratorConfig config) {
+    public BinaryTreeMazeGenerator(MazeGeneratorConfig config) {
         super(config);
     }
 
     @Override
     public BlockChecker2D getBlockChecker(long seed) {
-        int spacing = config.spacing;
-        double threshold = config.threshold;
+        int spacing = config.spacing();
+        double threshold = config.threshold();
         return (x, z) -> {
             int tx = Math.floorDiv(x, spacing);
             int tz = Math.floorDiv(z, spacing);

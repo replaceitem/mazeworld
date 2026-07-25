@@ -1,17 +1,17 @@
 package net.replaceitem.mazeworld.types;
 
-import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.Tile;
 
 public class RoundWangTilesMazeGenerator extends WangTilesMazeGenerator {
 
-    public RoundWangTilesMazeGenerator(MazeChunkGeneratorConfig config) {
+    public RoundWangTilesMazeGenerator(MazeGeneratorConfig config) {
         super(config);
     }
 
     @Override
     protected void registerTiles() {
-        double t = this.config.threshold * 0.5;
+        double t = this.config.threshold() * 0.5;
 
         // solid
         registerIndeterminable(new Tile.Builder(0b0000).build());

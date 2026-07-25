@@ -4,7 +4,7 @@ import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
 import net.replaceitem.mazeworld.Tile;
 
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class WangTilesMazeGenerator extends MazeGenerator2D {
-    public WangTilesMazeGenerator(MazeChunkGeneratorConfig config) {
+    public WangTilesMazeGenerator(MazeGeneratorConfig config) {
         super(config);
         this.registerTiles();
     }
@@ -41,7 +41,7 @@ public abstract class WangTilesMazeGenerator extends MazeGenerator2D {
 
     @Override
     public BlockChecker2D getBlockChecker(long worldSeed) {
-        int spacing = config.spacing;
+        int spacing = config.spacing();
         Long2ObjectMap<Tile> tileCache = new Long2ObjectOpenHashMap<>();
         return (x, z) -> {
             int tx = Math.floorDiv(x, spacing);

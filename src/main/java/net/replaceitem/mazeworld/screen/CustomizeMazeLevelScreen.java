@@ -1,5 +1,6 @@
 package net.replaceitem.mazeworld.screen;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.CycleButton;
 import net.minecraft.client.gui.components.EditBox;
@@ -10,15 +11,17 @@ import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
 import net.replaceitem.mazeworld.MazeType;
-import net.replaceitem.mazeworld.MazeTypes;
+import net.replaceitem.mazeworld.MazeWorld;
+import net.replaceitem.mazeworld.fakes.WorldCreationUIStateAccess;
 import net.replaceitem.mazeworld.screen.widget.IntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.MazePreviewWidget;
+import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Consumer;
@@ -29,120 +32,103 @@ public class CustomizeMazeLevelScreen extends Screen {
     
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     protected final CreateWorldScreen parent;
-    private final MazeChunkGeneratorConfig modifiedConfig;
-    private final Consumer<MazeChunkGeneratorConfig> configConsumer;
-    
-    public CustomizeMazeLevelScreen(CreateWorldScreen parent, Consumer<MazeChunkGeneratorConfig> configConsumer, MazeChunkGeneratorConfig config) {
-        super(Component.translatable("createWorld.customize.maze_world.title"));
-        this.parent = parent;
-        this.configConsumer = configConsumer;
-        this.modifiedConfig = config.copy();
-    }
 
-    @Nullable
+    @UnknownNullability
     private MazePreviewWidget mazePreviewWidget;
 
-    private void reloadPreview() {
-        if(mazePreviewWidget != null) {
-            mazePreviewWidget.preRender();
-        }
+    @Nullable
+    private Consumer<WorldCreationUiState> stateChangeListener;
+
+
+    public CustomizeMazeLevelScreen(CreateWorldScreen parent) {
+        super(Component.translatable("createWorld.customize.maze_world.title"));
+        this.parent = parent;
+    }
+
+
+    private WorldCreationUIStateAccess getMazeUiState() {
+        return ((WorldCreationUIStateAccess) this.parent.getUiState());
     }
 
     @Override
     protected void init() {
         this.layout.addTitleHeader(this.title, this.font);
-        
-        int buttonWidth = 150;
-        int buttonHeight = 20;
-        int column1x = width/2-5-buttonWidth;
-        int column2x = width/2+5;
 
-        GridLayout gridWidget = this.layout.addToContents(new GridLayout());
+        var gridWidget = this.layout.addToContents(new GridLayout());
         gridWidget.spacing(10);
+        var helper = gridWidget.createRowHelper(2);
 
-        CycleButton.OnValueChange<MazeType> mazeTypeUpdateCallback = (_, value) -> {
-            this.modifiedConfig.mazeType = value;
-            reloadPreview();
-        };
-        
-        gridWidget.addChild(
-                CycleButton.builder(mazeType -> mazeType.name, modifiedConfig.mazeType)
-                        .withValues(MazeTypes.types)
-                        .withTooltip(mazeType1 -> Tooltip.create(mazeType1.getTooltipText()))
-                        .create(0, 0, buttonWidth, buttonHeight, Component.translatable("createWorld.customize.maze_world.maze_type"), mazeTypeUpdateCallback),
-                0, 0
+        helper.addChild(
+                CycleButton.builder(MazeType::name, getMazeUiState().getMazeType())
+                        .withValues(MazeWorld.MAZE_TYPE_REGISTRY.stream().toList())
+                        .withTooltip(mazeType1 -> Tooltip.create(
+                                mazeType1.name().copy().withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD)
+                                        .append("\n").append(mazeType1.description())
+                        ))
+                        .create(
+                                0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT, Component.translatable("createWorld.customize.maze_world.maze_type"),
+                                (_, type) -> this.getMazeUiState().setMazeType(type)
+                        )
         );
 
-        gridWidget.addChild(
-                new LogarithmicIntegerSliderWidget(0, 0, buttonWidth,
+        helper.addChild(
+                new LogarithmicIntegerSliderWidget(0, 0, Button.DEFAULT_WIDTH,
                         Component.translatable("createWorld.customize.maze_world.spacing"),
-                        modifiedConfig.spacing, 2, 1024,
-                        (_, value) -> {
-                            modifiedConfig.spacing = value;
-                            reloadPreview();
-                        }
-                ),
-                0, 1
+                        getMazeUiState().getSpacing(), 2, 1024,
+                        (_, spacing) -> this.getMazeUiState().setSpacing(spacing)
+                )
         );
 
-        gridWidget.addChild(
-                CycleButton.onOffBuilder(modifiedConfig.infiniteWall)
-                        .withTooltip(aBoolean -> infiniteWallTooltip)
-                        .create(0, 0, buttonWidth, buttonHeight,
+        helper.addChild(
+                CycleButton.onOffBuilder(getMazeUiState().isInfiniteWall())
+                        .withTooltip(_ -> infiniteWallTooltip)
+                        .create(0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
                                 Component.translatable("createWorld.customize.maze_world.infinite_walls"),
-                                (button, value) -> this.modifiedConfig.infiniteWall = value
-                        ),
-                1, 0
+                                (_, infiniteWall) -> this.getMazeUiState().setInfiniteWall(infiniteWall)
+                        )
         );
 
-        gridWidget.addChild(
+        helper.addChild(
                 new IntegerSliderWidget(
-                        0, 0, buttonWidth,
+                        0, 0, Button.DEFAULT_WIDTH,
                         Component.translatable("createWorld.customize.maze_world.threshold"),
-                        (int) (modifiedConfig.threshold * 100), 0, 100,
-                        (integerSliderWidget, value) -> {
-                            modifiedConfig.threshold = integerSliderWidget.getPercentageValue();
-                            reloadPreview();
-                        }
-                ),
-                1, 1
+                        (int) (getMazeUiState().getThreshold() * 100), 0, 100,
+                        (slider, _) -> this.getMazeUiState().setThreshold(slider.getPercentageValue())
+                )
         );
 
-        EditBox wallBlockWidget = gridWidget.addChild(
-                new EditBox(this.font, 0, 0, buttonWidth, buttonHeight, Component.empty()),
-                2, 0
+        var wallBlockEditBox = helper.addChild(
+                new EditBox(this.font, 0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT, Component.empty())
         );
-        wallBlockWidget.setValue(modifiedConfig.wallBlock.toString());
-        wallBlockWidget.setHint(Component.nullToEmpty("Maze wall block"));
-        wallBlockWidget.setResponder(s -> {
-            Identifier identifier = Identifier.tryParse(s);
-            if (identifier != null) modifiedConfig.wallBlock = identifier;
-            reloadPreview();
+        wallBlockEditBox.setValue(getMazeUiState().getWallBlock().toString());
+        wallBlockEditBox.setHint(Component.nullToEmpty("Maze wall block"));
+        wallBlockEditBox.setResponder(wallBlockId -> {
+            var id = Identifier.tryParse(wallBlockId);
+            if(id != null) {
+                this.getMazeUiState().setWallBlock(id);
+            }
         });
 
-        mazePreviewWidget = gridWidget.addChild(
+        mazePreviewWidget = helper.addChild(
                 new MazePreviewWidget(
-                        this.width / 2 - 10 * 16 / 2, height - 30 - 5 * 16, 160, 80,
-                        modifiedConfig, this.minecraft.getTextureManager()
+                        this.width / 2 - 10 * 16 / 2, height - 30 - 5 * 16, 160, 80, this.minecraft.getTextureManager()
                 ),
-                3, 0, 1, 2,
-                LayoutSettings::alignHorizontallyCenter
+                2, LayoutSettings.defaults().alignHorizontallyCenter()
         );
 
         LinearLayout footerLayout = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
         footerLayout.defaultCellSetting().alignVerticallyMiddle();
         footerLayout.addChild(
-                Button.builder(CommonComponents.GUI_DONE, this::onDone)
-                        .pos(column1x, this.height - 28)
-                        .size(buttonWidth, buttonHeight).build()
-        );
-        footerLayout.addChild(
-                Button.builder(CommonComponents.GUI_CANCEL, this::onCancel)
-                        .pos(column2x, this.height - 28)
-                        .size(buttonWidth, buttonHeight).build()
+                Button.builder(CommonComponents.GUI_DONE, _ -> onClose()).build()
         );
 
-        mazePreviewWidget.preRender();
+        this.mazePreviewWidget.preRender();
+        this.stateChangeListener = state -> {
+            this.mazePreviewWidget.updateConfig(((WorldCreationUIStateAccess) state).createMazeConfig());
+            this.mazePreviewWidget.preRender();
+        };
+        this.parent.getUiState().addListener(this.stateChangeListener);
+        this.stateChangeListener.accept(this.parent.getUiState());
         
         this.layout.visitWidgets(this::addRenderableWidget);
         this.repositionElements();
@@ -153,12 +139,16 @@ public class CustomizeMazeLevelScreen extends Screen {
         this.layout.arrangeElements();
     }
 
-    private void onDone(Button buttonWidget) {
-        this.configConsumer.accept(this.modifiedConfig);
+    @Override
+    public void onClose() {
         this.minecraft.setScreenAndShow(this.parent);
     }
 
-    private void onCancel(Button buttonWidget) {
-        this.minecraft.setScreenAndShow(this.parent);
+    @Override
+    public void removed() {
+        if(stateChangeListener != null) {
+            this.getMazeUiState().removeListener(stateChangeListener);
+        }
+        super.removed();
     }
 }

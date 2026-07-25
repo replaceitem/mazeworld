@@ -8,7 +8,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.replaceitem.mazeworld.types.SimplexNoise3DMazeGenerator;
 
 public abstract class MazeGenerator3D extends MazeGenerator<MazeGenerator3D.BlockChecker3D> {
-    protected MazeGenerator3D(MazeChunkGeneratorConfig config) {
+    protected MazeGenerator3D(MazeGeneratorConfig config) {
         super(config);
     }
 

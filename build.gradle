@@ -16,11 +16,10 @@ version = project.minecraft_version + '-' + project.mod_version
 group = project.maven_group
 
 repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
+    maven {
+        url 'https://jitpack.io'
+        content { includeGroup "com.github.cputnam-a11y" }
+    }
 }
 
 dependencies {
@@ -28,6 +27,9 @@ dependencies {
 	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    include(implementation('com.github.cputnam-a11y:RecordRecoder:v0.0.5') {
+        transitive = false
+    })
 }
 
 processResources {

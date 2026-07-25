@@ -15,9 +15,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.MapColor;
-import net.replaceitem.mazeworld.MazeChunkGeneratorConfig;
+import net.replaceitem.mazeworld.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.MazeGenerator2D;
 import net.replaceitem.mazeworld.MazeWorld;
+import org.jspecify.annotations.Nullable;
 
 public class MazePreviewWidget extends AbstractWidget {
     public static final Identifier ID = MazeWorld.id("preview_texture");
@@ -26,26 +27,31 @@ public class MazePreviewWidget extends AbstractWidget {
     private final NativeImage image;
     private final DynamicTexture texture;
     private final TextureManager textureManager;
-    private final MazeChunkGeneratorConfig config;
+    @Nullable
+    private MazeGeneratorConfig config = null;
     private double vx, vy;
     private boolean needsRender = true;
 
-    public MazePreviewWidget(int x, int y, int w, int h, MazeChunkGeneratorConfig config, TextureManager textureManager) {
+    public MazePreviewWidget(int x, int y, int w, int h, TextureManager textureManager) {
         super(x, y, w, h, Component.empty());
         this.textureManager = textureManager;
         this.texture = new DynamicTexture("Mazeworld Preview" ,w, h, false);
         this.image = texture.getPixels();
+    }
+
+    public void updateConfig(MazeGeneratorConfig config) {
         this.config = config;
     }
     
     public void preRender() {
-        MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType.getGenerator(config).getBlockChecker(0);
-        int wallColor = BuiltInRegistries.BLOCK.get(config.wallBlock)
+        if(config == null) return;
+        MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType().getGenerator(config).getBlockChecker(0);
+        int wallColor = BuiltInRegistries.BLOCK.get(config.wallBlock())
                 .map(Holder.Reference::value)
                 .map(block -> block.defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL))
                 .orElse(DEFAULT_WALL_COLOR);
         int backgroundColor = Blocks.GRASS_BLOCK.defaultMapColor().calculateARGBColor(MapColor.Brightness.HIGH);
-        int spacing = config.spacing;
+        int spacing = config.spacing();
         int offsetX = (int) (vx * spacing) - getWidth()/2;
         int offsetY = (int) (vy * spacing) - getHeight()/2;
         for(int pixelX = 0; pixelX < getWidth(); pixelX++) {
@@ -70,8 +76,9 @@ public class MazePreviewWidget extends AbstractWidget {
     
     @Override
     protected void onDrag(MouseButtonEvent click, double offsetX, double offsetY) {
-        this.vx -= offsetX / config.spacing;
-        this.vy -= offsetY / config.spacing;
+        if(config == null) return;
+        this.vx -= offsetX / config.spacing();
+        this.vy -= offsetY / config.spacing();
         this.needsRender = true;
     }
 
