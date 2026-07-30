@@ -23,6 +23,8 @@
 
     "createWorld.customize.maze_world.spacing": "Spacing",
     "createWorld.customize.maze_world.threshold": "Threshold",
+    "createWorld.customize.maze_world.bias": "Bias",
+    "createWorld.customize.maze_world.wall_width": "Wall width",
 
     "createWorld.customize.maze_world.infinite_walls": "Infinite walls",
     "createWorld.customize.maze_world.infinite_walls.description": "Prevents the player from going above or below the walls in worlds without a ceiling by rejecting movement packets that cross the maze walls"

@@ -1,14 +1,14 @@
-package net.replaceitem.mazeworld;
+package net.replaceitem.mazeworld.generator.wangtiles;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tile {
+public class WangTile {
     private final TileOperation[] operations;
-    // binary flags for whether there is a wall is on top|right|bottom|left
+    // bit flags for whether there is a wall is on top|right|bottom|left
     public final byte wallState;
 
-    private Tile(int wallState, TileOperation[] operations) {
+    private WangTile(int wallState, TileOperation[] operations) {
         this.wallState = (byte)(wallState & 0b1111);
         this.operations = operations;
     }
@@ -23,14 +23,14 @@ public class Tile {
         return true;
     }
 
-    public Tile rotated(int times) {
+    public WangTile rotated(int times) {
         times %= 4;
         TileOperation[] rotatedOperations = new TileOperation[this.operations.length];
         for (int i = 0; i < rotatedOperations.length; i++) {
             rotatedOperations[i] = operations[i].rotated(times);
         }
         byte newWallState = (byte) (wallState >> times | wallState << 4-times);
-        return new Tile(newWallState, rotatedOperations);
+        return new WangTile(newWallState, rotatedOperations);
     }
 
     public static long tilePosToLong(int x, int z) {
@@ -61,9 +61,9 @@ public class Tile {
             return this;
         }
 
-        public Tile build() {
+        public WangTile build() {
             TileOperation[] operationsArr = new TileOperation[operations.size()];
-            return new Tile(wallState, operations.toArray(operationsArr));
+            return new WangTile(wallState, operations.toArray(operationsArr));
         }
     }
 
@@ -82,7 +82,7 @@ public class Tile {
     }
 
 
-    public static class Rectangle extends Tile.TileShape {
+    public static class Rectangle extends WangTile.TileShape {
         private final double xa;
         private final double ya;
         private final double xb;
@@ -107,7 +107,7 @@ public class Tile {
     }
 
 
-    public static class Circle extends Tile.TileShape {
+    public static class Circle extends WangTile.TileShape {
         private final double x;
         private final double y;
         private final double r;

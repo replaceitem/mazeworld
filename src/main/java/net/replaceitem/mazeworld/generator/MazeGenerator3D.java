@@ -1,11 +1,11 @@
-package net.replaceitem.mazeworld;
+package net.replaceitem.mazeworld.generator;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.replaceitem.mazeworld.types.SimplexNoise3DMazeGenerator;
+import net.replaceitem.mazeworld.MazeGeneratorConfig;
 
 public abstract class MazeGenerator3D extends MazeGenerator<MazeGenerator3D.BlockChecker3D> {
     protected MazeGenerator3D(MazeGeneratorConfig config) {
