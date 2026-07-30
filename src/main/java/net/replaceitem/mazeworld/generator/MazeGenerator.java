@@ -1,4 +1,4 @@
-package net.replaceitem.mazeworld;
+package net.replaceitem.mazeworld.generator;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -8,16 +8,17 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.replaceitem.mazeworld.MazeGeneratorConfig;
 
 import java.util.Random;
 import java.util.Set;
 
 public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
 
-    protected final MazeGeneratorConfig config;
+    protected final MazeGeneratorConfig mazeGeneratorConfig;
 
-    protected MazeGenerator(MazeGeneratorConfig config) {
-        this.config = config;
+    protected MazeGenerator(MazeGeneratorConfig mazeGeneratorConfig) {
+        this.mazeGeneratorConfig = mazeGeneratorConfig;
     }
     
     public abstract void generateChunk(WorldGenLevel world, ChunkAccess chunk);
@@ -41,10 +42,10 @@ public abstract class MazeGenerator<T extends MazeGenerator2D.BlockChecker2D> {
     }
 
     public static int getRandomIntAt(int x, int y, long seed, int max) {
-        return Math.abs(getMultiSeededRandom(seed, x, y).nextInt(max));
+        return getMultiSeededRandom(seed, x, y).nextInt(max);
     }
 
     protected BlockState getWallBlockState(LevelAccessor world) {
-        return world.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(this.config.wallBlock()).orElse(Blocks.BEDROCK).defaultBlockState();
+        return world.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(this.mazeGeneratorConfig.wallBlock()).orElse(Blocks.BEDROCK).defaultBlockState();
     }
 }

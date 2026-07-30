@@ -71,14 +71,12 @@ public abstract class ServerLevelMixin extends Level implements ServerLevelAcces
             CallbackInfo ci
     ) {
         var mazeGeneratorConfig = ((LevelStemAccess)(Object) levelStem).getMazeGenerator();
+        if(mazeGeneratorConfig == null && levelStem.generator() instanceof LegacyMazeChunkGenerator legacyMazeChunkGenerator) {
+            mazeGeneratorConfig = legacyMazeChunkGenerator.getConfig().getMigratedConfig();
+        }
         if(mazeGeneratorConfig != null) {
             this.infiniteMazeWall = mazeGeneratorConfig.infiniteWall();
             this.mazeWallBlock = this.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(mazeGeneratorConfig.wallBlock()).orElse(Blocks.BEDROCK);
-            this.mazeCollisionView = new MazeCollisionView(this, getMazeWallBlock());
-        } else if(levelStem.generator() instanceof LegacyMazeChunkGenerator legacyMazeChunkGenerator) {
-            var legacyConfig = legacyMazeChunkGenerator.getConfig();
-            this.infiniteMazeWall = legacyConfig.infiniteWall;
-            this.mazeWallBlock = this.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(legacyConfig.wallBlock).orElse(Blocks.BEDROCK);
             this.mazeCollisionView = new MazeCollisionView(this, getMazeWallBlock());
         }
     }

@@ -44,7 +44,7 @@ public class ChunkMapMixin {
         var stem = ServerLevelAccess.LEVEL_STEM.get();
         var mazeGeneratorConfig = ((LevelStemAccess)(Object) stem).getMazeGenerator();
         if(mazeGeneratorConfig != null) {
-            var mazeGenerator = mazeGeneratorConfig.mazeType().constructor().apply(mazeGeneratorConfig);
+            var mazeGenerator = mazeGeneratorConfig.createGenerator();
             RecordRecoderRegistration.WORLD_GEN_CONTEXT_MAZE_GENERATOR.queueNext(mazeGenerator);
         }
     }

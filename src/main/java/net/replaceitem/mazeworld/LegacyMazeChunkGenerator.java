@@ -10,6 +10,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.replaceitem.mazeworld.generator.MazeGenerator;
 
 @Deprecated()
 public class LegacyMazeChunkGenerator extends NoiseBasedChunkGenerator {
@@ -21,29 +22,18 @@ public class LegacyMazeChunkGenerator extends NoiseBasedChunkGenerator {
                     LegacyMazeChunkGeneratorConfig.CODEC.fieldOf("maze_settings").forGetter(LegacyMazeChunkGenerator::getConfig)
             ).apply(instance, instance.stable(LegacyMazeChunkGenerator::new)));
 
+    private final LegacyMazeChunkGeneratorConfig legacyConfig;
+
     private final MazeGenerator<?> mazeGenerator;
 
     public LegacyMazeChunkGenerator(BiomeSource biomeSource, Holder<NoiseGeneratorSettings> chunkGeneratorSettings, LegacyMazeChunkGeneratorConfig legacyConfig) {
         super(biomeSource, chunkGeneratorSettings);
-        var mazeGeneratorConfig = new MazeGeneratorConfig(
-                legacyConfig.spacing,
-                legacyConfig.mazeType,
-                legacyConfig.infiniteWall,
-                legacyConfig.threshold,
-                legacyConfig.wallBlock
-        );
-        this.mazeGenerator = legacyConfig.mazeType.getGenerator(mazeGeneratorConfig);
+        this.mazeGenerator = legacyConfig.getMigratedConfig().createGenerator();
+        this.legacyConfig = legacyConfig;
     }
 
     public LegacyMazeChunkGeneratorConfig getConfig() {
-        var config = mazeGenerator.config;
-        return new LegacyMazeChunkGeneratorConfig(
-                config.spacing(),
-                config.mazeType(),
-                config.infiniteWall(),
-                config.threshold(),
-                config.wallBlock()
-        );
+        return legacyConfig;
     }
 
     @Override

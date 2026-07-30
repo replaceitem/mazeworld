@@ -16,7 +16,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.MapColor;
 import net.replaceitem.mazeworld.MazeGeneratorConfig;
-import net.replaceitem.mazeworld.MazeGenerator2D;
+import net.replaceitem.mazeworld.generator.MazeGenerator2D;
 import net.replaceitem.mazeworld.MazeWorld;
 import org.jspecify.annotations.Nullable;
 
@@ -39,21 +39,20 @@ public class MazePreviewWidget extends AbstractWidget {
         this.image = texture.getPixels();
     }
 
-    public void updateConfig(MazeGeneratorConfig config) {
+    public void updateConfig(@Nullable MazeGeneratorConfig config) {
         this.config = config;
     }
     
     public void preRender() {
         if(config == null) return;
-        MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType().getGenerator(config).getBlockChecker(0);
+        MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType().createGenerator(config).getBlockChecker(0);
         int wallColor = BuiltInRegistries.BLOCK.get(config.wallBlock())
                 .map(Holder.Reference::value)
                 .map(block -> block.defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL))
                 .orElse(DEFAULT_WALL_COLOR);
         int backgroundColor = Blocks.GRASS_BLOCK.defaultMapColor().calculateARGBColor(MapColor.Brightness.HIGH);
-        int spacing = config.spacing();
-        int offsetX = (int) (vx * spacing) - getWidth()/2;
-        int offsetY = (int) (vy * spacing) - getHeight()/2;
+        int offsetX = (int) vx - getWidth()/2;
+        int offsetY = (int) vy - getHeight()/2;
         for(int pixelX = 0; pixelX < getWidth(); pixelX++) {
             for(int pixelY = 0; pixelY < getHeight(); pixelY++) {
                 int blockX = pixelX+offsetX;
@@ -77,8 +76,8 @@ public class MazePreviewWidget extends AbstractWidget {
     @Override
     protected void onDrag(MouseButtonEvent click, double offsetX, double offsetY) {
         if(config == null) return;
-        this.vx -= offsetX / config.spacing();
-        this.vy -= offsetY / config.spacing();
+        this.vx -= offsetX;
+        this.vy -= offsetY;
         this.needsRender = true;
     }
 

@@ -27,13 +27,13 @@ public class CreateWorldScreenWorldTabMixin {
     private void addMazeConfigurationButton(CreateWorldScreen parent, CallbackInfo ci, @Local GridLayout.RowHelper helper) {
         helper.addChild(CycleButton.onOffBuilder(false).create(
                 Component.translatable("selectWorld.mazeworld.generateMaze"),
-                (button, value) -> ((WorldCreationUIStateAccess) this$0.getUiState()).setGenerateMaze(value)
+                (button, value) -> ((WorldCreationUIStateAccess) this$0.getUiState()).getMazeworldState().setGenerateMaze(value)
         ));
         var customizeMazeButton = helper.addChild(Button.builder(
                 Component.translatable("selectWorld.mazeworld.customizeMaze"),
                 _ -> this.openMazeConfiguration()).build()
         );
-        this$0.getUiState().addListener(state -> customizeMazeButton.active = ((WorldCreationUIStateAccess) state).getGenerateMaze());
+        this$0.getUiState().addListener(state -> customizeMazeButton.active = ((WorldCreationUIStateAccess) state).getMazeworldState().getGenerateMaze());
     }
 
     @Unique
