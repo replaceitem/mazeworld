@@ -18,8 +18,6 @@ public class MazeWorld implements ModInitializer {
 
 	public static final String NAMESPACE = "mazeworld";
 
-    public static final ResourceKey<WorldPreset> LEGACY_MAZE_WORLD_PRESET = ResourceKey.create(Registries.WORLD_PRESET, id("maze_world"));
-
 	@Override
 	public void onInitialize() {
 		MazeTypes.bootstrap(MAZE_TYPE_REGISTRY);
