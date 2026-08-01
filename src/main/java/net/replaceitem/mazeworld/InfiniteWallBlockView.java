@@ -2,20 +2,20 @@ package net.replaceitem.mazeworld;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
 
-public class MazeBlockView<T extends BlockGetter> implements BlockGetter {
+public class InfiniteWallBlockView<T extends BlockGetter> implements BlockGetter {
     
     protected final T delegate;
-    protected final Block wallBlock;
+    protected final InfiniteWallConfig infiniteWallConfig;
 
-    public MazeBlockView(T delegate, Block wallBlock) {
+    public InfiniteWallBlockView(T delegate, InfiniteWallConfig infiniteWallConfig) {
         this.delegate = delegate;
-        this.wallBlock = wallBlock;
+        this.infiniteWallConfig = infiniteWallConfig;
     }
 
     @Override
@@ -26,12 +26,14 @@ public class MazeBlockView<T extends BlockGetter> implements BlockGetter {
     @Override
     public BlockState getBlockState(BlockPos pos) {
         int y = pos.getY();
-        if(y < this.getMinY()) {
-            BlockState bottomBlock = delegate.getBlockState(pos.atY(this.getMinY()));
-            if(bottomBlock.is(wallBlock)) return bottomBlock;
-        } else if(y > this.getMaxY()) {
-            BlockState topBlock = delegate.getBlockState(pos.atY(this.getMaxY()));
-            if(topBlock.is(wallBlock)) return topBlock;
+        var minY = this.infiniteWallConfig.minY();
+        var maxY = this.infiniteWallConfig.maxY();
+        if(y < minY) {
+            BlockState bottomBlock = delegate.getBlockState(pos.atY(minY));
+            if(bottomBlock.is(infiniteWallConfig.mazeWallBlock())) return Blocks.BEDROCK.defaultBlockState();
+        } else if(y >= maxY) {
+            BlockState topBlock = delegate.getBlockState(pos.atY(maxY - 1));
+            if(topBlock.is(infiniteWallConfig.mazeWallBlock())) return Blocks.BEDROCK.defaultBlockState();
         }
         return delegate.getBlockState(pos);
     }

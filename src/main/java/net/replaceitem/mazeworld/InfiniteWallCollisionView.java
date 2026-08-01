@@ -1,19 +1,18 @@
 package net.replaceitem.mazeworld;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.CollisionGetter;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.border.WorldBorder;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-public class MazeCollisionView extends MazeBlockView<CollisionGetter> implements CollisionGetter {
-    public MazeCollisionView(CollisionGetter delegate, Block wallBlock) {
-        super(delegate, wallBlock);
+import java.util.List;
+
+public class InfiniteWallCollisionView extends InfiniteWallBlockView<CollisionGetter> implements CollisionGetter {
+    public InfiniteWallCollisionView(CollisionGetter delegate, InfiniteWallConfig infiniteWallConfig) {
+        super(delegate, infiniteWallConfig);
     }
 
     @Override
@@ -25,7 +24,7 @@ public class MazeCollisionView extends MazeBlockView<CollisionGetter> implements
     public @Nullable BlockGetter getChunkForCollisions(int chunkX, int chunkZ) {
         @Nullable BlockGetter delegateChunkView = delegate.getChunkForCollisions(chunkX, chunkZ);
         if(delegateChunkView == null) return null;
-        return new MazeBlockView<>(delegateChunkView, wallBlock);
+        return new InfiniteWallBlockView<>(delegateChunkView, infiniteWallConfig);
     }
 
     @Override
