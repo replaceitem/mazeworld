@@ -13,7 +13,6 @@ import net.minecraft.server.level.ServerChunkCache;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.CustomSpawner;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -27,8 +26,9 @@ import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.replaceitem.mazeworld.InfiniteWallCollisionView;
+import net.replaceitem.mazeworld.InfiniteWallConfig;
 import net.replaceitem.mazeworld.LegacyMazeChunkGenerator;
-import net.replaceitem.mazeworld.MazeCollisionView;
 import net.replaceitem.mazeworld.fakes.LevelStemAccess;
 import net.replaceitem.mazeworld.fakes.ServerLevelAccess;
 import org.jetbrains.annotations.Nullable;
@@ -48,12 +48,8 @@ public abstract class ServerLevelMixin extends Level implements ServerLevelAcces
         super(properties, registryRef, registryManager, dimensionEntry, isClient, debugWorld, seed, maxChainedNeighborUpdates);
     }
 
-    @Unique
-    private boolean infiniteMazeWall = false;
-    @Unique
-    private Block mazeWallBlock = Blocks.BEDROCK;
     @Unique @Nullable
-    private MazeCollisionView mazeCollisionView;
+    private InfiniteWallCollisionView mazeCollisionView;
 
 
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -74,28 +70,18 @@ public abstract class ServerLevelMixin extends Level implements ServerLevelAcces
         if(mazeGeneratorConfig == null && levelStem.generator() instanceof LegacyMazeChunkGenerator legacyMazeChunkGenerator) {
             mazeGeneratorConfig = legacyMazeChunkGenerator.getConfig().getMigratedConfig();
         }
-        if(mazeGeneratorConfig != null) {
-            this.infiniteMazeWall = mazeGeneratorConfig.infiniteWall();
-            this.mazeWallBlock = this.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(mazeGeneratorConfig.wallBlock()).orElse(Blocks.BEDROCK);
-            this.mazeCollisionView = new MazeCollisionView(this, getMazeWallBlock());
+        if(mazeGeneratorConfig != null && mazeGeneratorConfig.infiniteWall()) {
+            var wallBlock = this.registryAccess().lookupOrThrow(Registries.BLOCK).getOptional(mazeGeneratorConfig.wallBlock()).orElse(Blocks.BEDROCK);
+            var minY = Math.max(this.getMinY(), mazeGeneratorConfig.minY());
+            var maxY = Math.min(this.getMaxY() + 1, mazeGeneratorConfig.maxY());
+            var infiniteWallConfig = new InfiniteWallConfig(minY, maxY, wallBlock);
+            this.mazeCollisionView = new InfiniteWallCollisionView(this, infiniteWallConfig);
         }
-    }
-
-    @Unique
-    @Override
-    public boolean isInfiniteMaze() {
-        return infiniteMazeWall;
-    }
-
-    @Unique
-    @Override
-    public Block getMazeWallBlock() {
-        return mazeWallBlock;
     }
 
     @Override
     public Iterable<VoxelShape> getBlockCollisionsFromContext(CollisionContext shapeContext, AABB box) {
-        if(isInfiniteMaze() && mazeCollisionView != null) return mazeCollisionView.getBlockCollisionsFromContext(shapeContext, box);
+        if(mazeCollisionView != null) return mazeCollisionView.getBlockCollisionsFromContext(shapeContext, box);
         return super.getBlockCollisionsFromContext(shapeContext, box);
     }
 
