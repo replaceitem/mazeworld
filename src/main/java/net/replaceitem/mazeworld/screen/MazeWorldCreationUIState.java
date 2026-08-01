@@ -23,6 +23,8 @@ public class MazeWorldCreationUIState {
 
     private boolean infiniteWall = true;
     private Identifier wallBlock = BlockItemIds.BEDROCK.block().identifier();
+    private int minY = Integer.MIN_VALUE;
+    private int maxY = Integer.MAX_VALUE;
 
     private ResourceKey<MapCodec<? extends MazeType>> mazeType = MazeTypes.BINARY_TREE;
 
@@ -50,7 +52,7 @@ public class MazeWorldCreationUIState {
     public @Nullable MazeGeneratorConfig createMazeConfig() {
         var mazeType = createMazeType();
         if(mazeType == null) return null;
-        return new MazeGeneratorConfig(infiniteWall, wallBlock, mazeType);
+        return new MazeGeneratorConfig(infiniteWall, wallBlock, minY, maxY, mazeType);
     }
 
     private @Nullable MazeType createMazeType() {
@@ -102,6 +104,21 @@ public class MazeWorldCreationUIState {
         this.onChanged();
     }
 
+    public int getMinY() {
+        return minY;
+    }
+    public void setMinY(int minY) {
+        this.minY = minY;
+        this.onChanged();
+    }
+
+    public int getMaxY() {
+        return maxY;
+    }
+    public void setMaxY(int maxY) {
+        this.maxY = maxY;
+        this.onChanged();
+    }
 
     public ResourceKey<MapCodec<? extends MazeType>> getMazeType() {
         return mazeType;

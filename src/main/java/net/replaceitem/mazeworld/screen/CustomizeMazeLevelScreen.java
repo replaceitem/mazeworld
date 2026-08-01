@@ -1,10 +1,7 @@
 package net.replaceitem.mazeworld.screen;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LayoutSettings;
@@ -19,6 +16,7 @@ import net.replaceitem.mazeworld.MazeWorld;
 import net.replaceitem.mazeworld.fakes.WorldCreationUIStateAccess;
 import net.replaceitem.mazeworld.screen.widget.IntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
+import net.replaceitem.mazeworld.screen.widget.MappedIntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.MazePreviewWidget;
 import net.replaceitem.mazeworld.types.MazeType;
 import net.replaceitem.mazeworld.types.MazeTypes;
@@ -28,12 +26,15 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.IntStream;
 
 public class CustomizeMazeLevelScreen extends Screen {
 
     private static final Tooltip infiniteWallTooltip = Tooltip.create(Component.translatable("createWorld.customize.maze_world.infinite_walls.description"));
     
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
+    @Nullable
+    private ScrollableLayout scrollableLayout;
     protected final CreateWorldScreen parent;
 
     @UnknownNullability
@@ -59,7 +60,8 @@ public class CustomizeMazeLevelScreen extends Screen {
     protected void init() {
         this.layout.addTitleHeader(this.title, this.font);
 
-        var gridWidget = this.layout.addToContents(new GridLayout().spacing(10));
+        var gridWidget = new GridLayout().spacing(10);
+        this.scrollableLayout = this.layout.addToContents(new ScrollableLayout(this.minecraft, gridWidget, this.layout.getContentHeight()));
         var helper = gridWidget.createRowHelper(2);
 
         // Wall block - Edit box
@@ -83,6 +85,53 @@ public class CustomizeMazeLevelScreen extends Screen {
                                 Component.translatable("createWorld.customize.maze_world.infinite_walls"),
                                 (_, infiniteWall) -> this.getMazeUiState().setInfiniteWall(infiniteWall)
                         )
+        );
+
+        var dimensionsHeightRange = this.parent.getUiState().getSettings().selectedDimensions().dimensions().values().stream().flatMapToInt(stem -> {
+            var dim = stem.type().value();
+            return IntStream.of(dim.minY(), dim.minY() + dim.height());
+        }).summaryStatistics();
+        var minMinY = dimensionsHeightRange.getMin();
+        var maxMaxY = dimensionsHeightRange.getMax();
+
+        // Min Y - Slider
+        helper.addChild(
+                new MappedIntegerSliderWidget<Integer>(
+                        0, 0, Button.DEFAULT_WIDTH,
+                        Component.translatable("createWorld.customize.maze_world.min_y"),
+                        getMazeUiState().getMinY(), minMinY - 1, maxMaxY,
+                        value -> value == Integer.MIN_VALUE ? (minMinY - 1) : value,
+                        value -> value == (minMinY - 1) ? Integer.MIN_VALUE : value,
+                        (slider, value) -> this.getMazeUiState().setMinY(value)
+                ) {
+                    @Override
+                    protected void updateMessage() {
+                        var value = getMappedValue();
+                        var isNone = value == Integer.MIN_VALUE;
+                        this.setMessage(Component.empty().append(name).append(": ")
+                                .append(isNone ? Component.translatable("gui.none") : Component.literal(String.valueOf(value))));
+                    }
+                }
+        );
+
+        // Max Y - Slider
+        helper.addChild(
+                new MappedIntegerSliderWidget<Integer>(
+                        0, 0, Button.DEFAULT_WIDTH,
+                        Component.translatable("createWorld.customize.maze_world.max_y"),
+                        getMazeUiState().getMaxY(), minMinY, maxMaxY + 1,
+                        value -> value == Integer.MAX_VALUE ? (maxMaxY + 1) : value,
+                        value -> value == (maxMaxY + 1) ? Integer.MAX_VALUE : value,
+                        (slider, value) -> this.getMazeUiState().setMaxY(value)
+                ) {
+                    @Override
+                    protected void updateMessage() {
+                        var value = getMappedValue();
+                        var isNone = value == Integer.MAX_VALUE;
+                        this.setMessage(Component.empty().append(name).append(": ")
+                                .append(isNone ? Component.translatable("gui.none") : Component.literal(String.valueOf(value))));
+                    }
+                }
         );
 
         // Maze type - Cycle button
@@ -194,6 +243,9 @@ public class CustomizeMazeLevelScreen extends Screen {
 
     @Override
     protected void repositionElements() {
+        if (this.scrollableLayout != null) {
+            this.scrollableLayout.setMaxHeight(this.layout.getContentHeight());
+        }
         this.layout.arrangeElements();
     }
 

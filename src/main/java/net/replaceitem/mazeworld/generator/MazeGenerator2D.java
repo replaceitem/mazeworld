@@ -16,29 +16,29 @@ public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.Bloc
     public void generateChunk(WorldGenLevel world, ChunkAccess chunk) {
         ChunkPos chunkPos = chunk.getPos();
         long worldSeed = world.getSeed();
-        int xs = chunkPos.getMinBlockX();
-        int zs = chunkPos.getMinBlockZ();
-        int xe = chunkPos.getMaxBlockX();
-        int ze = chunkPos.getMaxBlockZ();
+        int minX = chunkPos.getMinBlockX();
+        int minZ = chunkPos.getMinBlockZ();
+        int minY = Math.max(world.getMinY(), mazeGeneratorConfig.minY());
+        int maxY = Math.min(world.getMaxY(), mazeGeneratorConfig.maxY() - 1);
+        int maxX = chunkPos.getMaxBlockX();
+        int maxZ = chunkPos.getMaxBlockZ();
 
         BlockChecker2D blockChecker = this.getBlockChecker(worldSeed);
-
-        int wallTopY = world.getMaxY();
-
         BlockState defaultState = this.getWallBlockState(world);
 
-        for(int i = xs; i <= xe; i++) {
-            for(int j = zs; j <= ze; j++) {
-                if(blockChecker.isBlockAt(i, j))
-                    placeColumn(world, chunk, i, j, wallTopY, defaultState);
+        for(int i = minX; i <= maxX; i++) {
+            for(int j = minZ; j <= maxZ; j++) {
+                if(blockChecker.isBlockAt(i, j)) {
+                    placeColumn(chunk, i, j, minY, maxY, defaultState);
+                }
             }
         }
         clearBlockEntities(chunk, defaultState.getBlock());
     }
 
-    protected static void placeColumn(WorldGenLevel world, ChunkAccess chunk, int cx, int cz, int top, BlockState blockState) {
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(cx, world.getMinY(), cz);
-        while(pos.getY() <= top) {
+    protected void placeColumn(ChunkAccess chunk, int x, int z, int minY, int maxY, BlockState blockState) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, minY, z);
+        while(pos.getY() <= maxY) {
             chunk.setBlockState(pos, blockState);
             pos.setY(pos.getY()+1);
         }

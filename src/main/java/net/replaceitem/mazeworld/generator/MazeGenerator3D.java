@@ -16,21 +16,23 @@ public abstract class MazeGenerator3D extends MazeGenerator<MazeGenerator3D.Bloc
     public void generateChunk(WorldGenLevel world, ChunkAccess chunk) {
         ChunkPos chunkPos = chunk.getPos();
         long worldSeed = world.getSeed();
-        int xs = chunkPos.getMinBlockX();
-        int ys = world.getMinY();
-        int zs = chunkPos.getMinBlockZ();
 
-        int xe = chunkPos.getMaxBlockX();
-        int ye = world.getMaxY();
-        int ze = chunkPos.getMaxBlockZ();
+        int minX = chunkPos.getMinBlockX();
+        int minY = Math.max(world.getMinY(), mazeGeneratorConfig.minY());
+        int minZ = chunkPos.getMinBlockZ();
+
+        int maxX = chunkPos.getMaxBlockX();
+        int maxY = Math.min(world.getMaxY(), mazeGeneratorConfig.maxY() - 1);
+        int maxZ = chunkPos.getMaxBlockZ();
+
 
         SimplexNoise3DMazeGenerator.BlockChecker3D blockChecker = getBlockChecker(worldSeed);
 
         BlockState defaultState = this.getWallBlockState(world);
 
-        for(int x = xs; x <= xe; x++) {
-            for(int y = ys; y <= ye; y++) {
-                for (int z = zs; z <= ze; z++) {
+        for(int x = minX; x <= maxX; x++) {
+            for(int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
                     if (blockChecker.isBlockAt(x, y, z)) {
                         chunk.setBlockState(new BlockPos(x, y, z), defaultState);
                     }
