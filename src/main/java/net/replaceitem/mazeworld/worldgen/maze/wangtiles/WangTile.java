@@ -1,4 +1,4 @@
-package net.replaceitem.mazeworld.generator.wangtiles;
+package net.replaceitem.mazeworld.worldgen.maze.wangtiles;
 
 import java.util.ArrayList;
 import java.util.List;

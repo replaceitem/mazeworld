@@ -3,10 +3,9 @@ package net.replaceitem.mazeworld.config.types;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.config.MazeType;
-import net.replaceitem.mazeworld.generator.BinaryTreeMazeGenerator;
-import net.replaceitem.mazeworld.generator.MazeGenerator;
+import net.replaceitem.mazeworld.worldgen.maze.BinaryTreeMazeGenerator;
+import net.replaceitem.mazeworld.worldgen.maze.MazeGenerator;
 
 public record BinaryTreeMazeConfig(int spacing, float bias) implements MazeType {
     public static final MapCodec<BinaryTreeMazeConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -20,7 +19,7 @@ public record BinaryTreeMazeConfig(int spacing, float bias) implements MazeType 
     }
 
     @Override
-    public MazeGenerator<?> createGenerator(MazeGeneratorConfig mazeGeneratorConfig) {
-        return new BinaryTreeMazeGenerator(mazeGeneratorConfig, spacing, bias);
+    public MazeGenerator createGenerator() {
+        return new BinaryTreeMazeGenerator(spacing, bias);
     }
 }

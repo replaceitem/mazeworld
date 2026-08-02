@@ -1,4 +1,4 @@
-package net.replaceitem.mazeworld.generator.wangtiles;
+package net.replaceitem.mazeworld.worldgen.maze.wangtiles;
 
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectOpenHashMap;

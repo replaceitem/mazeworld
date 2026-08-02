@@ -1,20 +1,17 @@
-package net.replaceitem.mazeworld.generator;
+package net.replaceitem.mazeworld.worldgen.maze;
 
-import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
-
-public class BinaryTreeMazeGenerator extends MazeGenerator2D {
+public class BinaryTreeMazeGenerator extends MazeGenerator {
     private final int spacing;
     private final float bias;
 
-    public BinaryTreeMazeGenerator(MazeGeneratorConfig mazeConfig, int spacing, float bias) {
-        super(mazeConfig);
+    public BinaryTreeMazeGenerator(int spacing, float bias) {
         this.spacing = spacing;
         this.bias = bias;
     }
 
     @Override
-    public BlockChecker2D getBlockChecker(long seed) {
-        return (x, z) -> {
+    public BlockChecker getBlockChecker(long seed) {
+        return (x, _, z) -> {
             int tx = Math.floorDiv(x, spacing);
             int tz = Math.floorDiv(z, spacing);
             boolean wallDirection = getRandomIntAt(tx, tz, seed, 1000) >= bias*1000; // true=wall in x, false=wall in z

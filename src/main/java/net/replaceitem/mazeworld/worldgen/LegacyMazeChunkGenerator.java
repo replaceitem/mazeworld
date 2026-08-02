@@ -1,4 +1,4 @@
-package net.replaceitem.mazeworld.generator;
+package net.replaceitem.mazeworld.worldgen;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -24,7 +24,7 @@ public class LegacyMazeChunkGenerator extends NoiseBasedChunkGenerator {
 
     private final LegacyMazeChunkGeneratorConfig legacyConfig;
 
-    private final MazeGenerator<?> mazeGenerator;
+    private final MazeChunkGenerator mazeGenerator;
 
     public LegacyMazeChunkGenerator(BiomeSource biomeSource, Holder<NoiseGeneratorSettings> chunkGeneratorSettings, LegacyMazeChunkGeneratorConfig legacyConfig) {
         super(biomeSource, chunkGeneratorSettings);
