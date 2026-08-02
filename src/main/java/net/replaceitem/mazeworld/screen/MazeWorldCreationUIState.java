@@ -5,9 +5,11 @@ import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeType;
+import net.replaceitem.mazeworld.config.MazeTypes;
 import net.replaceitem.mazeworld.fakes.WorldDimensionsAccess;
-import net.replaceitem.mazeworld.types.*;
+import net.replaceitem.mazeworld.config.types.*;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;

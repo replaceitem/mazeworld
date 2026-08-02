@@ -1,9 +1,10 @@
-package net.replaceitem.mazeworld.types;
+package net.replaceitem.mazeworld.config.types;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeType;
 import net.replaceitem.mazeworld.generator.MazeGenerator;
 import net.replaceitem.mazeworld.generator.SimplexNoise3DMazeGenerator;
 

@@ -7,8 +7,8 @@ import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.replaceitem.mazeworld.types.MazeType;
-import net.replaceitem.mazeworld.types.MazeTypes;
+import net.replaceitem.mazeworld.config.MazeType;
+import net.replaceitem.mazeworld.config.MazeTypes;
 
 import java.util.Objects;
 

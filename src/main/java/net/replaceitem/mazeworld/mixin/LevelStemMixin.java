@@ -11,7 +11,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.RecordRecoderRegistration;
 import net.replaceitem.mazeworld.fakes.LevelStemAccess;
 import org.jspecify.annotations.Nullable;

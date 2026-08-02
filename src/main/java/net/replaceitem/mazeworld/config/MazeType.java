@@ -1,10 +1,9 @@
-package net.replaceitem.mazeworld.types;
+package net.replaceitem.mazeworld.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.MazeWorld;
 import net.replaceitem.mazeworld.generator.MazeGenerator;
 

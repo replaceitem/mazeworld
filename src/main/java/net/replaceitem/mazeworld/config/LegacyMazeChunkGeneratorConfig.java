@@ -1,9 +1,9 @@
-package net.replaceitem.mazeworld;
+package net.replaceitem.mazeworld.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.Identifier;
-import net.replaceitem.mazeworld.types.*;
+import net.replaceitem.mazeworld.config.types.*;
 
 @Deprecated()
 public class LegacyMazeChunkGeneratorConfig {

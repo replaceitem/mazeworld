@@ -5,7 +5,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 
 public abstract class MazeGenerator2D extends MazeGenerator<MazeGenerator2D.BlockChecker2D> {
 
