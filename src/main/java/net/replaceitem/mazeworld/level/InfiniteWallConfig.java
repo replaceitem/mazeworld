@@ -1,4 +1,4 @@
-package net.replaceitem.mazeworld;
+package net.replaceitem.mazeworld.level;
 
 import net.minecraft.world.level.block.Block;
 

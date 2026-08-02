@@ -2,7 +2,7 @@ package net.replaceitem.mazeworld.generator;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.generator.wangtiles.WangTile;
 import net.replaceitem.mazeworld.generator.wangtiles.WangTilesSet;
 

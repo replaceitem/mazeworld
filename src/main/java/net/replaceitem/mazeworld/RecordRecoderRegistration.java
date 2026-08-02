@@ -1,5 +1,6 @@
 package net.replaceitem.mazeworld;
 
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.generator.MazeGenerator;
 import org.jspecify.annotations.Nullable;
 import recordrecoder.api.record.ComponentKeyRegistry;

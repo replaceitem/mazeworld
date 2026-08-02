@@ -1,4 +1,4 @@
 @NullMarked
-package net.replaceitem.mazeworld.types;
+package net.replaceitem.mazeworld.level;
 
 import org.jspecify.annotations.NullMarked;

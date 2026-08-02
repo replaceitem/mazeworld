@@ -1,6 +1,6 @@
 package net.replaceitem.mazeworld.generator;
 
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 
 public class BinaryTreeMazeGenerator extends MazeGenerator2D {
     private final int spacing;

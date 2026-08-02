@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.ChunkGenerators;
-import net.replaceitem.mazeworld.LegacyMazeChunkGenerator;
+import net.replaceitem.mazeworld.generator.LegacyMazeChunkGenerator;
 import net.replaceitem.mazeworld.MazeWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

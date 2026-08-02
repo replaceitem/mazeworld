@@ -18,8 +18,8 @@ import net.replaceitem.mazeworld.screen.widget.IntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.MappedIntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.MazePreviewWidget;
-import net.replaceitem.mazeworld.types.MazeType;
-import net.replaceitem.mazeworld.types.MazeTypes;
+import net.replaceitem.mazeworld.config.MazeType;
+import net.replaceitem.mazeworld.config.MazeTypes;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.Nullable;
 

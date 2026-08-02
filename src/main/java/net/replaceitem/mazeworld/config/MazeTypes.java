@@ -1,9 +1,10 @@
-package net.replaceitem.mazeworld.types;
+package net.replaceitem.mazeworld.config;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.replaceitem.mazeworld.MazeWorld;
+import net.replaceitem.mazeworld.config.types.*;
 
 public class MazeTypes {
     public static final ResourceKey<MapCodec<? extends MazeType>> BINARY_TREE = register("binary_tree", BinaryTreeMazeConfig.CODEC);

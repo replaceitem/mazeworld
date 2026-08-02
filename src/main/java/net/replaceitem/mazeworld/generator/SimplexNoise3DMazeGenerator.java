@@ -2,7 +2,7 @@ package net.replaceitem.mazeworld.generator;
 
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.SimplexNoise;
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 
 public class SimplexNoise3DMazeGenerator extends MazeGenerator3D {
     private final double size;

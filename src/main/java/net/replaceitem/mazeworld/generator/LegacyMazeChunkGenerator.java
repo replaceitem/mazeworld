@@ -1,4 +1,4 @@
-package net.replaceitem.mazeworld;
+package net.replaceitem.mazeworld.generator;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.replaceitem.mazeworld.generator.MazeGenerator;
+import net.replaceitem.mazeworld.config.LegacyMazeChunkGeneratorConfig;
 
 @Deprecated()
 public class LegacyMazeChunkGenerator extends NoiseBasedChunkGenerator {

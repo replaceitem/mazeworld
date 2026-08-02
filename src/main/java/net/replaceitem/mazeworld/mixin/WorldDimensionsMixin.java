@@ -3,7 +3,7 @@ package net.replaceitem.mazeworld.mixin;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.WorldDimensions;
-import net.replaceitem.mazeworld.MazeGeneratorConfig;
+import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.fakes.LevelStemAccess;
 import net.replaceitem.mazeworld.fakes.WorldDimensionsAccess;
 import org.jspecify.annotations.Nullable;
