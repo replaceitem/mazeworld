@@ -28,7 +28,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.replaceitem.mazeworld.level.InfiniteWallCollisionView;
 import net.replaceitem.mazeworld.level.InfiniteWallConfig;
-import net.replaceitem.mazeworld.generator.LegacyMazeChunkGenerator;
+import net.replaceitem.mazeworld.worldgen.LegacyMazeChunkGenerator;
 import net.replaceitem.mazeworld.fakes.LevelStemAccess;
 import net.replaceitem.mazeworld.fakes.ServerLevelAccess;
 import org.jetbrains.annotations.Nullable;

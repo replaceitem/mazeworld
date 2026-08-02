@@ -1,24 +1,22 @@
-package net.replaceitem.mazeworld.generator;
+package net.replaceitem.mazeworld.worldgen.maze;
 
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.synth.SimplexNoise;
-import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 
-public class SimplexNoiseMazeGenerator extends MazeGenerator2D {
+public class SimplexNoiseMazeGenerator extends MazeGenerator {
     private final double size;
     private final double threshold;
 
-    public SimplexNoiseMazeGenerator(MazeGeneratorConfig config, double size, double threshold) {
-        super(config);
+    public SimplexNoiseMazeGenerator(double size, double threshold) {
         this.size = size;
         this.threshold = threshold;
     }
 
     @Override
-    public BlockChecker2D getBlockChecker(long seed) {
+    public BlockChecker getBlockChecker(long seed) {
         SimplexNoise simplexNoiseSampler = new SimplexNoise(RandomSource.create(seed));
         double t = threshold * 2 - 1;
-        return (x, z) -> {
+        return (x, _, z) -> {
             double sample = simplexNoiseSampler.getValue(x / size, z / size);
             return sample >= t;
         };

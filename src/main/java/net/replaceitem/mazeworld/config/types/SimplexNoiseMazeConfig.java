@@ -3,10 +3,9 @@ package net.replaceitem.mazeworld.config.types;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.config.MazeType;
-import net.replaceitem.mazeworld.generator.MazeGenerator;
-import net.replaceitem.mazeworld.generator.SimplexNoiseMazeGenerator;
+import net.replaceitem.mazeworld.worldgen.maze.MazeGenerator;
+import net.replaceitem.mazeworld.worldgen.maze.SimplexNoiseMazeGenerator;
 
 public record SimplexNoiseMazeConfig(double size, double threshold) implements MazeType {
     public static final MapCodec<SimplexNoiseMazeConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -20,7 +19,7 @@ public record SimplexNoiseMazeConfig(double size, double threshold) implements M
     }
 
     @Override
-    public MazeGenerator<?> createGenerator(MazeGeneratorConfig mazeGeneratorConfig) {
-        return new SimplexNoiseMazeGenerator(mazeGeneratorConfig, size, threshold);
+    public MazeGenerator createGenerator() {
+        return new SimplexNoiseMazeGenerator(size, threshold);
     }
 }

@@ -1,7 +1,7 @@
 package net.replaceitem.mazeworld;
 
 import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
-import net.replaceitem.mazeworld.generator.MazeGenerator;
+import net.replaceitem.mazeworld.worldgen.MazeChunkGenerator;
 import org.jspecify.annotations.Nullable;
 import recordrecoder.api.record.ComponentKeyRegistry;
 import recordrecoder.api.record.RecordComponentKey;
@@ -11,10 +11,9 @@ public class RecordRecoderRegistration implements Runnable {
             "maze_generator", "net/minecraft/world/level/dimension/LevelStem",
             MazeGeneratorConfig.class, ((MazeGeneratorConfig) null)
     );
-    @SuppressWarnings("rawtypes")
-    public static final RecordComponentKey<@Nullable MazeGenerator> WORLD_GEN_CONTEXT_MAZE_GENERATOR = RecordComponentKey.create(
+    public static final RecordComponentKey<@Nullable MazeChunkGenerator> WORLD_GEN_CONTEXT_MAZE_GENERATOR = RecordComponentKey.create(
             "maze_generator", "net/minecraft/world/level/chunk/status/WorldGenContext",
-            MazeGenerator.class, ((MazeGenerator<?>) null)
+            MazeChunkGenerator.class, ((MazeChunkGenerator) null)
     );
 
     @Override

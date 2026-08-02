@@ -1,25 +1,23 @@
-package net.replaceitem.mazeworld.generator;
+package net.replaceitem.mazeworld.worldgen.maze;
 
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
-import net.replaceitem.mazeworld.generator.wangtiles.WangTile;
-import net.replaceitem.mazeworld.generator.wangtiles.WangTilesSet;
+import net.replaceitem.mazeworld.worldgen.maze.wangtiles.WangTile;
+import net.replaceitem.mazeworld.worldgen.maze.wangtiles.WangTilesSet;
 
-public class WangTilesMazeGenerator extends MazeGenerator2D {
+public class WangTilesMazeGenerator extends MazeGenerator {
     private final WangTilesSet tiles;
     private final int tileSize;
 
-    public WangTilesMazeGenerator(MazeGeneratorConfig config, WangTilesSet tiles, int tileSize) {
-        super(config);
+    public WangTilesMazeGenerator(WangTilesSet tiles, int tileSize) {
         this.tiles = tiles;
         this.tileSize = tileSize;
     }
 
     @Override
-    public BlockChecker2D getBlockChecker(long worldSeed) {
+    public BlockChecker getBlockChecker(long worldSeed) {
         Long2ObjectMap<WangTile> tileCache = new Long2ObjectOpenHashMap<>();
-        return (x, z) -> {
+        return (x, _, z) -> {
             int tx = Math.floorDiv(x, tileSize);
             int tz = Math.floorDiv(z, tileSize);
             WangTile wangTile = computeTileAt(tx, tz, worldSeed, tileCache);

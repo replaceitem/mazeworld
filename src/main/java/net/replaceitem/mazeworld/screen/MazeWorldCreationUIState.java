@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceKey;
 import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.config.MazeType;
 import net.replaceitem.mazeworld.config.MazeTypes;
+import net.replaceitem.mazeworld.config.StructureReplacementType;
 import net.replaceitem.mazeworld.fakes.WorldDimensionsAccess;
 import net.replaceitem.mazeworld.config.types.*;
 import org.jspecify.annotations.Nullable;
@@ -27,6 +28,7 @@ public class MazeWorldCreationUIState {
     private Identifier wallBlock = BlockItemIds.BEDROCK.block().identifier();
     private int minY = Integer.MIN_VALUE;
     private int maxY = Integer.MAX_VALUE;
+    private StructureReplacementType replaceStructures = StructureReplacementType.PRESERVE_ESSENTIAL;
 
     private ResourceKey<MapCodec<? extends MazeType>> mazeType = MazeTypes.BINARY_TREE;
 
@@ -54,7 +56,7 @@ public class MazeWorldCreationUIState {
     public @Nullable MazeGeneratorConfig createMazeConfig() {
         var mazeType = createMazeType();
         if(mazeType == null) return null;
-        return new MazeGeneratorConfig(infiniteWall, wallBlock, minY, maxY, mazeType);
+        return new MazeGeneratorConfig(infiniteWall, wallBlock, minY, maxY, replaceStructures, mazeType);
     }
 
     private @Nullable MazeType createMazeType() {
@@ -119,6 +121,14 @@ public class MazeWorldCreationUIState {
     }
     public void setMaxY(int maxY) {
         this.maxY = maxY;
+        this.onChanged();
+    }
+
+    public StructureReplacementType getReplaceStructures() {
+        return replaceStructures;
+    }
+    public void setReplaceStructures(StructureReplacementType replaceStructures) {
+        this.replaceStructures = replaceStructures;
         this.onChanged();
     }
 

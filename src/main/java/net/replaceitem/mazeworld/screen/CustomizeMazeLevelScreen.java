@@ -1,6 +1,5 @@
 package net.replaceitem.mazeworld.screen;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.*;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
@@ -13,13 +12,14 @@ import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.replaceitem.mazeworld.MazeWorld;
+import net.replaceitem.mazeworld.config.MazeType;
+import net.replaceitem.mazeworld.config.MazeTypes;
+import net.replaceitem.mazeworld.config.StructureReplacementType;
 import net.replaceitem.mazeworld.fakes.WorldCreationUIStateAccess;
 import net.replaceitem.mazeworld.screen.widget.IntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.LogarithmicIntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.MappedIntegerSliderWidget;
 import net.replaceitem.mazeworld.screen.widget.MazePreviewWidget;
-import net.replaceitem.mazeworld.config.MazeType;
-import net.replaceitem.mazeworld.config.MazeTypes;
 import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.Nullable;
 
@@ -134,18 +134,40 @@ public class CustomizeMazeLevelScreen extends Screen {
                 }
         );
 
+        // Structure replacement type - Cycle button
+        helper.addChild(
+                CycleButton.builder(StructureReplacementType::getDisplayName, getMazeUiState().getReplaceStructures())
+                        .withValues(StructureReplacementType.values())
+                        .withTooltip(s -> Tooltip.create(
+                                Component.empty().append(
+                                        s.getDisplayName().copy().withStyle(style -> style.withUnderlined(true))
+                                ).append("\n").append(
+                                        s.getDescription()
+                                )
+                        ))
+                        .create(0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
+                                Component.translatable("createWorld.customize.maze_world.structure_replacement"),
+                                (_, value) -> this.getMazeUiState().setReplaceStructures(value)
+                        )
+        );
+
         // Maze type - Cycle button
         helper.addChild(
                 CycleButton.builder(MazeType::getName, getMazeUiState().getMazeType())
                         .withValues(MazeWorld.MAZE_TYPE_REGISTRY.listElementIds().toList())
                         .withTooltip(mazeType -> Tooltip.create(
-                                Component.empty().append(MazeType.getName(mazeType).copy().withStyle(ChatFormatting.BOLD, ChatFormatting.GOLD))
-                                        .append("\n").append(MazeType.getDescription(mazeType))
+                                Component.empty().append(
+                                        MazeType.getName(mazeType).copy().withStyle(style -> style.withUnderlined(true))
+                                ).append("\n").append(
+                                        MazeType.getDescription(mazeType)
+                                )
                         ))
                         .create(
-                                0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT, Component.translatable("createWorld.customize.maze_world.maze_type"),
+                                0, 0, Button.DEFAULT_WIDTH * 2 + 10, Button.DEFAULT_HEIGHT, Component.translatable("createWorld.customize.maze_world.maze_type"),
                                 (_, type) -> this.getMazeUiState().setMazeType(type)
-                        )
+                        ),
+                2,
+                LayoutSettings.defaults().alignHorizontallyCenter()
         );
 
         this.mazeTypeSpecificWidgets = helper.addChild(new GridLayout().spacing(10), 2);

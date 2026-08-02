@@ -3,12 +3,11 @@ package net.replaceitem.mazeworld.config.types;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.config.MazeType;
-import net.replaceitem.mazeworld.generator.MazeGenerator;
-import net.replaceitem.mazeworld.generator.WangTilesMazeGenerator;
-import net.replaceitem.mazeworld.generator.wangtiles.WangTile;
-import net.replaceitem.mazeworld.generator.wangtiles.WangTilesSet;
+import net.replaceitem.mazeworld.worldgen.maze.MazeGenerator;
+import net.replaceitem.mazeworld.worldgen.maze.WangTilesMazeGenerator;
+import net.replaceitem.mazeworld.worldgen.maze.wangtiles.WangTile;
+import net.replaceitem.mazeworld.worldgen.maze.wangtiles.WangTilesSet;
 
 public record RectangularWangTilesMazeConfig(int size, float wallWidth) implements MazeType {
     public static final MapCodec<RectangularWangTilesMazeConfig> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -22,7 +21,7 @@ public record RectangularWangTilesMazeConfig(int size, float wallWidth) implemen
     }
 
     @Override
-    public MazeGenerator<?> createGenerator(MazeGeneratorConfig mazeGeneratorConfig) {
+    public MazeGenerator createGenerator() {
         double t = wallWidth * 0.5;
 
         var tileSet = new WangTilesSet();
@@ -43,6 +42,6 @@ public record RectangularWangTilesMazeConfig(int size, float wallWidth) implemen
         // Intersection piece
         tileSet.register(new WangTile.Builder( 0b1111).carve(new WangTile.Rectangle(t,0,1-t,1)).carve(new WangTile.Rectangle(0,t,1,1-t)).build());
 
-        return new WangTilesMazeGenerator(mazeGeneratorConfig, tileSet, size);
+        return new WangTilesMazeGenerator(tileSet, size);
     }
 }

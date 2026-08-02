@@ -16,7 +16,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.MapColor;
 import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
-import net.replaceitem.mazeworld.generator.MazeGenerator2D;
 import net.replaceitem.mazeworld.MazeWorld;
 import org.jspecify.annotations.Nullable;
 
@@ -45,7 +44,7 @@ public class MazePreviewWidget extends AbstractWidget {
     
     public void preRender() {
         if(config == null) return;
-        MazeGenerator2D.BlockChecker2D blockChecker = config.mazeType().createGenerator(config).getBlockChecker(0);
+        var blockChecker = config.mazeType().createGenerator().getBlockChecker(0);
         int wallColor = BuiltInRegistries.BLOCK.get(config.wallBlock())
                 .map(Holder.Reference::value)
                 .map(block -> block.defaultMapColor().calculateARGBColor(MapColor.Brightness.NORMAL))
@@ -56,8 +55,8 @@ public class MazePreviewWidget extends AbstractWidget {
         for(int pixelX = 0; pixelX < getWidth(); pixelX++) {
             for(int pixelY = 0; pixelY < getHeight(); pixelY++) {
                 int blockX = pixelX+offsetX;
-                int blockY = pixelY+offsetY;
-                image.setPixel(pixelX, pixelY, blockChecker.isBlockAt(blockX, blockY) ? wallColor : backgroundColor);
+                int blockZ = pixelY+offsetY;
+                image.setPixel(pixelX, pixelY, blockChecker.isBlockAt(blockX, 0, blockZ) ? wallColor : backgroundColor);
             }
         }
         this.texture.upload();

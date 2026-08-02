@@ -1,4 +1,4 @@
 @NullMarked
-package net.replaceitem.mazeworld.generator.wangtiles;
+package net.replaceitem.mazeworld.worldgen;
 
 import org.jspecify.annotations.NullMarked;
