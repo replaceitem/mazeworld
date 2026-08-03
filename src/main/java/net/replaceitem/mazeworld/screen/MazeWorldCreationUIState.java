@@ -34,7 +34,7 @@ public class MazeWorldCreationUIState {
     private BlockReplacementType replace = BlockReplacementType.ALL;
     private StructureReplacementType replaceStructures = StructureReplacementType.PRESERVE_ESSENTIAL;
 
-    private ResourceKey<MapCodec<? extends MazeType>> mazeType = MazeTypes.BINARY_TREE;
+    private ResourceKey<MapCodec<? extends MazeType>> mazeType = MazeTypes.WANG_TILES;
 
     // specific to the mazeTypes, not every setting is used in all
     private int size = 5;

@@ -30,7 +30,7 @@ import java.util.stream.IntStream;
 
 public class CustomizeMazeLevelScreen extends Screen {
 
-    private static final Tooltip infiniteWallTooltip = Tooltip.create(Component.translatable("createWorld.customize.maze_world.infinite_walls.description"));
+    private static final Tooltip INFINITE_WALL_TOOLTIP = Tooltip.create(Component.translatable("createWorld.customize.maze_world.infinite_walls.description"));
     
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     @Nullable
@@ -80,7 +80,7 @@ public class CustomizeMazeLevelScreen extends Screen {
         // Infinite wall - Cycle button
         helper.addChild(
                 CycleButton.onOffBuilder(getMazeUiState().isInfiniteWall())
-                        .withTooltip(_ -> infiniteWallTooltip)
+                        .withTooltip(_ -> INFINITE_WALL_TOOLTIP)
                         .create(0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
                                 Component.translatable("createWorld.customize.maze_world.infinite_walls"),
                                 (_, infiniteWall) -> this.getMazeUiState().setInfiniteWall(infiniteWall)
