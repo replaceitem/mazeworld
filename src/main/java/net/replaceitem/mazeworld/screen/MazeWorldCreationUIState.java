@@ -2,21 +2,24 @@ package net.replaceitem.mazeworld.screen;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
+import net.minecraft.network.chat.Component;
 import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.config.MazeType;
 import net.replaceitem.mazeworld.config.MazeTypes;
 import net.replaceitem.mazeworld.config.StructureReplacementType;
-import net.replaceitem.mazeworld.fakes.WorldDimensionsAccess;
 import net.replaceitem.mazeworld.config.types.*;
+import net.replaceitem.mazeworld.fakes.WorldDimensionsAccess;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class MazeWorldCreationUIState {
     private final WorldCreationUiState worldCreationUiState;
@@ -28,6 +31,7 @@ public class MazeWorldCreationUIState {
     private Identifier wallBlock = BlockItemIds.BEDROCK.block().identifier();
     private int minY = Integer.MIN_VALUE;
     private int maxY = Integer.MAX_VALUE;
+    private BlockReplacementType replace = BlockReplacementType.ALL;
     private StructureReplacementType replaceStructures = StructureReplacementType.PRESERVE_ESSENTIAL;
 
     private ResourceKey<MapCodec<? extends MazeType>> mazeType = MazeTypes.BINARY_TREE;
@@ -56,7 +60,7 @@ public class MazeWorldCreationUIState {
     public @Nullable MazeGeneratorConfig createMazeConfig() {
         var mazeType = createMazeType();
         if(mazeType == null) return null;
-        return new MazeGeneratorConfig(infiniteWall, wallBlock, minY, maxY, replaceStructures, mazeType);
+        return new MazeGeneratorConfig(infiniteWall, wallBlock, minY, maxY, replace.getBlockPredicate(), replaceStructures, mazeType);
     }
 
     private @Nullable MazeType createMazeType() {
@@ -124,6 +128,14 @@ public class MazeWorldCreationUIState {
         this.onChanged();
     }
 
+    public BlockReplacementType getReplace() {
+        return replace;
+    }
+    public void setReplace(BlockReplacementType replace) {
+        this.replace = replace;
+        this.onChanged();
+    }
+
     public StructureReplacementType getReplaceStructures() {
         return replaceStructures;
     }
@@ -175,5 +187,27 @@ public class MazeWorldCreationUIState {
     public void setWallWidth(float wallWidth) {
         this.wallWidth = wallWidth;
         this.onChanged();
+    }
+
+    public enum BlockReplacementType {
+        ALL("all", BlockPredicate::alwaysTrue),
+        REPLACEABLE("replaceable", BlockPredicate::replaceable),
+        AIR("air", () -> BlockPredicate.ONLY_IN_AIR_PREDICATE);
+
+        private final Supplier<BlockPredicate> blockPredicate;
+        private final Component displayName;
+
+        BlockReplacementType(String name, Supplier<BlockPredicate> blockPredicate) {
+            this.blockPredicate = blockPredicate;
+            this.displayName = Component.translatable("createWorld.customize.maze_world.replace." + name);
+        }
+
+        public BlockPredicate getBlockPredicate() {
+            return blockPredicate.get();
+        }
+
+        public Component getDisplayName() {
+            return displayName;
+        }
     }
 }
