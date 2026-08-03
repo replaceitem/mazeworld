@@ -16,9 +16,9 @@ public interface MazeType {
     MazeGenerator createGenerator();
 
     static Component getName(ResourceKey<MapCodec<? extends MazeType>> key) {
-        return Component.translatable("maze_type." + key.identifier().getPath() + ".name");
+        return Component.translatable("mazeworld.maze_type." + key.identifier().getPath());
     }
     static Component getDescription(ResourceKey<MapCodec<? extends MazeType>> key) {
-        return Component.translatable("maze_type." + key.identifier().getPath() + ".description");
+        return Component.translatable("mazeworld.maze_type." + key.identifier().getPath() + ".description");
     }
 }

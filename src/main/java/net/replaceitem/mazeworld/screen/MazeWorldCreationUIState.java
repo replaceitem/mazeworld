@@ -217,7 +217,7 @@ public class MazeWorldCreationUIState {
 
         BlockReplacementType(String name, Supplier<BlockPredicate> blockPredicate) {
             this.blockPredicate = blockPredicate;
-            this.displayName = Component.translatable("createWorld.customize.maze_world.replace." + name);
+            this.displayName = Component.translatable("createWorld.customize.maze_world.replace.option." + name);
         }
 
         public BlockPredicate getBlockPredicate() {
