@@ -33,6 +33,10 @@
     "createWorld.customize.maze_world.replace.replaceable": "Replaceable",
     "createWorld.customize.maze_world.replace.air": "Air",
 
+    "createWorld.customize.maze_world.heading.general": "General",
+    "createWorld.customize.maze_world.heading.enabled_dimensions": "Enabled Dimensions",
+    "createWorld.customize.maze_world.heading.maze_generator": "Maze generator",
+
     "createWorld.customize.maze_world.structure_replacement": "Structures",
     "createWorld.customize.maze_world.structure_replacement.replace_all": "Replace all",
     "createWorld.customize.maze_world.structure_replacement.replace_all.description": "The maze walls may replace all structures. This may make it impossible to open the end portal.",

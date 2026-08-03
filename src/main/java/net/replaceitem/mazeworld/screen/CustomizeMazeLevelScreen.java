@@ -7,10 +7,13 @@ import net.minecraft.client.gui.layouts.LayoutSettings;
 import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
+import net.minecraft.client.gui.screens.worldselection.SwitchGrid;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.dimension.LevelStem;
 import net.replaceitem.mazeworld.MazeWorld;
 import net.replaceitem.mazeworld.config.MazeType;
 import net.replaceitem.mazeworld.config.MazeTypes;
@@ -24,13 +27,20 @@ import org.jetbrains.annotations.UnknownNullability;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class CustomizeMazeLevelScreen extends Screen {
 
     private static final Tooltip INFINITE_WALL_TOOLTIP = Tooltip.create(Component.translatable("createWorld.customize.maze_world.infinite_walls.description"));
+    private static final Map<ResourceKey<LevelStem>, Integer> DIMENSION_ORDER = Map.of(
+            LevelStem.OVERWORLD, 0,
+            LevelStem.NETHER, 1,
+            LevelStem.END, 2
+    );
     
     private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     @Nullable
@@ -60,9 +70,13 @@ public class CustomizeMazeLevelScreen extends Screen {
     protected void init() {
         this.layout.addTitleHeader(this.title, this.font);
 
-        var gridWidget = new GridLayout().spacing(10);
+        var spacing = 10;
+        var gridWidget = new GridLayout().spacing(spacing);
         this.scrollableLayout = this.layout.addToContents(new ScrollableLayout(this.minecraft, gridWidget, this.layout.getContentHeight()));
         var helper = gridWidget.createRowHelper(2);
+
+        // Heading - General
+        helper.addChild(new StringWidget(Component.translatable("createWorld.customize.maze_world.heading.general").withStyle(style -> style.withUnderlined(true)), this.getFont()), 2);
 
         // Wall block - Edit box
         var wallBlockEditBox = helper.addChild(
@@ -161,6 +175,27 @@ public class CustomizeMazeLevelScreen extends Screen {
                         )
         );
 
+        // Heading - Dimensions
+        helper.addChild(new StringWidget(Component.translatable("createWorld.customize.maze_world.heading.enabled_dimensions").withStyle(style -> style.withUnderlined(true)), this.getFont()), 2);
+
+        // Dinemsions enabled - Switch grid
+        SwitchGrid.Builder switchGridBuilder = SwitchGrid.builder(Button.DEFAULT_WIDTH * 2 + spacing);
+        var dimensionKeys = this.parent.getUiState().getSettings().selectedDimensions().dimensions().keySet().stream()
+                .sorted(Comparator.comparing((ResourceKey<LevelStem> key) -> DIMENSION_ORDER.getOrDefault(key, Integer.MAX_VALUE)).thenComparing(ResourceKey::toString, Comparator.naturalOrder()))
+                .toList();
+        for (ResourceKey<LevelStem> key : dimensionKeys) {
+            switchGridBuilder.addSwitch(
+                    Component.literal(key.identifier().toString()),
+                    () -> getMazeUiState().getEnabledDimensions().getOrDefault(key, true),
+                    enabled -> getMazeUiState().setDimensionEnabled(key, enabled)
+            );
+        }
+        SwitchGrid switchGrid = switchGridBuilder.build();
+        helper.addChild(switchGrid.layout(), 2);
+
+        // Heading - Maze generator
+        helper.addChild(new StringWidget(Component.translatable("createWorld.customize.maze_world.heading.maze_generator").withStyle(style -> style.withUnderlined(true)), this.getFont()), 2);
+
         // Maze type - Cycle button
         helper.addChild(
                 CycleButton.builder(MazeType::getName, getMazeUiState().getMazeType())
@@ -173,13 +208,13 @@ public class CustomizeMazeLevelScreen extends Screen {
                                 )
                         ))
                         .create(
-                                0, 0, Button.DEFAULT_WIDTH * 2 + 10, Button.DEFAULT_HEIGHT, Component.translatable("createWorld.customize.maze_world.maze_type"),
+                                0, 0, Button.DEFAULT_WIDTH * 2 + spacing, Button.DEFAULT_HEIGHT, Component.translatable("createWorld.customize.maze_world.maze_type"),
                                 (_, type) -> this.getMazeUiState().setMazeType(type)
                         ),
                 2
         );
 
-        this.mazeTypeSpecificWidgets = helper.addChild(new GridLayout().spacing(10), 2);
+        this.mazeTypeSpecificWidgets = helper.addChild(new GridLayout().spacing(spacing), 2);
 
         mazePreviewWidget = helper.addChild(
                 new MazePreviewWidget(
@@ -197,7 +232,8 @@ public class CustomizeMazeLevelScreen extends Screen {
         this.onRemoveCleanup.clear();
 
         Consumer<WorldCreationUiState> stateChangeListener = state -> {
-            this.mazePreviewWidget.updateConfig(((WorldCreationUIStateAccess) state).getMazeworldState().createMazeConfig());
+            switchGrid.refreshStates();
+            this.mazePreviewWidget.updateConfig(((WorldCreationUIStateAccess) state).getMazeworldState().createMazeGeneratorConfig());
             this.mazePreviewWidget.preRender();
         };
         this.parent.getUiState().addListener(stateChangeListener);
