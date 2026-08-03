@@ -3,6 +3,7 @@ package net.replaceitem.mazeworld.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.replaceitem.mazeworld.config.types.*;
 
 @Deprecated()
@@ -43,7 +44,7 @@ public class LegacyMazeChunkGeneratorConfig {
             case "simplex_noise_3d" -> new SimplexNoise3dMazeConfig(spacing, (float) threshold);
             default -> throw new IllegalStateException("Unexpected maze type: " + this.mazeType);
         };
-        return new MazeGeneratorConfig(infiniteWall, Identifier.parse(wallBlock), Integer.MIN_VALUE, Integer.MAX_VALUE, StructureReplacementType.PRESERVE_ESSENTIAL, mazeType);
+        return new MazeGeneratorConfig(infiniteWall, Identifier.parse(wallBlock), Integer.MIN_VALUE, Integer.MAX_VALUE, BlockPredicate.alwaysTrue(), StructureReplacementType.PRESERVE_ESSENTIAL, mazeType);
     }
 
     public MazeGeneratorConfig getMigratedConfig() {

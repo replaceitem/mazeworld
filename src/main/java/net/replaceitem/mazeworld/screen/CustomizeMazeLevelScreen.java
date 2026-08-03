@@ -136,6 +136,16 @@ public class CustomizeMazeLevelScreen extends Screen {
 
         // Structure replacement type - Cycle button
         helper.addChild(
+                CycleButton.builder(MazeWorldCreationUIState.BlockReplacementType::getDisplayName, getMazeUiState().getReplace())
+                        .withValues(MazeWorldCreationUIState.BlockReplacementType.values())
+                        .create(0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
+                                Component.translatable("createWorld.customize.maze_world.replace"),
+                                (_, value) -> this.getMazeUiState().setReplace(value)
+                        )
+        );
+
+        // Structure replacement type - Cycle button
+        helper.addChild(
                 CycleButton.builder(StructureReplacementType::getDisplayName, getMazeUiState().getReplaceStructures())
                         .withValues(StructureReplacementType.values())
                         .withTooltip(s -> Tooltip.create(
@@ -166,8 +176,7 @@ public class CustomizeMazeLevelScreen extends Screen {
                                 0, 0, Button.DEFAULT_WIDTH * 2 + 10, Button.DEFAULT_HEIGHT, Component.translatable("createWorld.customize.maze_world.maze_type"),
                                 (_, type) -> this.getMazeUiState().setMazeType(type)
                         ),
-                2,
-                LayoutSettings.defaults().alignHorizontallyCenter()
+                2
         );
 
         this.mazeTypeSpecificWidgets = helper.addChild(new GridLayout().spacing(10), 2);

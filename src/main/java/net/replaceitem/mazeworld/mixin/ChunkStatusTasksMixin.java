@@ -1,6 +1,8 @@
 package net.replaceitem.mazeworld.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.server.level.GenerationChunkHolder;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.StaticCache2D;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.status.ChunkStatusTasks;
@@ -17,10 +19,14 @@ import java.util.concurrent.CompletableFuture;
 @Mixin(ChunkStatusTasks.class)
 public class ChunkStatusTasksMixin {
     @Inject(method = "generateFeatures", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/ChunkGenerator;applyBiomeDecoration(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/StructureManager;)V", shift = At.Shift.AFTER))
-    private static void afterChunkGeneratorBiomeDecoration(WorldGenContext context, ChunkStep step, StaticCache2D<GenerationChunkHolder> chunks, ChunkAccess chunk, CallbackInfoReturnable<CompletableFuture<ChunkAccess>> cir) {
+    private static void afterChunkGeneratorBiomeDecoration(
+            WorldGenContext context, ChunkStep step, StaticCache2D<GenerationChunkHolder> chunks, ChunkAccess chunk,
+            CallbackInfoReturnable<CompletableFuture<ChunkAccess>> cir,
+            @Local(name = "region") WorldGenRegion region
+    ) {
         var mazeGenerator = RecordRecoderRegistration.WORLD_GEN_CONTEXT_MAZE_GENERATOR.getOrNull(context);
         if(mazeGenerator != null) {
-            mazeGenerator.generateChunk(context.level(), chunk);
+            mazeGenerator.generateChunk(region, chunk);
         }
     }
 }

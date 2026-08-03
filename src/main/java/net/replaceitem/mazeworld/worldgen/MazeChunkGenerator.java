@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.worldgen.maze.MazeGenerator;
 
@@ -39,6 +40,11 @@ public class MazeChunkGenerator {
         var blockChecker = this.mazeGenerator.getBlockChecker(worldSeed);
 
         var mazePlacer = new MazePlacer(chunk, minX, minY, minZ, maxX, maxY, maxZ);
+
+        if(mazeGeneratorConfig.replace() != BlockPredicate.alwaysTrue()) {
+            var predicate = mazeGeneratorConfig.replace();
+            mazePlacer.addCondition(pos -> predicate.test(world, pos));
+        }
 
         var structureCondition = new StructureCondition(mazeGeneratorConfig.replaceStructures(), world, chunkPos);
         structureCondition.createPredicate().ifPresent(mazePlacer::addCondition);
