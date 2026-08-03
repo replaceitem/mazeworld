@@ -16,8 +16,8 @@ public enum StructureReplacementType implements StringRepresentable {
 
     StructureReplacementType(String name) {
         this.name = name;
-        this.displayName = Component.translatable("createWorld.customize.maze_world.structure_replacement." + name);
-        this.description = Component.translatable("createWorld.customize.maze_world.structure_replacement." + name + ".description");
+        this.displayName = Component.translatable("mazeworld.structure_replacement." + name);
+        this.description = Component.translatable("mazeworld.structure_replacement." + name + ".description");
     }
 
     @Override

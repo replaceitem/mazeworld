@@ -83,7 +83,7 @@ public class CustomizeMazeLevelScreen extends Screen {
                 new EditBox(this.font, 0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT, Component.empty())
         );
         wallBlockEditBox.setValue(getMazeUiState().getWallBlock().toString());
-        wallBlockEditBox.setHint(Component.nullToEmpty("Maze wall block"));
+        wallBlockEditBox.setHint(Component.translatable("createWorld.customize.maze_world.wall_block"));
         wallBlockEditBox.setResponder(wallBlockId -> {
             var id = Identifier.tryParse(wallBlockId);
             if(id != null) {
@@ -116,7 +116,7 @@ public class CustomizeMazeLevelScreen extends Screen {
                         getMazeUiState().getMinY(), minMinY - 1, maxMaxY,
                         value -> value == Integer.MIN_VALUE ? (minMinY - 1) : value,
                         value -> value == (minMinY - 1) ? Integer.MIN_VALUE : value,
-                        (slider, value) -> this.getMazeUiState().setMinY(value)
+                        (_, value) -> this.getMazeUiState().setMinY(value)
                 ) {
                     @Override
                     protected void updateMessage() {
