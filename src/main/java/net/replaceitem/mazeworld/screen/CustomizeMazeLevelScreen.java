@@ -276,7 +276,12 @@ public class CustomizeMazeLevelScreen extends Screen {
                             Component.translatable("createWorld.customize.maze_world.bias"),
                             (int) (getMazeUiState().getBias() * 100), 0, 100,
                             (slider, _) -> this.getMazeUiState().setBias((float) slider.getPercentageValue())
-                    )
+                    ) {
+                        @Override
+                        protected void updateMessage() {
+                            this.setMessage(Component.empty().append(name).append(": " + getIntegerValue() + "%"));
+                        }
+                    }
             );
         }
 
@@ -288,7 +293,12 @@ public class CustomizeMazeLevelScreen extends Screen {
                             Component.translatable("createWorld.customize.maze_world.wall_width"),
                             (int) (getMazeUiState().getWallWidth() * 100), 0, 100,
                             (slider, _) -> this.getMazeUiState().setWallWidth((float) slider.getPercentageValue())
-                    )
+                    ) {
+                        @Override
+                        protected void updateMessage() {
+                            this.setMessage(Component.empty().append(name).append(": " + getIntegerValue() + "%"));
+                        }
+                    }
             );
         }
 
@@ -300,7 +310,12 @@ public class CustomizeMazeLevelScreen extends Screen {
                             Component.translatable("createWorld.customize.maze_world.threshold"),
                             (int) (getMazeUiState().getThreshold() * 100), 0, 100,
                             (slider, _) -> this.getMazeUiState().setThreshold(slider.getPercentageValue())
-                    )
+                    ) {
+                        @Override
+                        protected void updateMessage() {
+                            this.setMessage(Component.empty().append(name).append(": " + getIntegerValue() + "%"));
+                        }
+                    }
             );
         }
 
