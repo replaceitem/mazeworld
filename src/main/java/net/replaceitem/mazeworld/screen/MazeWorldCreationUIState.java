@@ -6,20 +6,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.WorldDimensions;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.replaceitem.mazeworld.config.MazeGeneratorConfig;
 import net.replaceitem.mazeworld.config.MazeType;
 import net.replaceitem.mazeworld.config.MazeTypes;
 import net.replaceitem.mazeworld.config.StructureReplacementType;
 import net.replaceitem.mazeworld.config.types.*;
-import net.replaceitem.mazeworld.fakes.WorldDimensionsAccess;
+import net.replaceitem.mazeworld.fakes.LevelStemAccess;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class MazeWorldCreationUIState {
     private final WorldCreationUiState worldCreationUiState;
@@ -33,6 +34,7 @@ public class MazeWorldCreationUIState {
     private int maxY = Integer.MAX_VALUE;
     private BlockReplacementType replace = BlockReplacementType.ALL;
     private StructureReplacementType replaceStructures = StructureReplacementType.PRESERVE_ESSENTIAL;
+    private final Map<ResourceKey<LevelStem>, Boolean> enabledDimensions = new HashMap<>();
 
     private ResourceKey<MapCodec<? extends MazeType>> mazeType = MazeTypes.WANG_TILES;
 
@@ -57,7 +59,7 @@ public class MazeWorldCreationUIState {
         }
     }
 
-    public @Nullable MazeGeneratorConfig createMazeConfig() {
+    public @Nullable MazeGeneratorConfig createMazeGeneratorConfig() {
         var mazeType = createMazeType();
         if(mazeType == null) return null;
         return new MazeGeneratorConfig(infiniteWall, wallBlock, minY, maxY, replace.getBlockPredicate(), replaceStructures, mazeType);
@@ -83,7 +85,15 @@ public class MazeWorldCreationUIState {
     }
 
     private void onChanged() {
-        this.worldCreationUiState.updateDimensions((_, worldDimensions) -> ((WorldDimensionsAccess)(Object) worldDimensions).withMazeGenerator(this.generateMaze ? this.createMazeConfig() : null));
+        this.worldCreationUiState.updateDimensions((_, worldDimensions) -> {
+            var mazeGenerator = this.generateMaze ? this.createMazeGeneratorConfig() : null;
+            return new WorldDimensions(worldDimensions.dimensions().entrySet().stream()
+                    .map(entry -> {
+                        var dimEnabled = this.enabledDimensions.getOrDefault(entry.getKey(), true);
+                        return Map.entry(entry.getKey(), ((LevelStemAccess) (Object) entry.getValue()).withMazeGenerator(dimEnabled ? mazeGenerator : null));
+                    })
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        });
         this.worldCreationUiState.onChanged();
     }
 
@@ -141,6 +151,14 @@ public class MazeWorldCreationUIState {
     }
     public void setReplaceStructures(StructureReplacementType replaceStructures) {
         this.replaceStructures = replaceStructures;
+        this.onChanged();
+    }
+
+    public Map<ResourceKey<LevelStem>, Boolean> getEnabledDimensions() {
+        return enabledDimensions;
+    }
+    public void setDimensionEnabled(ResourceKey<LevelStem> key, boolean enabled) {
+        this.enabledDimensions.put(key, enabled);
         this.onChanged();
     }
 

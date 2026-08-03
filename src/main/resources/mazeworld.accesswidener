@@ -3,3 +3,4 @@ extendable	class	net/minecraft/world/level/levelgen/NoiseBasedChunkGenerator
 accessible	class	net/minecraft/world/level/levelgen/presets/WorldPresets$Bootstrap
 accessible	method	net/minecraft/world/level/CollisionGetter	getBlockCollisionsFromContext	(Lnet/minecraft/world/phys/shapes/CollisionContext;Lnet/minecraft/world/phys/AABB;)Ljava/lang/Iterable;
 accessible  class   net/minecraft/client/gui/screens/worldselection/CreateWorldScreen$WorldTab
+accessible  class   net/minecraft/client/gui/screens/worldselection/SwitchGrid
