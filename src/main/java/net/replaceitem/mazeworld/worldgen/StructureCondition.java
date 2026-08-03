@@ -2,7 +2,6 @@ package net.replaceitem.mazeworld.worldgen;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -44,7 +43,7 @@ public class StructureCondition {
 
     public Optional<Predicate<BlockPos>> createPredicate() {
         if (structureReplacementType == StructureReplacementType.REPLACE_ALL) return Optional.empty();
-        if(!(level instanceof ServerLevel serverLevel)) return Optional.empty();
+        var serverLevel = level.getLevel();
 
         var structureManager = serverLevel.structureManager();
 
