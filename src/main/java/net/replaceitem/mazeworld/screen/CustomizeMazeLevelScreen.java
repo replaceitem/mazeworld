@@ -271,7 +271,7 @@ public class CustomizeMazeLevelScreen extends Screen {
         if(getMazeUiState().isOfType(MazeTypes.BINARY_TREE, MazeTypes.WANG_TILES, MazeTypes.ROUND_WANG_TILES, MazeTypes.SIMPLEX_NOISE, MazeTypes.SIMPLEX_NOISE_3D)) {
             helper.addChild(
                     new LogarithmicIntegerSliderWidget(0, 0, Button.DEFAULT_WIDTH,
-                            Component.translatable("createWorld.customize.maze_world.spacing"),
+                            Component.translatable("createWorld.customize.maze_world.size"),
                             getMazeUiState().getSize(), 2, 1024,
                             (_, size) -> this.getMazeUiState().setSize(size)
                     )

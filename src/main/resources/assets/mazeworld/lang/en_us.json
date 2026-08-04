@@ -29,7 +29,7 @@
 
     "createWorld.customize.maze_world.maze_type": "Maze Type",
 
-    "createWorld.customize.maze_world.spacing": "Spacing",
+    "createWorld.customize.maze_world.size": "Size",
     "createWorld.customize.maze_world.threshold": "Threshold",
     "createWorld.customize.maze_world.bias": "Bias",
     "createWorld.customize.maze_world.wall_width": "Wall width",
