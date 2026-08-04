@@ -13,6 +13,7 @@ public record MazeGeneratorConfig(
         int maxY,
         BlockPredicate replace,
         StructureReplacementType replaceStructures,
+        int spawnChunks,
         MazeType mazeType
 ) {
     public static final Codec<MazeGeneratorConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -22,6 +23,7 @@ public record MazeGeneratorConfig(
             Codec.INT.fieldOf("max_y").orElse(Integer.MAX_VALUE).forGetter(MazeGeneratorConfig::maxY),
             BlockPredicate.CODEC.fieldOf("replace").orElse(BlockPredicate.alwaysTrue()).forGetter(MazeGeneratorConfig::replace),
             StructureReplacementType.CODEC.fieldOf("replace_structures").orElse(StructureReplacementType.PRESERVE_ESSENTIAL).forGetter(MazeGeneratorConfig::replaceStructures),
+            Codec.INT.fieldOf("spawn_chunks").orElse(0).forGetter(MazeGeneratorConfig::spawnChunks),
             MazeType.CODEC.fieldOf("maze_type").forGetter(MazeGeneratorConfig::mazeType)
     ).apply(instance, MazeGeneratorConfig::new));
 

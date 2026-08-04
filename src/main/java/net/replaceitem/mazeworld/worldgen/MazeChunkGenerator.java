@@ -26,6 +26,10 @@ public class MazeChunkGenerator {
 
     public void generateChunk(WorldGenLevel world, ChunkAccess chunk) {
         ChunkPos chunkPos = chunk.getPos();
+
+        int chunkSpawnDistance = chunkPos.getChessboardDistance(0, 0);
+        if(chunkSpawnDistance < mazeGeneratorConfig.spawnChunks()) return;
+
         long worldSeed = world.getSeed();
 
         int minX = chunkPos.getMinBlockX();

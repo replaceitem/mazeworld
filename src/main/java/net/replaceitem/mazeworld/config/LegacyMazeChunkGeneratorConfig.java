@@ -44,7 +44,7 @@ public class LegacyMazeChunkGeneratorConfig {
             case "simplex_noise_3d" -> new SimplexNoise3dMazeConfig(spacing, (float) threshold);
             default -> throw new IllegalStateException("Unexpected maze type: " + this.mazeType);
         };
-        return new MazeGeneratorConfig(infiniteWall, Identifier.parse(wallBlock), Integer.MIN_VALUE, Integer.MAX_VALUE, BlockPredicate.alwaysTrue(), StructureReplacementType.PRESERVE_ESSENTIAL, mazeType);
+        return new MazeGeneratorConfig(infiniteWall, Identifier.parse(wallBlock), Integer.MIN_VALUE, Integer.MAX_VALUE, BlockPredicate.alwaysTrue(), StructureReplacementType.PRESERVE_ESSENTIAL, 0, mazeType);
     }
 
     public MazeGeneratorConfig getMigratedConfig() {

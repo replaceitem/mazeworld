@@ -25,6 +25,8 @@
 
     "createWorld.customize.maze_world.structure_replacement": "Structures",
 
+    "createWorld.customize.maze_world.preserve_end_island": "Preserve End Island",
+
     "createWorld.customize.maze_world.maze_type": "Maze Type",
 
     "createWorld.customize.maze_world.spacing": "Spacing",

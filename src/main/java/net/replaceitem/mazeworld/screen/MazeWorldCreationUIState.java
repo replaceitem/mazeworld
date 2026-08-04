@@ -35,6 +35,7 @@ public class MazeWorldCreationUIState {
     private BlockReplacementType replace = BlockReplacementType.ALL;
     private StructureReplacementType replaceStructures = StructureReplacementType.PRESERVE_ESSENTIAL;
     private final Map<ResourceKey<LevelStem>, Boolean> enabledDimensions = new HashMap<>();
+    private boolean preserveEndIsland = true;
 
     private ResourceKey<MapCodec<? extends MazeType>> mazeType = MazeTypes.WANG_TILES;
 
@@ -59,10 +60,18 @@ public class MazeWorldCreationUIState {
         }
     }
 
-    public @Nullable MazeGeneratorConfig createMazeGeneratorConfig() {
+    public @Nullable MazeGeneratorConfig createMazeGeneratorConfig(ResourceKey<LevelStem> key) {
         var mazeType = createMazeType();
         if(mazeType == null) return null;
-        return new MazeGeneratorConfig(infiniteWall, wallBlock, minY, maxY, replace.getBlockPredicate(), replaceStructures, mazeType);
+        return new MazeGeneratorConfig(infiniteWall,
+                wallBlock,
+                minY,
+                maxY,
+                replace.getBlockPredicate(),
+                replaceStructures,
+                key == LevelStem.END ? 10 : 0,
+                mazeType
+        );
     }
 
     private @Nullable MazeType createMazeType() {
@@ -85,15 +94,15 @@ public class MazeWorldCreationUIState {
     }
 
     private void onChanged() {
-        this.worldCreationUiState.updateDimensions((_, worldDimensions) -> {
-            var mazeGenerator = this.generateMaze ? this.createMazeGeneratorConfig() : null;
-            return new WorldDimensions(worldDimensions.dimensions().entrySet().stream()
-                    .map(entry -> {
-                        var dimEnabled = this.enabledDimensions.getOrDefault(entry.getKey(), true);
-                        return Map.entry(entry.getKey(), ((LevelStemAccess) (Object) entry.getValue()).withMazeGenerator(dimEnabled ? mazeGenerator : null));
-                    })
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
-        });
+        this.worldCreationUiState.updateDimensions((_, worldDimensions) -> new WorldDimensions(
+                worldDimensions.dimensions().entrySet().stream()
+                .map(entry -> {
+                    var mazeGenerator = this.generateMaze ? this.createMazeGeneratorConfig(entry.getKey()) : null;
+                    var dimEnabled = this.enabledDimensions.getOrDefault(entry.getKey(), true);
+                    return Map.entry(entry.getKey(), ((LevelStemAccess) (Object) entry.getValue()).withMazeGenerator(dimEnabled ? mazeGenerator : null));
+                })
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+        ));
         this.worldCreationUiState.onChanged();
     }
 
@@ -159,6 +168,14 @@ public class MazeWorldCreationUIState {
     }
     public void setDimensionEnabled(ResourceKey<LevelStem> key, boolean enabled) {
         this.enabledDimensions.put(key, enabled);
+        this.onChanged();
+    }
+
+    public boolean isPreserveEndIsland() {
+        return preserveEndIsland;
+    }
+    public void setPreserveEndIsland(boolean preserveEndIsland) {
+        this.preserveEndIsland = preserveEndIsland;
         this.onChanged();
     }
 

@@ -175,6 +175,16 @@ public class CustomizeMazeLevelScreen extends Screen {
                         )
         );
 
+        // Infinite wall - Cycle button
+        helper.addChild(
+                CycleButton.onOffBuilder(getMazeUiState().isPreserveEndIsland())
+                        .withTooltip(_ -> INFINITE_WALL_TOOLTIP)
+                        .create(0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
+                                Component.translatable("createWorld.customize.maze_world.preserve_end_island"),
+                                (_, value) -> this.getMazeUiState().setPreserveEndIsland(value)
+                        )
+        );
+
         // Heading - Dimensions
         helper.addChild(new StringWidget(Component.translatable("createWorld.customize.maze_world.heading.enabled_dimensions").withStyle(style -> style.withUnderlined(true)), this.getFont()), 2);
 
@@ -233,7 +243,7 @@ public class CustomizeMazeLevelScreen extends Screen {
 
         Consumer<WorldCreationUiState> stateChangeListener = state -> {
             switchGrid.refreshStates();
-            this.mazePreviewWidget.updateConfig(((WorldCreationUIStateAccess) state).getMazeworldState().createMazeGeneratorConfig());
+            this.mazePreviewWidget.updateConfig(((WorldCreationUIStateAccess) state).getMazeworldState().createMazeGeneratorConfig(LevelStem.OVERWORLD));
             this.mazePreviewWidget.preRender();
         };
         this.parent.getUiState().addListener(stateChangeListener);
