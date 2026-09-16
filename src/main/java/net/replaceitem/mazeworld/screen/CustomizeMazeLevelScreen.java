@@ -36,6 +36,7 @@ import java.util.stream.IntStream;
 public class CustomizeMazeLevelScreen extends Screen {
 
     private static final Tooltip INFINITE_WALL_TOOLTIP = Tooltip.create(Component.translatable("createWorld.customize.maze_world.infinite_walls.description"));
+    private static final Tooltip PRESERVE_END_ISLAND_TOOLTIP = Tooltip.create(Component.translatable("createWorld.customize.maze_world.preserve_end_island.description"));
     private static final Map<ResourceKey<LevelStem>, Integer> DIMENSION_ORDER = Map.of(
             LevelStem.OVERWORLD, 0,
             LevelStem.NETHER, 1,
@@ -175,10 +176,10 @@ public class CustomizeMazeLevelScreen extends Screen {
                         )
         );
 
-        // Infinite wall - Cycle button
+        // Preserve end island - Cycle button
         helper.addChild(
                 CycleButton.onOffBuilder(getMazeUiState().isPreserveEndIsland())
-                        .withTooltip(_ -> INFINITE_WALL_TOOLTIP)
+                        .withTooltip(_ -> PRESERVE_END_ISLAND_TOOLTIP)
                         .create(0, 0, Button.DEFAULT_WIDTH, Button.DEFAULT_HEIGHT,
                                 Component.translatable("createWorld.customize.maze_world.preserve_end_island"),
                                 (_, value) -> this.getMazeUiState().setPreserveEndIsland(value)
