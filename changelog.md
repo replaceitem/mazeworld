@@ -1,1 +1,2 @@
-* Updated to MC 26.3
+* Fixed incorrect tooltip on preserve end island button
+* Fixed preserve end island option always being enabled
