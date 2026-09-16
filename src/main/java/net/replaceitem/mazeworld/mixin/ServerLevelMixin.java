@@ -20,17 +20,16 @@ import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.LevelStorageSource;
-import net.minecraft.world.level.storage.SavedDataStorage;
 import net.minecraft.world.level.storage.ServerLevelData;
 import net.minecraft.world.level.storage.WritableLevelData;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.replaceitem.mazeworld.fakes.LevelStemAccess;
+import net.replaceitem.mazeworld.fakes.ServerLevelAccess;
 import net.replaceitem.mazeworld.level.InfiniteWallCollisionView;
 import net.replaceitem.mazeworld.level.InfiniteWallConfig;
 import net.replaceitem.mazeworld.worldgen.LegacyMazeChunkGenerator;
-import net.replaceitem.mazeworld.fakes.LevelStemAccess;
-import net.replaceitem.mazeworld.fakes.ServerLevelAccess;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -40,7 +39,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin extends Level implements ServerLevelAccess {
@@ -86,7 +84,7 @@ public abstract class ServerLevelMixin extends Level implements ServerLevelAcces
     }
 
 
-    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Ljava/util/concurrent/Executor;Lnet/minecraft/world/level/chunk/ChunkGenerator;IIZLnet/minecraft/world/level/entity/ChunkStatusUpdateListener;Ljava/util/function/Supplier;)Lnet/minecraft/server/level/ServerChunkCache;"))
+    @WrapOperation(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/storage/LevelStorageSource$LevelStorageAccess;Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Ljava/util/concurrent/Executor;Lnet/minecraft/world/level/chunk/ChunkGenerator;IIZLnet/minecraft/world/level/entity/ChunkStatusUpdateListener;)Lnet/minecraft/server/level/ServerChunkCache;"))
     private ServerChunkCache beforeServerChunkCacheInit(
             ServerLevel level,
             LevelStorageSource.LevelStorageAccess levelStorage,
@@ -98,13 +96,12 @@ public abstract class ServerLevelMixin extends Level implements ServerLevelAcces
             int simulationDistance,
             boolean syncWrites,
             ChunkStatusUpdateListener chunkStatusListener,
-            Supplier<SavedDataStorage> overworldDataStorage,
             Operation<ServerChunkCache> original,
             @Local(argsOnly = true, name = "levelStem") LevelStem levelStem
     ) {
         return ScopedValue.where(LEVEL_STEM, levelStem).call(() -> {
             // same args
-            return original.call(level, levelStorage, fixerUpper, structureTemplateManager, executor, generator, viewDistance, simulationDistance, syncWrites, chunkStatusListener, overworldDataStorage);
+            return original.call(level, levelStorage, fixerUpper, structureTemplateManager, executor, generator, viewDistance, simulationDistance, syncWrites, chunkStatusListener);
         });
     }
 }

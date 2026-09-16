@@ -47,7 +47,7 @@ public class StructureCondition {
 
         var structureManager = serverLevel.structureManager();
 
-        List<BoundingBox> holdoutBoundingBoxes = structureManager.startsForStructure(chunkPos, getStructurePredicate())
+        List<BoundingBox> holdoutBoundingBoxes = structureManager.startsForStructure(chunkPos.x(), chunkPos.z(), getStructurePredicate())
                 .stream().flatMap(structureStart -> structureStart.getPieces().stream())
                 .filter(piece -> piece.isCloseToChunk(chunkPos, 0))
                 .filter(getStructurePiecePredicate())

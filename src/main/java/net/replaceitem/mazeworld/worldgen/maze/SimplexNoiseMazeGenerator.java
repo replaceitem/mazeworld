@@ -17,7 +17,7 @@ public class SimplexNoiseMazeGenerator extends MazeGenerator {
         SimplexNoise simplexNoiseSampler = new SimplexNoise(RandomSource.create(seed));
         double t = threshold * 2 - 1;
         return (x, _, z) -> {
-            double sample = simplexNoiseSampler.getValue(x / size, z / size);
+            double sample = simplexNoiseSampler.get(x / size, z / size);
             return sample >= t;
         };
     }

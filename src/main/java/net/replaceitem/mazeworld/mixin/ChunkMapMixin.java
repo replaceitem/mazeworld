@@ -10,7 +10,6 @@ import net.minecraft.world.level.chunk.LightChunkGetter;
 import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.world.level.storage.LevelStorageSource;
-import net.minecraft.world.level.storage.SavedDataStorage;
 import net.replaceitem.mazeworld.RecordRecoderRegistration;
 import net.replaceitem.mazeworld.fakes.LevelStemAccess;
 import net.replaceitem.mazeworld.fakes.ServerLevelAccess;
@@ -20,26 +19,24 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.concurrent.Executor;
-import java.util.function.Supplier;
 
 @Mixin(ChunkMap.class)
 public class ChunkMapMixin {
     @Inject(method = "<init>", at = @At(value = "NEW", target = "(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;Lnet/minecraft/server/level/ThreadedLevelLightEngine;Ljava/util/concurrent/Executor;Lnet/minecraft/world/level/chunk/LevelChunk$UnsavedListener;)Lnet/minecraft/world/level/chunk/status/WorldGenContext;"))
     void beforeWorldGenContextInit(
-            ServerLevel level,
-            LevelStorageSource.LevelStorageAccess levelStorage,
-            DataFixer dataFixer,
-            StructureTemplateManager structureManager,
-            Executor executor,
-            BlockableEventLoop<Runnable> mainThreadExecutor,
-            LightChunkGetter chunkGetter,
-            ChunkGenerator generator,
-            ChunkStatusUpdateListener chunkStatusListener,
-            Supplier<SavedDataStorage> overworldDataStorage,
-            TicketStorage ticketStorage,
-            int serverViewDistance,
-            boolean syncWrites,
-            CallbackInfo ci
+           final ServerLevel level,
+           final LevelStorageSource.LevelStorageAccess levelStorage,
+           final DataFixer dataFixer,
+           final StructureTemplateManager structureManager,
+           final Executor executor,
+           final BlockableEventLoop<Runnable> mainThreadExecutor,
+           final LightChunkGetter chunkGetter,
+           final ChunkGenerator generator,
+           final ChunkStatusUpdateListener chunkStatusListener,
+           final TicketStorage ticketStorage,
+           final int serverViewDistance,
+           final boolean syncWrites,
+           CallbackInfo ci
     ) {
         var stem = ServerLevelAccess.LEVEL_STEM.get();
         var mazeGeneratorConfig = ((LevelStemAccess)(Object) stem).getMazeGenerator();
