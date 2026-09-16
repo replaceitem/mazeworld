@@ -69,7 +69,7 @@ public class MazeWorldCreationUIState {
                 maxY,
                 replace.getBlockPredicate(),
                 replaceStructures,
-                key == LevelStem.END ? 10 : 0,
+                isPreserveEndIsland() && key == LevelStem.END ? 10 : 0,
                 mazeType
         );
     }
